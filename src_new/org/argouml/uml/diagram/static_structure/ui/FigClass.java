@@ -923,29 +923,29 @@ public class FigClass extends FigNodeModelElement {
         // correction due to rounded division result, will be added to the name
         // compartment
 
-        Rectangle oldBounds = getBounds();
-        Dimension aSize = checkSize ? getMinimumSize() : new Dimension(w,h);
+	Rectangle oldBounds = getBounds();
+	Dimension aSize = checkSize ? getMinimumSize() : new Dimension(w,h);
 
-        int newW = Math.max(w,aSize.width);
-        int newH = h;
+	int newW = Math.max(w,aSize.width);
+	int newH = h;
 
-        int extra_each = 0;
-        int height_correction = 0;
+	int extra_each = 0;
+	int height_correction = 0;
 
-        // First compute all nessessary height data. Easy if we want less than
+	// First compute all nessessary height data. Easy if we want less than
         // the minimum
 
-        if (newH <= aSize.height) {
+	if (newH <= aSize.height) {
 
             // Just use the mimimum
 
             newH = aSize.height;
 
-        } else  {
+	} else  {
 
             // Split the extra amongst the number of displayed compartments
 
-            int displayedFigs = 1; //this is for _name
+	    int displayedFigs = 1; //this is for _name
 
             if (_attrVec.isDisplayed()) {
 	        displayedFigs++;
@@ -958,12 +958,12 @@ public class FigClass extends FigNodeModelElement {
             // Calculate how much each, plus a correction to put in the name
             // comparment if the result is rounded
 
-            extra_each        = (newH - aSize.height) / displayedFigs;
-            height_correction = (newH - aSize.height) -
+	    extra_each        = (newH - aSize.height) / displayedFigs;
+	    height_correction = (newH - aSize.height) -
                                 (extra_each * displayedFigs);
-        }
+	}
 
-        // Now resize all sub-figs, including not displayed figs. Start by the
+	// Now resize all sub-figs, including not displayed figs. Start by the
         // name. We override the getMinimumSize if it is less than our view (21
         // pixels hardcoded!). Add in the shared extra, plus in this case the
         // correction.
@@ -988,7 +988,7 @@ public class FigClass extends FigNodeModelElement {
         }
 
         _name.setBounds(x,currentY,newW,height);
-        _stereo.setBounds(x,y,newW,STEREOHEIGHT + 1);
+	_stereo.setBounds(x,y,newW,STEREOHEIGHT + 1);
         _stereoLineBlinder.setBounds(x + 1,y + STEREOHEIGHT,newW - 2,2);
 
         // Advance currentY to where the start of the attribute box is,
@@ -1015,10 +1015,10 @@ public class FigClass extends FigNodeModelElement {
 
         // Finally update the bounds of the operations box
 
-        aSize = getUpdatedSize(_operVec, x, currentY, newW,
+   	aSize = getUpdatedSize(_operVec, x, currentY, newW,
                                newH + y - currentY);
 
-        // set bounds of big box
+	// set bounds of big box
 
         _bigPort.setBounds(x,y,newW,newH);
 
@@ -1026,7 +1026,7 @@ public class FigClass extends FigNodeModelElement {
         // and trigger anyone who's listening to see if the "bounds" property
         // has changed.
 
-        calcBounds();
+ 	calcBounds();
         updateEdges();
         firePropChange("bounds", oldBounds, getBounds());
     }

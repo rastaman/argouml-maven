@@ -103,10 +103,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 
     protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return (baseClass.equals("ClassifierRole") ||
-                baseClass.equals("Namespace") ||
-                baseClass.equals("GeneralizableElement") ||
-                baseClass.equals("Classifier"));
+        return baseClass.equals("ClassifierRole");
     }
 
 

@@ -38,6 +38,7 @@ import ru.novosoft.uml.behavior.use_cases.*;
 
 import org.argouml.ui.*;
 import org.argouml.kernel.*;
+import org.argouml.application.api.*;
 
 
 /**
@@ -164,8 +165,8 @@ public class UMLExtensionPointListModel extends UMLModelElementListLinkModel  {
      * <p>Format a given model element.</p>
      *
      * <p>If there is no location (or it is the empty string), use the default
-     *   text ("(anon)").
-     * <p>If there is use "name: location", with "name:" omitted if
+     *   text ("(anon)"). If there is use the notation generator (which should
+     *   generate "name: location", with both "name:" and "location" omitted if
      *   undefined.</p> 
      *
      * <p>In this current implementation, more rigorously checks it is
@@ -182,24 +183,14 @@ public class UMLExtensionPointListModel extends UMLModelElementListLinkModel  {
     public Object formatElement(MModelElement element) {
 
         Object value = _nullLocation;
-	StringBuffer sb = new StringBuffer(20);
 
         if (element instanceof MExtensionPoint) {
             MExtensionPoint  extensionPoint = (MExtensionPoint) element;
             String           location       = extensionPoint.getLocation();
 
-	    if (extensionPoint.getName() != null) {
-		sb.append(extensionPoint.getName());
-		sb.append(":");
-	    }
-	    if((location != null) && (!(location.equals("")))) {
-		sb.append(" ");
-		sb.append(location);
-	    }
-	    else {
-		sb.append(_nullLocation);
-	    }
-	    value = sb.toString();
+            if((location != null) && (!(location.equals("")))) {
+                value = Notation.generate(this, element);
+            }
         }
         else {
             if (element != null) {

@@ -1,4 +1,4 @@
-// Copyright (c) 1996-01 The Regents of the University of California. All
+// Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,11 +21,45 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.layout;
+package org.argouml.i18n;
+import org.argouml.application.api.*;
+import org.argouml.application.helpers.*;
 
+public class NotationResourceBundle extends ResourceBundleHelper
+implements PluggableResourceBundle {
 
-/**
- * This is a layouted edge in a diagram.
- */
-public interface LayoutedEdge {
+   static final Object[][] _contents = {
+        {"label_use_guillemots", "Use guillemots (\u00ab \u00bb) for stereotypes" },
+        {"label_uml_notation_only", "Only allow strict UML notation text" },
+        {"tab_notation", "Notation" }  
+   };
+
+     public Object[][] getContents() {
+        return _contents;
+     }
+
+    public String getModuleName() {
+        return "NotationResourceBundle";
+    }
+
+    public String getModuleDescription() {
+        return "Generic Resource Bundle for Notations";
+    }
+
+    public String getModuleAuthor() {
+        return "ArgoUML Core";
+    }
+
+    /** This should call on the version number from a central xml file
+     * me thinks...
+     * @return the version number of the module
+     */    
+    public String getModuleVersion() {
+        return "0.9.4";
+    }
+
+    public String getModuleKey() {
+        return "module.resources.notation";
+    }
 }
+

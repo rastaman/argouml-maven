@@ -138,7 +138,7 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
 
   <!-- These cannot be changed in .ant.properties -->
   <target name="setversion">
-    <property name="thisversion" value="0.10"/>
+    <property name="thisversion" value="0.10.1"/>
   </target>
 
 
@@ -159,8 +159,7 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
 
     <property name="src.dir" value="../src_new"/>
     <property name="lib.dir" value="../lib"/>
-    <property name="gef.jar" value="gef-0.9.6.jar"/>
-    <property name="classpath" value="${JAVA_HOME}/lib/tools.jar:${lib.dir}/xerces.jar:${lib.dir}/nsuml.jar:${lib.dir}/ocl-argo.jar:${lib.dir}/${gef.jar}:${lib.dir}/antlrall.jar:${lib.dir}/log4j.jar:${lib.dir}/jh.jar"/>
+    <property name="classpath" value="${JAVA_HOME}/lib/tools.jar:${lib.dir}/xerces.jar:${lib.dir}/nsuml.jar:${lib.dir}/ocl-argo.jar:${lib.dir}/gef.jar:${lib.dir}/antlrall.jar:${lib.dir}/log4j.jar:${lib.dir}/jh.jar"/>
 
     <property name="packages" value="org.argouml.*"/>
     <property name="manifest" value="${src.dir}/org/argouml.mf"/>
@@ -277,9 +276,6 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
     <mkdir dir="${build.dest}"/>
     <copy todir="${build.dest}/org/argouml/Images">
       <fileset dir="${build.src}/org/argouml/Images" includes="**/**" excludes="CVS/**" />
-    </copy>
-    <copy todir="${build.dest}/org/argouml/i18n">
-      <fileset dir="${build.src}/org/argouml/i18n" includes="*.properties" />
     </copy>
     <copy todir="${build.dest}/org/argouml/resource">
       <fileset dir="${build.src}/org/argouml/resource" includes="**/**" excludes="CVS/**" />
@@ -433,7 +429,7 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
           <pathelement path="${java.home}/../lib/tools.jar"/>
           <pathelement path="${lib.dir}/nsuml.jar"/>
           <pathelement path="${lib.dir}/ocl-argo.jar"/>
-          <pathelement path="${lib.dir}/${gef.jar}"/>
+          <pathelement path="${lib.dir}/gef.jar"/>
           <pathelement path="${lib.dir}/antlrall.jar"/>
           <pathelement path="${lib.dir}/log4j.jar"/>
           <pathelement path="${lib.dir}/xerces.jar"/>
@@ -471,8 +467,8 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
   <!-- =================================================================== -->
   <target name="dist" depends="package">
     <echo message="Building the distribution files (zip,tar)"/>
-    <zip zipfile="../${Name}-${version}.zip" basedir="${build.dir}" includes="${gef.jar} log4j.jar nsuml.jar xerces.jar ocl-argo.jar antlrall.jar argouml.jar README.txt"/>
-    <tar tarfile="../${Name}-${version}.tar" basedir="${build.dir}" includes="${gef.jar} log4j.jar nsuml.jar xerces.jar ocl-argo.jar antlrall.jar argouml.jar README.txt">
+    <zip zipfile="../${Name}-${version}.zip" basedir="${build.dir}" includes="gef.jar log4j.jar nsuml.jar xerces.jar ocl-argo.jar antlrall.jar argouml.jar README.txt"/>
+    <tar tarfile="../${Name}-${version}.tar" basedir="${build.dir}" includes="gef.jar log4j.jar nsuml.jar xerces.jar ocl-argo.jar antlrall.jar argouml.jar README.txt">
     <!--
       <tarfileset mode="555">
 	<include name="argouml.sh">
@@ -500,8 +496,8 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
   <!-- =================================================================== -->
   <target name="dist-lib" depends="init">
     <echo message="Building the library distribution files (zip,tar)"/>
-    <zip zipfile="../${Name}-${version}-libs.zip" basedir="${lib.dir}/.." includes="lib/${gef.jar} lib/log4j.jar lib/nsuml.jar lib/xerces.jar lib/ocl-argo.jar lib/antlrall.jar" />
-    <tar tarfile="../${Name}-${version}-libs.tar" basedir="${lib.dir}/.." includes="lib/${gef.jar} lib/log4j.jar lib/nsuml.jar lib/xerces.jar lib/ocl-argo.jar lib/antlrall.jar" />
+    <zip zipfile="../${Name}-${version}-libs.zip" basedir="${lib.dir}/.." includes="lib/gef.jar lib/log4j.jar lib/nsuml.jar lib/xerces.jar lib/ocl-argo.jar lib/antlrall.jar" />
+    <tar tarfile="../${Name}-${version}-libs.tar" basedir="${lib.dir}/.." includes="lib/gef.jar lib/log4j.jar lib/nsuml.jar lib/xerces.jar lib/ocl-argo.jar lib/antlrall.jar" />
     <gzip zipfile="../${Name}-${version}-libs.tar.gz" src="../${Name}-${version}-libs.tar" />
     <delete file="../${Name}-${version}-libs.tar"/>
   </target>

@@ -1,4 +1,4 @@
-// Copyright (c) 1996-01 The Regents of the University of California. All
+// Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,11 +21,39 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.layout;
+package org.argouml.i18n;
+import java.util.*;
+import org.argouml.util.*;
+import javax.swing.*;
+import java.awt.event.*;
 
 
-/**
- * This is a layouted edge in a diagram.
- */
-public interface LayoutedEdge {
+/** German Resource bundle for internationalization of Settings dialog
+*
+*  @author Thierry Lach
+*  @since 0.9.4
+*/
+public class SettingsResourceBundle_de extends ListResourceBundle {
+
+   static final Object[][] _contents = {
+        {"button_ok", "OK" },
+        {"button_cancel", "Abbrechen" },
+        {"button_apply", "\u00dcbernehmen" },
+        {"tab_user", "Benutzer" },
+        {"label_user", "Vollst\u00e4ndiger Name:" },
+        {"label_email", "Email Adresse:" },
+        {"label_splash", "Splash Panel anzeigen" },
+        {"label_preload", "Allgemeine Klassen im Voraus laden" },
+        {"label_edem", "Benutzerstatistik anzeigen" },
+        {"label_profile", "Ladezeiten anzeigen" },
+        {"tab_preferences", "Voreinstellungen" },
+        {"tab_environment", "I18N: Environment" },
+        {"caption_settings", "Einstellungen" }
+   };
+
+     public Object[][] getContents() {
+        return _contents;
+     }
 }
+
+

@@ -32,8 +32,6 @@ import javax.swing.*;
  *   All notation names will be accessed using the
  *   {@link NotationName} wrapper.
  *
- *   Not mutable!
- *
  *   @author Thierry Lach
  *   @since 0.9.4
  */
@@ -114,9 +112,7 @@ implements NotationName, ArgoModuleEventListener {
      ArgoEventPump.getInstance().fireEvent(new ArgoNotationEvent(eventType, nn));
     }
 
-    /** Create a NotationName with or without a version.
-     * The NotationName is only created if there is no such notation before.
-     * @returns the newly created or the old NotationName
+    /** Create a notation name with or without a version.
      */
     public static NotationName makeNotation(String k1, String k2, Icon icon) {
 	NotationName nn = null;
@@ -132,6 +128,8 @@ implements NotationName, ArgoModuleEventListener {
     /** Get all of the registered notations.
      */
     public static ArrayList getAvailableNotations() {
+        // Cannot be null unless someone really messed up the code
+	// because of the static initializer.
         return _notations;
     }
 
@@ -155,6 +153,9 @@ implements NotationName, ArgoModuleEventListener {
     }
 
     public boolean equals(NotationName nn) {
+        if (nn == null) {
+            return this.getConfigurationValue().equals(Notation.NOTATION_ARGO);
+	}
         return this.getConfigurationValue().equals(nn.getConfigurationValue());
     }
 
