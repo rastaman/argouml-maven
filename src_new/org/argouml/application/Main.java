@@ -49,7 +49,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.uml.cognitive.critics.*;
 import org.argouml.xml.argo.ArgoParser;
 import org.argouml.uml.ui.UMLAction;
-import org.argouml.util.*;
 import org.argouml.util.logging.*;
 
 import org.argouml.application.security.ArgoSecurityManager;
@@ -302,9 +301,6 @@ public class Main {
 
 	st.mark("set project");
 
-        // Touch the trash
-        Trash.SINGLETON.getSize();
-
         pb.setProject(p);
 
 	st.mark("perspectives");
@@ -497,7 +493,9 @@ class StartCritics implements Runnable {
         dsgr.setChildGenerator(new ChildGenUML());
         java.util.Enumeration models = (p.getModels()).elements();
         while (models.hasMoreElements()) {
-            ((ru.novosoft.uml.model_management.MModel)models.nextElement()).addMElementListener(dsgr);
+            Object o = models.nextElement();     
+            ((MModel)o).removeMElementListener(dsgr);
+            ((MModel)o).addMElementListener(dsgr);
         }
         Argo.log.info("spawned critiquing thread");
 
