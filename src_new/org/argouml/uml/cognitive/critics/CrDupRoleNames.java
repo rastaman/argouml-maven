@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -46,8 +46,8 @@ import org.argouml.model.ModelFacade;
  *   standard (see section 2.5.3 of the standard).</p>
  *
  * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_dup_role_names">
- * ArgoUML User Manual: Duplicate end (role) names for &lt;association&gt;</a>
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_dup_role_names">ArgoUML
+ * User Manual: Duplicate end (role) names for &lt;association&gt;</a>
  */
 
 public class CrDupRoleNames extends CrUML {
@@ -117,6 +117,8 @@ public class CrDupRoleNames extends CrUML {
 	    return NO_PROBLEM;
 	}
 
+        Iterator enum = ModelFacade.getConnections(dm).iterator();
+
         // Loop through all the ends, comparing the name against those already
         // seen (ignoring any with no name).
         // No problem if there are no connections defined, we will fall
@@ -124,9 +126,9 @@ public class CrDupRoleNames extends CrUML {
 
         Vector   namesSeen = new Vector();
 
-        Iterator conns = ModelFacade.getConnections(dm).iterator();
-        while (conns.hasNext()) {
-            String name = ModelFacade.getName(conns.next());
+        while (enum.hasNext()) {
+
+            String          name = ModelFacade.getName(enum.next());
 
             // Ignore non-existent and empty names
 

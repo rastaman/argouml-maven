@@ -29,11 +29,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for State->Entry.
  * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 25, 2002
@@ -53,9 +51,6 @@ public class GoStateToEntry extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAState(parent)) {
 	    Set set = new HashSet();
@@ -69,7 +64,7 @@ public class GoStateToEntry extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state.entry");
+        return "State->Entry"; 
     }
 
 }

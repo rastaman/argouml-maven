@@ -61,6 +61,7 @@ public class PerspectiveSupport {
         _goRules = new Vector();
     }
     
+    /** needs documenting */
     public PerspectiveSupport(String name, Vector subs) {
         this(name);
         _goRules = subs;
@@ -90,19 +91,13 @@ public class PerspectiveSupport {
     
     // ----------- name -------------------------
     
-
-    /**
-     * @return the name
-     */
+    /** needs documenting */
     public String getName() { return _name; }
     
-
-    /**
-     * @param s the name
-     */
+    /** needs documenting */
     public void setName(String s) { _name = s; }
     
-
+    /** needs documenting */
     public String toString() {
         if (getName() != null) return getName();
         else return super.toString();

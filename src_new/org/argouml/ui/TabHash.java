@@ -27,19 +27,19 @@ package org.argouml.ui;
 
 public class TabHash extends TabText {
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public TabHash() {
 	super("Hashcode");
     }
 
-    /**
-     * @see org.argouml.ui.TabText#genText(java.lang.Object)
-     */
+    ////////////////////////////////////////////////////////////////
+    // accessors
+
     public String genText(Object target) {  
 	return target == null ? "Nothing selected" : "" + target.hashCode();
     }
+  
+
   
 } /* end class TabHash */

@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,15 +39,9 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     private static final Logger LOG = 
         Logger.getLogger(ActionCollaborationDiagram.class);
 
-    /**
-     * The singleton.
-     */
-    public static final ActionCollaborationDiagram SINGLETON =
+    public static ActionCollaborationDiagram SINGLETON =
         new ActionCollaborationDiagram();
 
-    /**
-     * Constructor.
-     */
     private ActionCollaborationDiagram() {
         super("action.collaboration-diagram");
     }
@@ -66,16 +60,16 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         Object target = TargetManager.getInstance().getTarget();
         Object collaboration = null;
         if (ModelFacade.isAOperation(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
-                            .buildCollaboration(namespace);
+            collaboration =
+                UmlFactory.getFactory().getCollaborations().buildCollaboration(namespace);
             ModelFacade.setRepresentedOperation(collaboration, target);
         } else if (ModelFacade.isAClassifier(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
-                            .buildCollaboration(target);
+            collaboration =
+                UmlFactory.getFactory().getCollaborations().buildCollaboration(target);
             ModelFacade.setRepresentedClassifier(collaboration, target);
         } else if (ModelFacade.isAModel(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
-                            .buildCollaboration(target);
+            collaboration =
+                UmlFactory.getFactory().getCollaborations().buildCollaboration(target);
         } else if (ModelFacade.isAInteraction(target)) {
             collaboration = ModelFacade.getContext(target);
         } else if (target instanceof UMLCollaborationDiagram) {
@@ -96,7 +90,9 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(java.lang.Object)
+     * @see
+     * org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper#isAddingCollaborationAllowed(Object)
+     * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(Object)
      */
     public boolean isValidNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
@@ -106,8 +102,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
                 "The argument " + handle + "is not a namespace.");
         }
         Object/*MNamespace*/ ns = handle;
-        return CollaborationsHelper.getHelper()
-                                    .isAddingCollaborationAllowed(ns);
+        return CollaborationsHelper.getHelper().isAddingCollaborationAllowed(ns);
     }
 
     /**
@@ -117,11 +112,10 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     public boolean shouldBeEnabled() {
 
         Object target = TargetManager.getInstance().getModelTarget();
-        if (ModelFacade.isANamespace(target)) {
+        if (org.argouml.model.ModelFacade.isANamespace(target))
             return isValidNamespace(target);
-        } else {
+        else
             return false;
-        }
     }
 
 } /* end class ActionCollaborationDiagram */

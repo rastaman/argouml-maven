@@ -28,28 +28,17 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
-/**
- * Rule for Collaboration->Diagram.
- *
- */
 public class GoCollaborationDiagram extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.collaboration.diagram");
+        return "Collaboration->Diagram";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         if (!ModelFacade.isACollaboration(parent))
             return null;
@@ -62,19 +51,16 @@ public class GoCollaborationDiagram extends AbstractPerspectiveRule {
         Vector diagrams = p.getDiagrams();
         if (diagrams == null)
             return null;
-        java.util.Enumeration elems = diagrams.elements();
-        while (elems.hasMoreElements()) {
-            Object d = elems.nextElement();
+        java.util.Enumeration enum = diagrams.elements();
+        while (enum.hasMoreElements()) {
+            Object d = enum.nextElement();
             if (d instanceof UMLCollaborationDiagram
-                && ((UMLCollaborationDiagram) d).getNamespace() == parent)
+                && ((UMLCollaborationDiagram)d).getNamespace() == parent)
                 res.addElement(d);
         }
         return res;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

@@ -52,8 +52,8 @@ import ru.novosoft.uml.model_management.MModel;
 public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
     private static final Logger LOG = Logger.getLogger(XMIReader.class);
     
-    private boolean errors = false;
-    private org.xml.sax.Parser theParser = null;
+    private boolean _errors = false;
+    private org.xml.sax.Parser _parser = null;
 
     /**
      * Constructor for XMIReader.
@@ -76,13 +76,13 @@ public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
 
     /**
      * Constructor for XMIReader.
-     * @param pFactory
+     * @param p_factory
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public XMIReader(MFactory pFactory)
+    public XMIReader(MFactory p_factory)
         throws SAXException, ParserConfigurationException {
-        super(pFactory);
+        super(p_factory);
         SAXParserFactory saxpf = SAXParserFactory.newInstance();
         saxpf.setValidating(false);
         saxpf.setNamespaceAware(false);
@@ -101,25 +101,24 @@ public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
      * strange construction.
      * @see ru.novosoft.uml.xmi.XMIReader#parseStream(InputSource)
      */
-    protected void parseSourceStream(InputSource pIs) 
-        throws SAXException, IOException {
+    protected void parseSourceStream(InputSource p_is) throws SAXException, IOException {
 
         cleanup();
 
         try {
-            getParser().parse(pIs);
+            getParser().parse(p_is);
             performLinking();
         } catch (IOException e) {            
             LOG.error("IOException while trying to read inputsource " 
-                + pIs.getSystemId(), e);
+                + p_is.getSystemId(), e);
             throw e;
         } catch (SAXException e) {
             LOG.error("Parsing error while trying to parse inputsource " 
-                + pIs.getSystemId(), e);
+                + p_is.getSystemId(), e);
             throw e;
         } catch (ClassCastException e) {
             LOG.error("Parsing error while trying to parse inputsource "
-                + pIs.getSystemId(), e);
+                + p_is.getSystemId(), e);
             throw new SAXException(e);
         }
 
@@ -159,32 +158,20 @@ public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
 //                if (sourceObject instanceof MBase) {
 //                    if (methodType) {
 //                        String parameterXMIID =  (String)fields[3].get(link);
-//                        String parameterXMIUUID =  
-//                          (String)fields[4].get(link);
-//                        Object objectParameter =  getObject(parameterXMIID, 
-//                                                          parameterXMIUUID);
+//                        String parameterXMIUUID =  (String)fields[4].get(link);
+//                        Object objectParameter =  getObject(parameterXMIID, parameterXMIUUID);
 //                        Object methodName =  fields[1].get(link);
-//                        if (methodName.equals("type") 
-//                              && sourceObject instanceof MAssociationEnd 
-//                              && !(objectParameter instanceof MModelElement)) 
-//                        {
-//                            System.out.println("Link data from XMI " 
-//                                  + sourceObject + " " + methodName + " " 
-//                                  + parameterXMIID + " " + parameterXMIUUID 
-//                                  + " " + objectParameter);
+//                        if (methodName.equals("type") && sourceObject instanceof MAssociationEnd && !(objectParameter instanceof MModelElement)) {
+//                            System.out.println("Link data from XMI " + sourceObject + " " + methodName + " " + parameterXMIID + " " + parameterXMIUUID + " " + objectParameter);
 //                            //i.remove();
 //                        }
 //                    } else {
 //                        String parameterXMIID =  (String)fields[3].get(link);
-//                        String parameterXMIUUID = (String)fields[4].get(link);
-//                        Object objectParameter =  
-//                            getObject(parameterXMIID, parameterXMIUUID);
+//                        String parameterXMIUUID =  (String)fields[4].get(link);
+//                        Object objectParameter =  getObject(parameterXMIID, parameterXMIUUID);
 //                        if (!(objectParameter instanceof MModelElement)) {
 //                            Object methodName =  fields[1].get(link);
-//                            System.out.println("Invalid link data from XMI " 
-//                                + sourceObject + " " + methodName + " " 
-//                                + parameterXMIID + " " + parameterXMIUUID 
-//                                + " " + objectParameter);
+//                            System.out.println("Invalid link data from XMI " + sourceObject + " " + methodName + " " + parameterXMIID + " " + parameterXMIUUID + " " + objectParameter);
 //                            //i.remove();
 //                        }
 //                    }
@@ -200,32 +187,31 @@ public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
     /**
      * Parses a given inputsource to a model. Does not override the novosoft 
      * parse method since that does not have the right signature.
-     * @param pIs
+     * @param p_is
      * @return MModel
      * @throws SAXException
      * @throws IOException
      */
-    public MModel parseToModel(InputSource pIs) 
-        throws SAXException, IOException
+    public MModel parseToModel(InputSource p_is) throws SAXException, IOException
     {        
-	parseSourceStream(pIs);
+	parseSourceStream(p_is);
 	return getParsedModel();
         
     }
 
-    public void setErrors(boolean e) {
-        errors = e;
+    public void setErrors(boolean errors) {
+        _errors = errors;
     }
 
     public boolean getErrors() {
-        return errors;
+        return _errors;
     }
 
     public void setParser(org.xml.sax.Parser parser) {
-        theParser = parser;
+        _parser = parser;
     }
 
     public org.xml.sax.Parser getParser() {
-        return theParser;
+        return _parser;
     }
 }

@@ -51,6 +51,7 @@ import org.argouml.uml.ui.TabModelTarget;
 import org.argouml.util.ConfigLoader;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
+import org.tigris.gef.graph.presentation.JGraph;
 import org.tigris.gef.presentation.Fig;
 
 /** 
@@ -63,7 +64,7 @@ public class MultiEditorPane
     implements ChangeListener, MouseListener, QuadrantPanel, TargetListener {
 
     /** logger */
-    private static final Logger LOG = Logger.getLogger(MultiEditorPane.class);
+    private static Logger cat = Logger.getLogger(MultiEditorPane.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -86,7 +87,7 @@ public class MultiEditorPane
      * can be edited.
      */
     public MultiEditorPane() {
-        LOG.info("making MultiEditorPane");
+        cat.info("making MultiEditorPane");
         ConfigLoader.loadTabs(_tabPanels, "multi", Horizontal.getInstance());
 
         setLayout(new BorderLayout());
@@ -112,16 +113,9 @@ public class MultiEditorPane
         setTarget(null);
     }
     
-    /**
-     * @see java.awt.Component#getPreferredSize()
-     */
     public Dimension getPreferredSize() {
         return new Dimension(400, 500);
     }
-
-    /**
-     * @see java.awt.Component#getMinimumSize()
-     */
     public Dimension getMinimumSize() {
         return new Dimension(100, 100);
     }
@@ -132,8 +126,10 @@ public class MultiEditorPane
      * (that is a tab that displays model elements) that tab should
      * display the target if the target is an ArgoDiagram.
      * @param target
+     * @deprecated As of ArgoUml version 0.13.5, 
+     *             this method will change visibility in the near future
      */
-    private void setTarget(Object target) {
+    public void setTarget(Object target) {
         enableTabs(target);
         for (int i = 0; i < _tabs.getTabCount(); i++) {
             Component tab = _tabs.getComponentAt(i);
@@ -141,7 +137,7 @@ public class MultiEditorPane
                 _tabs.setSelectedComponent(tab);
                 break;
             }
-        }       
+        }
     }
     
     /**
@@ -183,7 +179,6 @@ public class MultiEditorPane
      * is the component shown by the multieditorpane. At the moment (version
      * 0.13.3 of ArgoUML) there is only 1 tab, the Diagram tab.
      *
-     * @param tabName the given tab name
      * @return The index.
      */
     public int getIndexOfNamedTab(String tabName) {
@@ -198,7 +193,7 @@ public class MultiEditorPane
     /**
      * Selects a certain tab and shows it. At the moment (version
      * 0.13.3 of ArgoUML) there is only 1 tab, the Diagram tab.
-     * @param tabName the name of the tab
+     * @param tabName
      */
     public void selectTabNamed(String tabName) {
         int index = getIndexOfNamedTab(tabName);
@@ -222,11 +217,29 @@ public class MultiEditorPane
         }
     }
 
+    /**
+     * Selects a Fig on a TabDiagram if the TabDiagram is currently shown. 
+     * @param o The Fig or the owner of the Fig to select.
+     *
+     * @deprecated As of ArgoUml version 0.13.5,
+     *             The tabdiagram arranges for it's own selection now via 
+     *             it's {@link org.argouml.ui.targetmanager.TargetListener}.
+     */
+    public void select(Object o) {
+        Component curTab = _tabs.getSelectedComponent();
+        if (curTab instanceof TabDiagram) {
+            JGraph jg = ((TabDiagram) curTab).getJGraph();
+            if (jg.getEditor().getLayerManager().getContents(null).contains(o))
+                jg.selectByOwnerOrFig(o);
+        }
+        //TODO: handle tables
+    }
+
+    
+
 
     /**
      * Called when the user selects a tab, by clicking or otherwise. 
-     *
-     * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
      */
     public void stateChanged(ChangeEvent  e) {
         //TODO: should fire its own event and ProjectBrowser
@@ -235,34 +248,19 @@ public class MultiEditorPane
             _lastTab.setVisible(false);
         }
         _lastTab = _tabs.getSelectedComponent();
-        LOG.debug(
+        cat.debug(
             "MultiEditorPane state changed:" + _lastTab.getClass().getName());
         _lastTab.setVisible(true);
         if (_lastTab instanceof TabModelTarget)
              ((TabModelTarget) _lastTab).refresh();
     }
 
-    /**
-     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-     */
     public void mousePressed(MouseEvent me) {
     }
-
-    /**
-     * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-     */
     public void mouseReleased(MouseEvent me) {
     }
-
-    /**
-     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-     */
     public void mouseEntered(MouseEvent me) {
     }
-
-    /**
-     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-     */
     public void mouseExited(MouseEvent me) {
     }
 
@@ -289,13 +287,11 @@ public class MultiEditorPane
 
     /**
      * Called when the user clicks once on a tab.
-     *
-     * @param tab the tab that was clicked on
      */
     public void mySingleClick(int tab) {
         //TODO: should fire its own event and ProjectBrowser
         //should register a listener
-        LOG.debug("single: " + _tabs.getComponentAt(tab).toString());
+        cat.debug("single: " + _tabs.getComponentAt(tab).toString());
     }
 
     /**
@@ -307,15 +303,12 @@ public class MultiEditorPane
     public void myDoubleClick(int tab) {
         //TODO: should fire its own event and ProjectBrowser
         //should register a listener
-        LOG.debug("double: " + _tabs.getComponentAt(tab).toString());
+        cat.debug("double: " + _tabs.getComponentAt(tab).toString());
         JPanel t = (JPanel) _tabPanels.elementAt(tab);
         if (t instanceof TabSpawnable)
              ((TabSpawnable) t).spawn();
     }
 
-    /**
-     * @see org.argouml.application.api.QuadrantPanel#getQuadrant()
-     */
     public int getQuadrant() {
         return Q_TOP_RIGHT;
     }
@@ -327,8 +320,7 @@ public class MultiEditorPane
      * TODO: move this to ProjectManager for example, in any case: out
      * of the GUI.
      *
-     * @param obj the given object
-     * @param diagrams the list of diagrams
+     * @param obj
      */
     public void removePresentationFor(Object obj, Vector diagrams) {
         for (int i = 0; i < _tabs.getComponentCount(); i++) {
@@ -356,9 +348,9 @@ public class MultiEditorPane
      * TODO: move this to ProjectManager for example, in any case: out
      * of the GUI
      *
-     * @param o the given object
-     * @param diagrams the given list of diagrams
-     * @return List the list of figs
+     * @param o
+     * @param diagrams
+     * @return List
      */
     public List findPresentationsFor(Object o, Vector diagrams) {
         List returnList = new ArrayList();
@@ -400,6 +392,8 @@ public class MultiEditorPane
      *         org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
+	// how to handle empty target lists?  probably the
+	// MultiEditorPane should only show an empty pane in that case
 	setTarget(e.getNewTarget());
     }
 

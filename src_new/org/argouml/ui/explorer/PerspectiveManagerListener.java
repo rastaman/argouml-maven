@@ -33,13 +33,7 @@ package org.argouml.ui.explorer;
  */
 public interface PerspectiveManagerListener {
     
-    /**
-     * @param perspective the perspective to be added
-     */
     public void addPerspective(Object perspective);
     
-    /**
-     * @param perspective the perspective to be removed
-     */
     public void removePerspective(Object perspective);
 }

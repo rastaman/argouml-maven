@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -55,29 +55,24 @@ public class ActionSetIncludeBase extends UMLChangeAction {
         super.actionPerformed(e);
         Object source = e.getSource();
         Object newBase = null;
-        Object oldBase = null;
-        Object include = null;
+        Object inc = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newBase = /*(MUseCase)*/ combo.getSelectedItem();
-            Object o = combo.getTarget();
-            if (org.argouml.model.ModelFacade.isAInclude(o)) {
-                include = /*(MInclude)*/ o;
-                o = combo.getSelectedItem();
-                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
-                    newBase = /*(MUseCase)*/ o;
-                    oldBase = ModelFacade.getBase(include);
-                    if (newBase != oldBase) {
-                        ModelFacade.setBase(include, newBase);
-                    }
-                } else {
-                    if (o != null && o.equals("")) {
-                        ModelFacade.setBase(include, null);
-                    }
-                }
-
+            if (org.argouml.model.ModelFacade.isAInclude(combo.getTarget())) {
+                inc = /*(MInclude)*/ combo.getTarget();
             }
+        }
 
+	if (inc == null) {
+	    return;
+	}
+
+        Object oldBase = ModelFacade.getBase(inc);
+        // oldbase can never be null
+        if (oldBase == null || newBase == null) throw new IllegalStateException("Base of include is null!");
+        if (oldBase != newBase) {
+            ModelFacade.setBase(inc, newBase);
         }
     }
 

@@ -30,25 +30,17 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.DocumentationManager;
 import org.tigris.gef.presentation.Fig;
 
-/**
- * The tab for the documentation.
- *
- */
 public class TabDocs extends TabText {
-    private static final Logger LOG = 
+    protected static Logger cat = 
         Logger.getLogger(TabDocs.class);
-
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public TabDocs() {
 	super("Javadocs");
     }
 
-    /**
-     * @see org.argouml.ui.TabText#genText(java.lang.Object)
-     */
+    ////////////////////////////////////////////////////////////////
+    // accessors
     protected String genText(Object modelObject) {
 	modelObject =
 	    (modelObject instanceof Fig)
@@ -59,9 +51,6 @@ public class TabDocs extends TabText {
 	    : DocumentationManager.getDocs(modelObject, "");
     }
 
-    /**
-     * @see org.argouml.ui.TabText#parseText(java.lang.String)
-     */
     protected void parseText(String s) {
 	Object modelObject = TargetManager.getInstance().getTarget();
 	modelObject =

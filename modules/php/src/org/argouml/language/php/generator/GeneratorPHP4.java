@@ -54,10 +54,33 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
+import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
+import ru.novosoft.uml.behavior.collaborations.MMessage;
+
+import ru.novosoft.uml.behavior.state_machines.MGuard;
+import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MTransition;
+
+import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
+
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.core.MParameter;
+
+import ru.novosoft.uml.foundation.data_types.MMultiplicity;
+import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
+
+import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
+
+import ru.novosoft.uml.model_management.MPackage;
+
 /**
  * Generator class for PHP 4.x source code
  *
- * @author Kai Schr&ouml;der
+ * @author Kai Schröder
  * @since  ArgoUML 0.15.5
  */
 public class GeneratorPHP4
@@ -152,15 +175,6 @@ public class GeneratorPHP4
         return "generateExtensionPoint(MExtensionPoint modelElement)";
     }
 
-    /**
-     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
-     */
-    public String generateObjectFlowState(Object m) {
-        Object c = ModelFacade.getType(m);
-        if (c == null) return "";
-        return ModelFacade.getName(c);
-    }
-    
     /**
      * Generates operation
      *
@@ -785,9 +799,6 @@ public class GeneratorPHP4
      *
      * @return name of generated file on success;
      *         <code>null</code> otherwise.
-     *
-     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
-     * java.lang.Object, java.lang.String)
      */
     public String GenerateFile(Object modelElement, String sPath) {
         return generateFile(modelElement, sPath);
@@ -893,7 +904,7 @@ public class GeneratorPHP4
      * @return name of author(s) of this module
      */
     public final String getModuleAuthor() {
-        return "Kai Schr\u00F6der";
+        return "Kai Schröder";
     }
 
     /**
@@ -1246,9 +1257,9 @@ public class GeneratorPHP4
         boolean bReturn = true;
         BufferedWriter bwOutput = null;
         try {
-            File parentDir = new File(file.getParent());
-            if (!parentDir.exists()) {
-                parentDir.mkdirs();
+            File ParentDir = new File(file.getParent());
+            if (!ParentDir.exists()) {
+                ParentDir.mkdirs();
             }
 
             bwOutput = new BufferedWriter(new FileWriter(file));
@@ -1835,12 +1846,5 @@ public class GeneratorPHP4
         }
 
         return null;
-    }
-    
-    /**
-     * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
-     */
-    public String generateActionState(Object actionState) {       
-        return generateState(actionState);
     }
 }

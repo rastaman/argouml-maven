@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
  */
 public class SerialLayout extends LineLayout {
     
-    private static final Logger LOG = 
+    protected static Logger cat = 
         Logger.getLogger(SerialLayout.class);
         
     public static final int LEFTTORIGHT = 10;
@@ -72,89 +72,46 @@ public class SerialLayout extends LineLayout {
     public static final int CENTER = 22;
     public static final int FILL = 23;
 
-    private String position = WEST;
-    private int direction = LEFTTORIGHT;
-    private int alignment = TOP;
+    String position = WEST;
+    int direction = LEFTTORIGHT;
+    int alignment = TOP;
 
-    /**
-     * The constructor.
-     */
     public SerialLayout() {
         this(Horizontal.getInstance(), WEST, LEFTTORIGHT, TOP);
     }
-    
-    /**
-     * The constructor.
-     * 
-     * @param orientation the orientation
-     */
     public SerialLayout(Orientation orientation) {
         this(orientation, WEST, LEFTTORIGHT, TOP);
     }
-    
-    /**
-     * The constructor.
-     * 
-     * @param o the orientation
-     * @param p the position
-     */
-    public SerialLayout(Orientation o, String p) {
-        this(o, p, LEFTTORIGHT, TOP);
+    public SerialLayout(Orientation orientation, String position) {
+        this(orientation, position, LEFTTORIGHT, TOP);
+    }
+    public SerialLayout(Orientation orientation, String position,
+			int direction) {
+        this(orientation, position, direction, TOP);
     }
     
-    /**
-     *  The constructor.
-     * 
-     * @param o the orientation
-     * @param p the position
-     * @param d the direction
-     */
-    public SerialLayout(Orientation o, String p,
-			int d) {
-        this(o, p, d, TOP);
-    }
-    
-    /**
-     *  The constructor.
-     * 
-     * @param o the orientation
-     * @param p the position
-     * @param d the direction
-     * @param a the alignment
-     */
-    public SerialLayout(Orientation o, String p, int d, int a) {
-        super(o);
-        this.position = p;
-        this.direction = d;
-        this.alignment = a;
+    public SerialLayout(Orientation orientation, String position,
+			int direction, int alignment) {
+        super(orientation);
+        this.position = position;
+        this.direction = direction;
+        this.alignment = alignment;
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param o the orientation
-     * @param p the position
-     * @param d the direction
-     * @param a the alignment
-     * @param gap the gap
-     */
-    public SerialLayout(Orientation o, String p,
-			int d, int a, int gap) {
-        super(o, gap);
-        this.position = p;
-        this.direction = d;
-        this.alignment = a;
+    public SerialLayout(Orientation orientation, String position,
+			int direction, int alignment, int gap) {
+        super(orientation, gap);
+        this.position = position;
+        this.direction = direction;
+        this.alignment = alignment;
     }
 
-    /**
-     * @see java.awt.LayoutManager#layoutContainer(java.awt.Container)
-     */
     public void layoutContainer(Container parent) {
         Insets insets = parent.getInsets();
 
         Point loc;
         int preferredBreadth =
-	    getMyOrientation().getBreadth(parent.getPreferredSize());
+	    _orientation.getBreadth(parent.getPreferredSize());
         if (direction == LEFTTORIGHT) {
             if (position.equals(EAST)) {
                 loc =
@@ -171,36 +128,32 @@ public class SerialLayout extends LineLayout {
                 if (comp != null && comp.isVisible()) {
                     Dimension size = comp.getPreferredSize();
                     if (alignment == FILL) {
-                        getMyOrientation().setBreadth(size, preferredBreadth);
+                        _orientation.setBreadth(size, preferredBreadth);
                     }
                     comp.setSize(size);
                     comp.setLocation(loc);
-                    loc = getMyOrientation().addToPosition(loc, comp);
-                    loc = getMyOrientation().addToPosition(loc, getGap());
+                    loc = _orientation.addToPosition(loc, comp);
+                    loc = _orientation.addToPosition(loc, _gap);
                 }
             }
         }
         else {
-            int lastUsablePosition = getMyOrientation()
-                .getLastUsablePosition(parent);
-            int firstUsableOffset = getMyOrientation()
-                .getFirstUsableOffset(parent);
-            loc = getMyOrientation()
-                .newPoint(lastUsablePosition, firstUsableOffset);
+            int lastUsablePosition = _orientation.getLastUsablePosition(parent);
+            int firstUsableOffset = _orientation.getFirstUsableOffset(parent);
+            loc = _orientation.newPoint(lastUsablePosition, firstUsableOffset);
 
             int nComps = parent.getComponentCount();
             for (int i = 0; i < nComps; i++) {
                 Component comp = parent.getComponent(i);
                 if (comp != null && comp.isVisible()) {
-                    loc = getMyOrientation().subtractFromPosition(loc, comp);
+                    loc = _orientation.subtractFromPosition(loc, comp);
                     Dimension size = comp.getPreferredSize();
                     if (alignment == FILL) {
-                        getMyOrientation().setBreadth(size, preferredBreadth);
+                        _orientation.setBreadth(size, preferredBreadth);
                     }
                     comp.setSize(size);
                     comp.setLocation(loc);
-                    loc = getMyOrientation().subtractFromPosition(loc, 
-                                                                getGap());
+                    loc = _orientation.subtractFromPosition(loc, _gap);
                 }
             }
         }

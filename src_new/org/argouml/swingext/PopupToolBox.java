@@ -42,34 +42,23 @@ import javax.swing.JButton;
  */
 public class PopupToolBox extends Toolbox {
 
-    private ArrayList actions = new ArrayList();
-    private MouseListener mouseListener;
+    ArrayList _actions = new ArrayList();
+    MouseListener _mouseListener;
 
-    /** 
-     * Creates a new instance of PopupToolBox.
-     * 
-     * @param rows the number of rows
-     * @param cols the number of columns
-     */
+    /** Creates a new instance of PopupToolBox */
     public PopupToolBox(int rows, int cols) {
         super(rows, cols);
     }
 
-    /**
-     * @see javax.swing.JToolBar#add(javax.swing.Action)
-     */
     public JButton add(Action action) {
         JButton button = super.add(action);
-        actions.add(action);
+        _actions.add(action);
         
         return button;
     }
 
-    /**
-     * @param theMouseListener the new mouse listener
-     */
-    public void setButtonMouseListener(MouseListener theMouseListener) {
-        mouseListener = theMouseListener;
+    public void setButtonMouseListener(MouseListener mouseListener) {
+        _mouseListener = mouseListener;
     }
 
     /**
@@ -79,12 +68,12 @@ public class PopupToolBox extends Toolbox {
      */
     public void rebuild() {
         super.removeAll();
-        Iterator it = actions.iterator();
+        Iterator it = _actions.iterator();
         while (it.hasNext()) {
             Action a = (Action) it.next();
             JButton button = super.add(a);
-            if (mouseListener != null) {
-                button.addMouseListener(mouseListener);
+            if (_mouseListener != null) {
+                button.addMouseListener(_mouseListener);
             }
         }
     }

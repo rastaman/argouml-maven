@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -56,10 +56,6 @@ import org.argouml.model.ModelFacade;
  */
 public class CrAttrNameConflict extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrAttrNameConflict() {
 	setHeadline("Revise MAttribute Names to Avoid Conflict");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -83,9 +79,9 @@ public class CrAttrNameConflict extends CrUML {
 
 	Vector namesSeen = new Vector();
 
-	Iterator attrs = ModelFacade.getAttributes(dm).iterator();
-	while (attrs.hasNext()) {
-	    String name = ModelFacade.getName(attrs.next());
+	Iterator enum = ModelFacade.getAttributes(dm).iterator();
+	while (enum.hasNext()) {
+	    String name = ModelFacade.getName(enum.next());
 	    if (name == null || name.length() == 0) continue;
 
 	    if (namesSeen.contains(name)) return PROBLEM_FOUND;
@@ -94,11 +90,8 @@ public class CrAttrNameConflict extends CrUML {
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClAttributeCompartment.getTheInstance();
+	return ClAttributeCompartment.TheInstance;
     }
 
 } /* end class CrAttrNameConflict.java */

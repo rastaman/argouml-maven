@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -49,8 +48,8 @@ public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule {
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() {
-	return Translator.localize ("Tree", "misc.classifier.sequence-diagram");
+    public String getRuleName() {        
+	return "Classifier->Sequence diagram";
     }
 
     /**
@@ -65,10 +64,8 @@ public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule {
 
 	    while (it.hasNext()) {
 		ArgoDiagram diagram = (ArgoDiagram) it.next();
-		if (diagram instanceof UMLSequenceDiagram 
-		    && col.contains(((SequenceDiagramGraphModel)
-		            ((UMLSequenceDiagram) diagram).getGraphModel())
-		                            .getCollaboration())) {
+		if (diagram instanceof UMLSequenceDiagram &&
+		    col.contains(((SequenceDiagramGraphModel)((UMLSequenceDiagram)diagram).getGraphModel()).getCollaboration())) {
 		    ret.add(diagram);
 		}
 	    }
@@ -79,9 +76,6 @@ public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

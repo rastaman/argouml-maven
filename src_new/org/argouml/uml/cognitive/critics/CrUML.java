@@ -49,8 +49,9 @@ import org.tigris.gef.util.VectorSet;
  * @see org.argouml.cognitive.Designer
  * @see org.argouml.cognitive.DecisionModel
  */
+
 public class CrUML extends Critic {
-    private static final Logger LOG = Logger.getLogger(CrUML.class);
+    protected static Logger cat = Logger.getLogger(CrUML.class);
     
     public static final Decision decINHERITANCE = new
 	Decision("misc.decision.inheritance", 1);
@@ -123,9 +124,10 @@ public class CrUML extends Critic {
     }
 
 
-    /**
-     * The constructor for this class. 
-     */
+
+    ////////////////////////////////////////////////////////////////
+    // constructor
+
     public CrUML() {
     }
 
@@ -143,16 +145,10 @@ public class CrUML extends Critic {
         super.setDescription(desc);
     }
 
+
+
     /**
-     * Set up the locale specific text for the critic headline 
-     * (the one liner that appears in the to-do pane) 
-     * and the critic description (the detailed explanation that 
-     * appears in the to-do tab of the details pane). 
-     *   
-     * TODO: Since the parameter is ignored, will be deprecated in good time.
-     * MVW: Maybe we can make it part of the constructor CrUML()?
-     * 
-     * @param s the english headline, but ignored!
+     *   Will be deprecated in good time
      */
     public final void setHeadline(String s) {
 	//
@@ -162,10 +158,8 @@ public class CrUML extends Critic {
 	setResource(className.substring(className.lastIndexOf('.') + 1));
     }
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#predicate(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+
+
     public boolean predicate(Object dm, Designer dsgr) {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	if (p.isInTrash(dm)) {
@@ -176,13 +170,6 @@ public class CrUML extends Critic {
 	}
     }
 
-    /** This is the decision routine for the critic. 
-     * 
-     * @param dm is the UML entity (an NSUML object) that is being checked. 
-     * @param dsgr is for future development and can be ignored.
-     * 
-     * @return boolean problem found
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	return super.predicate(dm, dsgr);
     }

@@ -50,18 +50,18 @@ public class CmdSetPreferredSize extends Cmd {
     /** constant for MINIMUM_SIZE */
     public static final int MINIMUM_SIZE = 1;
     
-    private int mode;
+    private int _mode;
 
     /** Constructor for the command.
-     * @param theMode one of the defined constants
+     * @param mode one of the defined constants
      */
-    public CmdSetPreferredSize(int theMode) {
+    public CmdSetPreferredSize(int mode) {
 	super(Translator.localize("action", 
-			    "action.set-" + wordFor(theMode) + "-size"));
-        mode = theMode;
+			    "action.set-" + wordFor(mode) + "-size"));
+        _mode = mode;
     }
 
-    private static String wordFor(int r) {
+    protected static String wordFor(int r) {
         switch (r) {
         case PREFERRED_SIZE: return "preferred";
         case MINIMUM_SIZE: return "minimum";
@@ -70,22 +70,14 @@ public class CmdSetPreferredSize extends Cmd {
 					   + "incompatible mode: " + r);
     }
     
-    /** 
-     * Set the fig to be resized. 
-     * 
-     * @param f the fig to resize
-     */
+    /** set the fig to be resized */
     public void setFigToResize(Fig f) {
         Vector figs = new Vector(1);
         figs.add(f);
         setArg("figs", figs);
     }
 
-    /** 
-     * Set the figs to be resized.
-     * 
-     * @param figs the list of figs to resize
-     */
+    /** set the figs to be resized */
     public void setFigToResize(Vector figs) {
         setArg("figs", figs);
     }
@@ -114,11 +106,12 @@ public class CmdSetPreferredSize extends Cmd {
             Fig fi = (Fig) figs.elementAt(i);
             // only resize elements which the user would also be able 
             // to resize.
-            if (fi.isResizable() && (!((fi instanceof FigPackage)
-		                     || (fi instanceof FigCompositeState))))
+            if (fi.isResizable() == true
+		&& (!((fi instanceof FigPackage)
+		      || (fi instanceof FigCompositeState))))
 	    {
-                if (mode == PREFERRED_SIZE)
-                    fi.setSize(fi.getPreferredSize());
+                if (_mode == PREFERRED_SIZE)
+                    fi.setSize(fi.getPreferedSize());
                 else
                     fi.setSize(fi.getMinimumSize());
                 Globals.showStatus("Setting size for " + fi);

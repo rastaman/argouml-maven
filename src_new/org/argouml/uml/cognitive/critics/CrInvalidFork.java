@@ -39,10 +39,6 @@ import org.argouml.model.ModelFacade;
 
 public class CrInvalidFork extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrInvalidFork() {
 	setHeadline("Change Fork Transitions");
 
@@ -50,10 +46,6 @@ public class CrInvalidFork extends CrUML {
 	addTrigger("incoming");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAPseudostate(dm))) return NO_PROBLEM;
 	Object k = ModelFacade.getPseudostateKind(dm);

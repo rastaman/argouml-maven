@@ -23,11 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 package org.argouml.ui.targetmanager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EventObject;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A targetevent indicating that the target of ArgoUML has changed 
@@ -54,34 +50,34 @@ public class TargetEvent extends EventObject {
     /**
      * The name of the event
      */
-    private String theEventName;
+    private String _name;
 
     /**
      * The old targets before the change took place
      */
-    private Object[] theOldTargets;
+    private Object[] _oldTargets;
 
     /**
      * The new targets after the change took place
      */
-    private Object[] theNewTargets;
+    private Object[] _newTargets;
 
     /**
      * Constructs a new TargetEvent
      * @param source The source that fired the TargetEvent, will
      * allways be the TargetManager
-     * @param tEName The name of the TargetEvent, can be TARGET_SET,
+     * @param name The name of the TargetEvent, can be TARGET_SET,
      * TARGET_REMOVED or TARGET_ADDED
      * @param oldTargets The old targets before the change took place
      * @param newTargets The new targets after the change took place
      */
-    public TargetEvent(Object source, String tEName,
+    public TargetEvent(Object source, String name,
 		       Object[] oldTargets, Object[] newTargets)
     {
 	super(source);
-	theEventName = tEName;
-        theOldTargets = oldTargets;
-        theNewTargets = newTargets;
+	_name = name;
+        _oldTargets = oldTargets;
+        _newTargets = newTargets;
     }
 
     /**
@@ -89,7 +85,7 @@ public class TargetEvent extends EventObject {
      * @return the name of the event
      */
     public String getName() {
-	return theEventName;
+	return _name;
     }
 
     /**
@@ -97,7 +93,7 @@ public class TargetEvent extends EventObject {
      * @return an object array with the old targets
      */
     public Object[] getOldTargets() {
-	return theOldTargets == null ? new Object[] {} : theOldTargets;
+	return _oldTargets == null ? new Object[] {} : _oldTargets;
     }
 
     /**
@@ -105,7 +101,7 @@ public class TargetEvent extends EventObject {
      * @return an object array with the new targets
      */
     public Object[] getNewTargets() {
-        return theNewTargets == null ? new Object[] {} : theNewTargets;
+        return _newTargets == null ? new Object[] {} : _newTargets;
     }
 
     /**
@@ -113,44 +109,7 @@ public class TargetEvent extends EventObject {
      * @return the zero'th element in _newTargets, or null
      */
     public Object getNewTarget() {
-        return theNewTargets == null 
-            || theNewTargets.length < 1 ? null : theNewTargets[0];
-    }
-    
-    /**
-     * Gets the targets that are removed from the selection
-     * @return the removed targets
-     */
-    public Object[] getRemovedTargets() {
-        List removedTargets = new ArrayList();
-        List oldTargets = Arrays.asList(theOldTargets);
-        List newTargets = Arrays.asList(theNewTargets);
-        Iterator it = oldTargets.iterator();
-        while (it.hasNext()) {
-            Object o = it.next();
-            if (!newTargets.contains(o)) {
-                removedTargets.add(o);
-            }
-        }
-        return removedTargets.toArray();
-    }
-    
-    /**
-     * Returns the targets that are added to the selection
-     * @return the added targets
-     */
-    public Object[] getAddedTargets() {
-        List addedTargets = new ArrayList();
-        List oldTargets = Arrays.asList(theOldTargets);
-        List newTargets = Arrays.asList(theNewTargets);
-        Iterator it = newTargets.iterator();
-        while (it.hasNext()) {
-            Object o = it.next();
-            if (!oldTargets.contains(o)) {
-                addedTargets.add(o);
-            }
-        }
-        return addedTargets.toArray();
+        return _newTargets == null || _newTargets.length < 1 ? null : _newTargets[0];
     }
 }
 

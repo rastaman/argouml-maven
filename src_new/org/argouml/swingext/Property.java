@@ -30,44 +30,43 @@ package org.argouml.swingext;
  * @author Jeremy Jones
 **/
 public class Property implements Comparable {
-    private String      name;
-    private Class       valueType;
-    private Object      initialValue;
-    private Object      currentValue;
-    private Object[]    availableValues;
+    private String      _name;
+    private Class       _valueType;
+    private Object      _initialValue;
+    private Object      _currentValue;
+    private Object[]    _availableValues;
 
     /**
      * Constructs a new Property. This version of the constructor does
      * not specify a finite set of available values.
      * 
-     * @param theName          the property name
-     * @param theValueType     the value type class
-     * @param theInitialValue  the initial value
+     * @param name          the property name
+     * @param valueType     the value type class
+     * @param initialValue  the initial value
     **/
-    public Property(String theName, Class theValueType, 
-            Object theInitialValue) {
-        this(theName, theValueType, theInitialValue, null);
+    public Property(String name, Class valueType, Object initialValue) {
+        this(name, valueType, initialValue, null);
     }
 
     /**
      * Constructs a new Property. This version of the constructor does
      * not specify a finite set of available values.
      * 
-     * @param theName          the property name
-     * @param theValueType     the value type class
-     * @param theInitialValue  the initial value
+     * @param name          the property name
+     * @param valueType     the value type class
+     * @param initialValue  the initial value
      * @param values        the set of available values to choose from
     **/
     public Property(
-            String theName,
-            Class theValueType,
-            Object theInitialValue,
+            String name,
+            Class valueType,
+            Object initialValue,
             Object[] values) {
-        name = theName;
-        valueType = theValueType;
-        initialValue = theInitialValue;
-        availableValues = values;
-        currentValue = initialValue;
+        _name = name;
+        _valueType = valueType;
+        _initialValue = initialValue;
+        _availableValues = values;
+        _currentValue = _initialValue;
     }
 
     /**
@@ -76,7 +75,7 @@ public class Property implements Comparable {
      * @return property name
     **/
     public String getName() {
-        return name;
+        return _name;
     }
 
     /**
@@ -85,7 +84,7 @@ public class Property implements Comparable {
      * @return  the property value class
     **/
     public Class getValueType() {
-        return valueType;
+        return _valueType;
     }
 
     /**
@@ -94,7 +93,7 @@ public class Property implements Comparable {
      * @return  initial property value
     **/
     public Object getInitialValue() {
-        return initialValue;
+        return _initialValue;
     }
 
     /**
@@ -104,7 +103,7 @@ public class Property implements Comparable {
      * @return set of available property values
     **/
     public Object[] getAvailableValues() {
-        return availableValues;
+        return _availableValues;
     }
 
     /**
@@ -113,7 +112,7 @@ public class Property implements Comparable {
      * @return current property value
     **/
     public Object getCurrentValue() {
-        return currentValue;
+        return _currentValue;
     }
 
     /**
@@ -122,15 +121,13 @@ public class Property implements Comparable {
      * @param value new property value
     **/
     public void setCurrentValue(Object value) {
-        currentValue = value;
+        _currentValue = value;
     }
     
     /**
      * Compares two Properties by comparing their names.
-     *
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
+    **/
     public int compareTo(Object o) {
-        return name.compareTo(((Property) o).name);    
+        return _name.compareTo(((Property) o)._name);    
     }
 }

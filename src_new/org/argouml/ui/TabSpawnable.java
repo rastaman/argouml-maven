@@ -51,59 +51,38 @@ import org.argouml.uml.ui.TabModelTarget;
  */
 public class TabSpawnable extends JPanel implements Cloneable, Orientable {
 
-    private static final Logger LOG = Logger.getLogger(TabSpawnable.class);
+    private Logger cat = Logger.getLogger(TabSpawnable.class);
 
-    private static final int OVERLAPP = 30;
+    public final int OVERLAPP = 30;
 
     private static final String BUNDLE = "UMLMenu";
 
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private String title = "untitled";
+    String _title = "untitled";
 
     /**
      * if true, remove tab from parent JTabbedPane
      */
-    private boolean tear = false;
+    boolean _tear = false;
 
-    private Orientation orientation;
+    protected Orientation orientation;
 
-    /**
-     * @return Returns the orientation.
-     */
-    public Orientation getOrientation() {
-        return orientation;
-    }
     ////////////////////////////////////////////////////////////////
     // constructor
 
-    /**
-     * The constructor.
-     * 
-     */
     public TabSpawnable() {
         this("untitled", false);
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param tag the name
-     */
     public TabSpawnable(String tag) {
         this(tag, false);
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param tag the name
-     * @param t if true, remove tab from parent JTabbedPane
-     */
-    public TabSpawnable(String tag, boolean t) {
+    public TabSpawnable(String tag, boolean tear) {
         setTitle(tag);
-        tear = t;
+        _tear = tear;
     }
 
     /**
@@ -120,35 +99,28 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
         try {
             return this.getClass().newInstance();
         } catch (Exception ex) {
-            LOG.error("exception in clone()", ex);
+            cat.error("exception in clone()", ex);
         }
         return null;
     }
 
-    /**
-     * Set the orientation of the property panel.
-     *
-     * @see org.argouml.swingext.Orientable#setOrientation(org.argouml.swingext.Orientation)
+    /*
+     * Set the orientation of the property panel @param orientation the new
+     * orientation for this preoprty panel
      */
-    public void setOrientation(Orientation o) {
-        this.orientation = o;
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    /**
-     * @return the title
-     */
     public String getTitle() {
-        return title;
+        return _title;
     }
 
-    /**
-     * @param t the title
-     */
     public void setTitle(String t) {
-        title = t;
+        _title = t;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -168,11 +140,11 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
     public TabSpawnable spawn() {
 
         // TODO: this disables spawning
-        if (true) return null;
+        if (true == true) return null;
         
         JDialog f = new JDialog(ProjectBrowser.getInstance());
         f.getContentPane().setLayout(new BorderLayout());
-        f.setTitle(Translator.localize(BUNDLE, title));
+        f.setTitle(Translator.localize(BUNDLE, _title));
         TabSpawnable newPanel = (TabSpawnable) clone();
         if (newPanel == null) return null; //failed to clone
 
@@ -190,7 +162,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
             it.setTarget(me.getTarget());
         }
 
-        newPanel.setTitle(Translator.localize(BUNDLE, title));
+        newPanel.setTitle(Translator.localize(BUNDLE, _title));
 
         f.getContentPane().add(newPanel, BorderLayout.CENTER);
         Rectangle bounds = getBounds();
@@ -203,7 +175,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
         f.setLocation(loc);
         f.setVisible(true);
 
-        if (tear && (getParent() instanceof JTabbedPane))
+        if (_tear && (getParent() instanceof JTabbedPane))
                 ((JTabbedPane) getParent()).remove(this);
 
         return newPanel;

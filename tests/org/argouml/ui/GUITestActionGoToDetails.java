@@ -101,7 +101,7 @@ import junit.framework.TestCase;
  */
 public class GUITestActionGoToDetails extends TestCase {
     
-    private ActionGoToDetails action;
+    ActionGoToDetails _action;
 
     
 
@@ -117,7 +117,7 @@ public class GUITestActionGoToDetails extends TestCase {
      */
     protected void setUp() throws Exception {       
         super.setUp();
-        action = new ActionGoToDetails("");
+        _action = new ActionGoToDetails("");
     }
 
     public void testToDoTab() {    

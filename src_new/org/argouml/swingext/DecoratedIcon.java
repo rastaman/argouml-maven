@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -46,50 +46,37 @@ import javax.swing.UIManager;
  */
 public abstract class DecoratedIcon extends ImageIcon {
     
-    /**
-     * If the icon is for hoovering: <code>ROLLOVER</code>
-     */
     public static final int ROLLOVER = 0;
-    
-    /**
-     * If the icon is the normally shown one: <code>STANDARD</code>
-     */
     public static final int STANDARD = 1;
 
-    /**
-     * This is the sprite buffer for the arrow image of the left button.
-     */
-    private int[][] imageBuffer;
+    // Sprite buffer for the arrow image of the left button
+    protected int[][] _buffer;
 
-    private int popupIconWidth = 11;
-    private int popupIconHeight = 16;
-    private int popupIconOffset = 5;
+    protected int _popupIconWidth = 11;
+    protected int _popupIconHeight = 16;
+    private int _popupIconOffset = 5;
 
-    private ImageIcon imageIcon;
+    private ImageIcon _imageIcon;
     
     /** Construct a decorated icon made up of the given icon and decorated with
      * the icon defined in the descendant class.
-     * @param theImageIcon The icon to decorate
+     * @param The icon to decorate
      */        
-    DecoratedIcon(ImageIcon theImageIcon) {
-        imageIcon = theImageIcon;
+    DecoratedIcon(ImageIcon imageIcon) {
+        _imageIcon = imageIcon;
     }
     
-    /**
-     * Initialise the icon.
-     * @param buffer the buffer containing the icon definition (pixels)
-     */
     protected void init(int[][] buffer) {
-        imageBuffer = buffer;
-        popupIconWidth = imageBuffer[0].length;
-        popupIconHeight = imageBuffer.length;
+        _buffer = buffer;
+        _popupIconWidth = _buffer[0].length;
+        _popupIconHeight = _buffer.length;
         BufferedImage mergedImage =
-	    new BufferedImage(imageIcon.getIconWidth()
-			      + popupIconOffset + popupIconWidth,
-			      imageIcon.getIconHeight(),
+	    new BufferedImage(_imageIcon.getIconWidth()
+			      + _popupIconOffset + _popupIconWidth,
+			      _imageIcon.getIconHeight(),
 			      BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = mergedImage.createGraphics();
-        g2.drawImage(imageIcon.getImage(), null, null);
+        g2.drawImage(_imageIcon.getImage(), null, null);
         setImage(mergedImage);
     }
 
@@ -107,7 +94,7 @@ public abstract class DecoratedIcon extends ImageIcon {
     public void paintIcon(Component c, Graphics g, int x, int y) {
         super.paintIcon(c, g, x, y);
 
-        int xOffset = x + imageIcon.getIconWidth() + popupIconOffset;
+        int xOffset = x + _imageIcon.getIconWidth() + _popupIconOffset;
         // Initialize the color array
         Color[] colors = {
                 c.getBackground(),
@@ -115,10 +102,10 @@ public abstract class DecoratedIcon extends ImageIcon {
                 UIManager.getColor("infoText"),
                 UIManager.getColor("controlHighlight")};
 
-        for (int i = 0; i < popupIconWidth; i++) {
-            for (int j = 0; j < popupIconHeight; j++) {
-                if (imageBuffer[j][i] != 0) {
-                    g.setColor(colors[imageBuffer[j][i]]);
+        for (int i = 0; i < _popupIconWidth; i++) {
+            for (int j = 0; j < _popupIconHeight; j++) {
+                if (_buffer[j][i] != 0) {
+                    g.setColor(colors[_buffer[j][i]]);
                     g.drawLine(xOffset + i, y + j, xOffset + i, y + j);
                 }
             }

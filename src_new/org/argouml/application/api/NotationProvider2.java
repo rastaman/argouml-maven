@@ -156,21 +156,13 @@ public interface NotationProvider2 {
     public String generateMultiplicity(Object m);
 
     /**
-     * Generate the String representation for a ObjectFlowState.
-     *
-     * @param m Object to generate representation for.
-     * @return The String representation of the object.
-     */
-    public String generateObjectFlowState(Object m);
-
-    /**
      * Generate the String representation for a State.
      *
      * @param m Object to generate representation for.
      * @return The String representation of the object.
      */
     public String generateState(Object m);
-    
+
     /**
      * Generate the String representation for a StateBody.
      *
@@ -202,14 +194,6 @@ public interface NotationProvider2 {
      * @return The String representation of the object.
      */
     public String generateAction(Object m);
-    
-    /**
-     * Generate the String representation for an Action State.
-     *
-     * @param actionState Object to generate representation for.
-     * @return The String representation of the object.
-     */
-    public String generateActionState(Object actionState);
 
     /**
      * Generate the String representation for a Guard.

@@ -2,6 +2,10 @@
 
 package org.argouml.uml.reveng.classfile;
 
+import antlr.*;
+import antlr.collections.*;
+import java.util.*;
+
 public interface ClassfileTokenTypes {
 	int EOF = 1;
 	int NULL_TREE_LOOKAHEAD = 3;

@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,25 +22,33 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+// File: ActionAddExtensionPoint.java
+// Classes: ActionAddExtensionPoint
+// Original Author: mail@jeremybennett.com
+// $Id$
+
+// 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
+// the display of extension points.
+
+
 package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLChangeAction;
 
 /**
- * A class to implement the addition of extension points to use cases.<p>
+ * <p>A class to implement the addition of extension points to use cases.</p>
  *
- * This is a singleton. Implemented with a private constructor and a static
- * access method. Marked as final, since it can't sensibly be subclassed (the
- * access method wouldn't work properly).<p>
+ * <p>This is a singleton. Implemented with a private constructor and a static
+ *   access method. Marked as final, since it can't sensibly be subclassed (the
+ *   access method wouldn't work properly).</p>
  *
  * @author  Jeremy Bennett (mail@jeremybennett.com).
- * @stereotype singleton
  */
+
 public final class ActionAddExtensionPoint extends UMLChangeAction {
 
 
@@ -51,10 +59,11 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Our private copy of the instance. Only accessible through the proper
-     * access method.<p>
+     * <p>Our private copy of the instance. Only accessible through the proper
+     *   access method.</p>
      */
-    private static ActionAddExtensionPoint singleton;
+
+    private static ActionAddExtensionPoint _singleton = null;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -64,9 +73,15 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Constructor is private, since it cannot be called directly for a
-     * singleton. Make use of the access funtion.<p>
+     * <p>Constructor is private, since it cannot be called directly for a
+     *   singleton. Make use of the access funtion.</p>
+     *
+     * <p><em>Warning</em>. There is a horrible piece of coding under all
+     *   this. The name of the icon MUST be the same as the tool tip with
+     *   spaces removed (Arrgh!). So we must have
+     *   <code>AddExtensionPoint.gif</code> somewhere.</p>
      */
+
     public ActionAddExtensionPoint() {
         super("New Extension Point");
     }
@@ -80,30 +95,32 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 
 
     /**
-     * Get the single instance of the action.<p>
+     * <p>Get the single instance of the action.</p>
      *
-     * Since we are a singleton, this is the only way of accessing the
-     * instance, which is created if it does not exist.<p>
+     * <p>Since we are a singleton, this is the only way of accessing the
+     * instance, which is created if it does not exist.</p>
      *
      * @return The singleton instance.
      */
+
     public static ActionAddExtensionPoint singleton() {
 
         // Create the singleton if it does not exist, and then return it
 
-        if (singleton == null) {
-            singleton = new ActionAddExtensionPoint();
+        if (_singleton == null) {
+            _singleton = new ActionAddExtensionPoint();
         }
 
-        return singleton;
+        return _singleton;
     }
 
+
     /**
-     * Called if this action is invoked.<p>
+     * <p>Called if this action is invoked.</p>
      *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      * @param ae  The action that caused us to be invoked.
      */
+
     public void actionPerformed(ActionEvent ae) {
 
         // Find the target in the project browser. We can only do anything if
@@ -111,16 +128,15 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 
 	Object         target = TargetManager.getInstance().getModelTarget();
 
-	if (!(ModelFacade.isAUseCase(target))) {
+	if (!(org.argouml.model.ModelFacade.isAUseCase(target))) {
             return;
         }
 
         // Create a new extension point and make it the browser target. Then
         // invoke the superclass action method.
 
-	Object ep =
-            UmlFactory.getFactory().getUseCases()
-            	.buildExtensionPoint(target);
+	Object/*MExtensionPoint*/ ep =
+            UmlFactory.getFactory().getUseCases().buildExtensionPoint(/*(MUseCase)*/target);
 
         TargetManager.getInstance().setTarget(ep);
 	super.actionPerformed(ae);
@@ -128,17 +144,17 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 
 
     /**
-     * A predicate to determine if this action should be enabled.<p>
+     * <p>A predicate to determine if this action should be enabled.</p>
      *
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      * @return  <code>true</code> if the superclass believes we should be
      *          enabled and the target is a use case. <code>false</code>
      *          otherwise.
      */
-    public boolean shouldBeEnabled() {
-	Object target = TargetManager.getInstance().getModelTarget();
 
-	return super.shouldBeEnabled() && (ModelFacade.isAUseCase(target));
+    public boolean shouldBeEnabled() {
+	Object         target = TargetManager.getInstance().getModelTarget();
+
+	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade.isAUseCase(target));
     }
 
 } /* end class ActionAddExtensionPoint */

@@ -39,18 +39,18 @@ import org.argouml.model.uml.UmlFactory;
  */
 public class ActionBooleanTaggedValue extends UMLChangeAction {
 
-    private String tagName;
+    private String _tagName;
 
     /**
      * The constructor takes the name of the tagged value as a string, which
      * will hold boolean data.
      * 
-     * @param theTagName
+     * @param tagName
      *            the name of the taggedvalue containing boolean values.
      */
-    public ActionBooleanTaggedValue(String theTagName) {
+    public ActionBooleanTaggedValue(String tagName) {
         super("Set", NO_ICON);
-        tagName = theTagName;
+        _tagName = tagName;
     }
 
     /**
@@ -61,24 +61,20 @@ public class ActionBooleanTaggedValue extends UMLChangeAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        if (!(e.getSource() instanceof UMLCheckBox2)) {
-            return;
-        }
+        if (!(e.getSource() instanceof UMLCheckBox2)) return;
 
         UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
         Object obj = source.getTarget();
 
-        if (!ModelFacade.isAModelElement(obj)) {
-            return;
-        }
+        if (!org.argouml.model.ModelFacade.isAModelElement(obj)) return;
 
         boolean newState = source.isSelected();
 
-        Object taggedValue = ModelFacade.getTaggedValue(obj, tagName);
+        Object taggedValue = ModelFacade.getTaggedValue(obj, _tagName);
         if (taggedValue == null) {
             taggedValue = UmlFactory.getFactory().getExtensionMechanisms()
                     .createTaggedValue();
-            ModelFacade.setTag(taggedValue, tagName);
+            ModelFacade.setTag(taggedValue, _tagName);
             ModelFacade.addTaggedValue(obj, taggedValue);
         }
         if (newState) {

@@ -34,8 +34,8 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
  */
 public class TestActionAddAllClassesFromModel extends TestCase {
 
-    private ActionAddAllClassesFromModel action;
-    private UMLClassDiagram diagram;
+    private ActionAddAllClassesFromModel _action;
+    private UMLClassDiagram _diagram;
 
     /**
      * Constructor for TestActionAddAllClassesFromModel.
@@ -50,9 +50,9 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        diagram = new UMLClassDiagram();
-	action = new ActionAddAllClassesFromModel("Add all classes from model",
-						   diagram);
+        _diagram = new UMLClassDiagram();
+	_action = new ActionAddAllClassesFromModel("Add all classes from model",
+						   _diagram);
     }
     
     /**
@@ -61,9 +61,9 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      */
     public void testConstruction() {
         try {
-            ActionAddAllClassesFromModel a = 
+            ActionAddAllClassesFromModel action = 
 		new ActionAddAllClassesFromModel("Add all classes from model",
-						 diagram);
+						 _diagram);
         } catch (Exception noHead) {
         }
     }
@@ -79,7 +79,7 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testShouldBeEnabled() {
-	assertTrue(action.shouldBeEnabled());
+	assertTrue(_action.shouldBeEnabled());
     }
 
     /**
@@ -90,8 +90,8 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testShouldNotBeEnabled() {
-	action = new ActionAddAllClassesFromModel("Add all classes from model",
+	_action = new ActionAddAllClassesFromModel("Add all classes from model",
 						   new Object());
-	assertEquals(action.shouldBeEnabled(), false);
+	assertEquals(_action.shouldBeEnabled(), false);
     }
 }

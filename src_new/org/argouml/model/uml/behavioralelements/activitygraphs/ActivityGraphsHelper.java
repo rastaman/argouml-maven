@@ -24,18 +24,6 @@
 
 package org.argouml.model.uml.behavioralelements.activitygraphs;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-
-import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
-import ru.novosoft.uml.behavior.state_machines.MState;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * Helper class for UML BehavioralElements::ActivityGraphs Package.
  *
@@ -54,7 +42,7 @@ public class ActivityGraphsHelper {
     
     /** Singleton instance.
      */
-    private static ActivityGraphsHelper singleton =
+    private static ActivityGraphsHelper SINGLETON =
                    new ActivityGraphsHelper();
 
     
@@ -62,79 +50,7 @@ public class ActivityGraphsHelper {
      * @return the singleton instance of the helper
      */
     public static ActivityGraphsHelper getHelper() {
-        return singleton;
-    }
-    
-    /**
-     * Finds the Classifier to which a given ObjectFlowState 
-     * refers by its given name. This function may be used for when the user 
-     * types the name of a classifier in the diagram, in an ObjectFlowState.
-     * 
-     * @author MVW
-     * @param ofs the given ObjectFlowState
-     * @param s   the given String that represents 
-     *            the name of the "type" Classifier
-     * @return    the found classifier or null
-     */
-    public Object findClassifierByName(Object ofs, String s) {
-        if (!(ofs instanceof MObjectFlowState)) 
-            throw new IllegalArgumentException();
-        Object cs = ModelFacade.getContainer(ofs); // the composite state
-        Object sm = ModelFacade.getStateMachine(cs); // the statemachine
-        Object ns = ModelFacade.getContext(sm); // the namespace
-        if (!ModelFacade.isANamespace(ns)) 
-            ns = ModelFacade.getNamespace(ns);
-        if (ns != null) {
-            Collection c = ModelManagementHelper.getHelper()
-                .getAllModelElementsOfKind(ns, (Class) ModelFacade.CLASSIFIER);
-            Iterator i = c.iterator();
-            while (i.hasNext()) { 
-                Object classifier = i.next();
-                String cn = ((MModelElement) classifier).getName();
-                if (cn.equals(s))
-                    return classifier;
-            }
-        } else
-            throw new IllegalArgumentException();
-        return null;
-    }
-    
-    /**
-     * Find a state of a Classifier by its name.
-     * This routine is used to make the connection between 
-     * a ClassifierInState and its State.
-     * 
-     * @author mvw
-     * @param c the Classifier. If this is not a Classifier, then 
-     *          IllegalArgumentException is thrown.
-     * @param s the string that represents the name of 
-     *          the state we are looking for. If "" or null, then 
-     *          null is returned straight away.
-     * @return  the State (as Object) or null, if not found.
-     */
-    public Object findStateByName(Object c, String s) {
-        if (!(c instanceof MClassifier))
-            throw new IllegalArgumentException();
-        if ((s == "") || (s == null)) return null;
-        Collection allStatemachines = ModelFacade.getBehaviors(c);
-        Iterator i = allStatemachines.iterator();
-        while (i.hasNext()) {
-            Object statemachine = i.next();
-            Object top = StateMachinesHelper.getHelper().getTop(statemachine);
-            Collection allStates = 
-                StateMachinesHelper.getHelper().getAllSubStates(top);
-            Iterator ii = allStates.iterator();
-            while (ii.hasNext()) {
-                Object state = ii.next();
-                if (ModelFacade.isAState(state)) { 
-                    String statename = ((MState) state).getName();
-                    if (statename != null) 
-                        if (statename.equals(s))
-                            return state;
-                }
-            }
-        }
-        return null;
+        return SINGLETON;
     }
 }
 

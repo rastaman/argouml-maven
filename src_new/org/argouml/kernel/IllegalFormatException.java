@@ -41,7 +41,7 @@ public class IllegalFormatException extends Exception {
 
     /**
      * Constructor for IllegalFormatException.
-     * @param message the message to show
+     * @param message
      */
     public IllegalFormatException(String message) {
         super(message);

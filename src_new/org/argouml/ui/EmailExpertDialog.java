@@ -52,34 +52,33 @@ import org.argouml.swingext.LabelledLayout;
  * within argo.
  */
 public class EmailExpertDialog extends ArgoDialog {
-    private static final Logger LOG =
+    protected static Logger cat =
 	Logger.getLogger(EmailExpertDialog.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    
     /** This field sets the email of the recipient.
-     * As yet, the
-     * user can not access a list of contributors to a
+     * As yet this doesn not work, nor can the
+     * user access a list of contributors to a
      * particular argo project.
      */    
-    private JTextField emailTo;
-    private JTextField emailCc;
+    protected JTextField _to;
+    protected JTextField _cc;
     /** The subject line should be automatically
      * generated based on the class or the
      * diagram.
      */  
-    private JTextField emailSubject;
-    private JTextArea  emailBody;
-    
-    /**
-     * The target todo item.
+    protected JTextField _subject;
+    protected JTextArea  _body;
+    /** Does not work.
      */  
-    private ToDoItem target;
-
     /**
-     * The constructor.
-     */
+     */  
+    protected ToDoItem _target;
+
+    ////////////////////////////////////////////////////////////////
+    // constructors
+
     public EmailExpertDialog() {
         super(ProjectBrowser.getInstance(), 
             Translator.localize("dialog.title.send-email-to-expert"), 
@@ -90,10 +89,10 @@ public class EmailExpertDialog extends ArgoDialog {
         getOkButton().setMnemonic(
                 Translator.localize("button.send.mnemonic").charAt(0));
         
-        emailTo = new JTextField(30);
-        emailCc = new JTextField(30);
-        emailSubject = new JTextField(30);
-        emailBody = new JTextArea(10, 30);
+        _to = new JTextField(30);
+        _cc = new JTextField(30);
+        _subject = new JTextField(30);
+        _body = new JTextArea(10, 30);
     
         JLabel toLabel = new JLabel(Translator.localize("label.to"));
         JLabel ccLabel = new JLabel(Translator.localize("label.cc"));
@@ -101,52 +100,45 @@ public class EmailExpertDialog extends ArgoDialog {
     
         JPanel panel = new JPanel(new LabelledLayout(labelGap, componentGap));
 
-        toLabel.setLabelFor(emailTo);
+        toLabel.setLabelFor(_to);
         panel.add(toLabel);
-        panel.add(emailTo);
+        panel.add(_to);
 
-        ccLabel.setLabelFor(emailCc);
+        ccLabel.setLabelFor(_cc);
         panel.add(ccLabel);
-        panel.add(emailCc);
+        panel.add(_cc);
     
-        subjectLabel.setLabelFor(emailSubject);
+        subjectLabel.setLabelFor(_subject);
         panel.add(subjectLabel);
-        panel.add(emailSubject);
+        panel.add(_subject);
 
-        JScrollPane bodyScroller = new JScrollPane(emailBody);
+        JScrollPane bodyScroller = new JScrollPane(_body);
         bodyScroller.setPreferredSize(new Dimension(100, 50));
         panel.add(bodyScroller);
         
         setContent(panel);
     }
     
-    /**
-     * @param t the target object
-     */
-    protected void setTarget(Object t) {
-	target = (ToDoItem) t;
-	Poster p = target.getPoster();
-	emailTo.setText(p.getExpertEmail());
-	emailSubject.setText(target.getHeadline());
+    public void setTarget(Object t) {
+	_target = (ToDoItem) t;
+	Poster p = _target.getPoster();
+	_to.setText(p.getExpertEmail());
+	_subject.setText(_target.getHeadline());
     }
 
-    /**
-     * Event handler.
-     * 
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+    ////////////////////////////////////////////////////////////////
+    // event handlers
     public void actionPerformed(ActionEvent e) {
 	super.actionPerformed(e);   
 	if (e.getSource() == getOkButton()) {
 	    Designer dsgr = Designer.TheDesigner;
-	    String to = emailTo.getText();
-	    String cc = emailCc.getText();
-	    String subject = emailSubject.getText();
-	    LOG.debug("sending email!");
-	} else {
-	    if (e.getSource() == getCancelButton()) {
-	        LOG.debug("cancel");
-	    }
+	    String to = _to.getText();
+	    String cc = _cc.getText();
+	    String subject = _subject.getText();
+	    cat.debug("sending email!");
+	}
+	else if (e.getSource() == getCancelButton()) {
+	    cat.debug("cancel");
 	}
     }  
 } /* end class EmailExpertDialog */

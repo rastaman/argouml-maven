@@ -50,27 +50,25 @@ import org.argouml.application.helpers.SettingsTabHelper;
 public class SettingsTabEnvironment extends SettingsTabHelper
     implements SettingsTabPanel {
 
-    private String userDir;
+    public String USER_DIR;
     
-    private JTextField fieldArgoRoot;
-    private JTextField fieldArgoHome;
-    private JTextField fieldArgoExtDir;
-    private JTextField fieldJavaHome;
-    private JTextField fieldUserHome;
-    private JTextField fieldUserDir;
-    private JTextField fieldStartupDir;
+    JTextField _argoRoot;
+    JTextField _argoHome;
+    JTextField _argoExtDir;
+    JTextField _javaHome;
+    JTextField _userHome;
+    JTextField _userDir;
+    JTextField _startupDir;
     
-    private JButton userDirButton;
+    JButton _userDirButton;
 
-    /**
-     * The constructor.
-     * 
-     */
     public SettingsTabEnvironment() {
         super();
         setLayout(new BorderLayout());
 	JPanel top = new JPanel();
     	top.setLayout(new GridBagLayout()); 
+
+        // TODO: I18N
 
 	GridBagConstraints labelConstraints = new GridBagConstraints();
 	labelConstraints.anchor = GridBagConstraints.WEST;
@@ -95,96 +93,81 @@ public class SettingsTabEnvironment extends SettingsTabHelper
 	// This string is NOT to be translated! See issue 2381.
 	//top.add(createLabel("${argo.root}"), labelConstraints);
 	top.add(new JLabel("${argo.root}"), labelConstraints);
-	fieldArgoRoot = createTextField();
-	fieldArgoRoot.setEnabled(false);
-	top.add(fieldArgoRoot, fieldConstraints);
+	_argoRoot = createTextField();
+	_argoRoot.setEnabled(false);
+	top.add(_argoRoot, fieldConstraints);
 
 	labelConstraints.gridy = 1;
 	fieldConstraints.gridy = 1;
 	// This string is NOT to be translated! See issue 2381.
 	top.add(new JLabel("${argo.home}"), labelConstraints);
-        fieldArgoHome = createTextField();
-	fieldArgoHome.setEnabled(false);
-	top.add(fieldArgoHome, fieldConstraints);
+        _argoHome = createTextField();
+	_argoHome.setEnabled(false);
+	top.add(_argoHome, fieldConstraints);
 
 	labelConstraints.gridy = 2;
 	fieldConstraints.gridy = 2;
  	// This string is NOT to be translated! See issue 2381.
 	top.add(new JLabel("${argo.ext.dir}"), labelConstraints);
-        fieldArgoExtDir = createTextField();
-	fieldArgoExtDir.setEnabled(false);
-	top.add(fieldArgoExtDir, fieldConstraints);
+        _argoExtDir = createTextField();
+	_argoExtDir.setEnabled(false);
+	top.add(_argoExtDir, fieldConstraints);
 
 	labelConstraints.gridy = 3;
 	fieldConstraints.gridy = 3;
   	// This string is NOT to be translated! See issue 2381.
 	top.add(new JLabel("${java.home}"), labelConstraints);
-        fieldJavaHome = createTextField();
-	fieldJavaHome.setEnabled(false);
-	top.add(fieldJavaHome, fieldConstraints);
+        _javaHome = createTextField();
+	_javaHome.setEnabled(false);
+	top.add(_javaHome, fieldConstraints);
 
 	labelConstraints.gridy = 4;
 	fieldConstraints.gridy = 4;
   	// This string is NOT to be translated! See issue 2381.
 	top.add(new JLabel("${user.home}"), labelConstraints);
-        fieldUserHome = createTextField();
-	fieldUserHome.setEnabled(false);
-	top.add(fieldUserHome, fieldConstraints);
+        _userHome = createTextField();
+	_userHome.setEnabled(false);
+	top.add(_userHome, fieldConstraints);
 
 	labelConstraints.gridy = 5;
 	fieldConstraints.gridy = 5;
 	// This string is NOT to be translated! See issue 2381.
 	top.add(new JLabel("${user.dir}"), labelConstraints);
-        fieldUserDir = createTextField();
-	fieldUserDir.setEnabled(false);
-	top.add(fieldUserDir, fieldConstraints);
+        _userDir = createTextField();
+	_userDir.setEnabled(false);
+	top.add(_userDir, fieldConstraints);
 
 	labelConstraints.gridy = 6;
 	fieldConstraints.gridy = 6;
   	top.add(createLabel("label.startup-directory"), labelConstraints);
-        fieldStartupDir = createTextField();
-	fieldStartupDir.setEnabled(false);
-	top.add(fieldStartupDir, fieldConstraints);
+        _startupDir = createTextField();
+	_startupDir.setEnabled(false);
+	top.add(_startupDir, fieldConstraints);
 
 	add(top, BorderLayout.NORTH);
     }
 
-    /**
-     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabRefresh()
-     */
     public void handleSettingsTabRefresh() {
-        fieldArgoRoot.setText(Argo.getArgoRoot());
-        fieldArgoHome.setText(Argo.getArgoHome());
-        fieldArgoExtDir.setText(Argo.getArgoHome() + File.separator + "ext");
-        fieldJavaHome.setText(System.getProperty("java.home"));
-        fieldUserHome.setText(System.getProperty("user.home"));
-        fieldUserDir.setText(Configuration.getString(Argo.KEY_STARTUP_DIR,
+        _argoRoot.setText(Argo.getArgoRoot());
+        _argoHome.setText(Argo.getArgoHome());
+        _argoExtDir.setText(Argo.getArgoHome() + File.separator + "ext");
+        _javaHome.setText(System.getProperty("java.home"));
+        _userHome.setText(System.getProperty("user.home"));
+        _userDir.setText(Configuration.getString(Argo.KEY_STARTUP_DIR,
 		System.getProperty("user.dir")));
-        fieldStartupDir.setText(Argo.getDirectory());
+        _startupDir.setText(Argo.getDirectory());
     }
 
-    /**
-     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabSave()
-     */
     public void handleSettingsTabSave() {
-        Configuration.setString(Argo.KEY_STARTUP_DIR, fieldUserDir.getText());
+        Configuration.setString(Argo.KEY_STARTUP_DIR, _userDir.getText());
     }
 
-    /**
-     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabCancel()
-     */
     public void handleSettingsTabCancel() {
 	handleSettingsTabRefresh();
     }
 
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleName()
-     */
     public String getModuleName() { return "SettingsTabEnvironment"; }
 
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleDescription()
-     */
     public String getModuleDescription() {
 	return "Settings Tab for Environment";
     }
@@ -195,26 +178,16 @@ public class SettingsTabEnvironment extends SettingsTabHelper
      * This means the author of this extension to ArgoUML.
      * this information is not stored in the .argo xml
      * in zargo
-     *
-     * @see org.argouml.application.api.ArgoModule#getModuleAuthor()
-     */
+     */    
     public String getModuleAuthor() { return "ArgoUML Core"; }
 
     /** This should call on a global config file somewhere
      * .9.4 is the last version of argo
-     *
-     * @see org.argouml.application.api.ArgoModule#getModuleVersion()
-     */
+     */    
     public String getModuleVersion() { return ArgoVersion.getVersion(); }
 
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleKey()
-     */
     public String getModuleKey() { return "module.settings.environment"; }
 
-    /**
-     * @see org.argouml.application.api.SettingsTabPanel#getTabKey()
-     */
     public String getTabKey() { return "tab.environment"; }
 
 }

@@ -63,13 +63,13 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * {@link org.argouml.ui.explorer.rules.PerspectiveRule PerspectiveRules},
      * that determine the tree view.
      */
-    private Object rules[];
+    Object rules[];
 
     /**
      * a map used to resolve model elements to tree nodes when determining
      * what effect a model event will have on the tree.
      */
-    private Map modelElementMap;
+    Map modelElementMap;
 
     /**
      * the global order for siblings in the tree.
@@ -85,7 +85,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * A Runnable object that when executed does update some
      * currently pending nodes.
      */
-    private ExplorerUpdater nodeUpdater = new ExplorerUpdater();
+    ExplorerUpdater nodeUpdater = new ExplorerUpdater();
 
     /**
      * Help class to semi-lazily update nodes in the tree.
@@ -163,11 +163,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
 	}
     }
 
-    /** 
-     * Creates a new instance of ExplorerTreeModel. 
-     * 
-     * @param root an object to place at the root
-     */
+    /** Creates a new instance of ExplorerTreeModel */
     public ExplorerTreeModel(Object root) {
 	super(new DefaultMutableTreeNode());
 
@@ -183,8 +179,6 @@ public class ExplorerTreeModel extends DefaultTreeModel
     
     /**
      * a model element has changed in some way.
-     *
-     * @see org.argouml.ui.explorer.TreeModelUMLEventListener#modelElementChanged(java.lang.Object)
      */
     public void modelElementChanged(Object node) {
 	traverseModified((TreeNode) getRoot(), node);
@@ -192,8 +186,6 @@ public class ExplorerTreeModel extends DefaultTreeModel
     
     /**
      * a model element has been added to the model.
-     *
-     * @see org.argouml.ui.explorer.TreeModelUMLEventListener#modelElementAdded(java.lang.Object)
      */
     public void modelElementAdded(Object node) {
 	traverseModified((TreeNode) getRoot(), node);
@@ -217,8 +209,6 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
     /**
      * a model element has been removed from the model.
-     *
-     * @see org.argouml.ui.explorer.TreeModelUMLEventListener#modelElementRemoved(java.lang.Object)
      */
     public void modelElementRemoved(Object node) {
         Collection nodes = this.findNodes(node);
@@ -666,8 +656,6 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
     /**
      * Updates the explorer for new perspectives / orderings.
-     *
-     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
      */
     public void itemStateChanged(ItemEvent e) {
 	if (e.getSource() instanceof PerspectiveComboBox) {
@@ -677,13 +665,6 @@ public class ExplorerTreeModel extends DefaultTreeModel
 	}
 
 	structureChanged();
-    }
-
-    /**
-     * @return Returns the nodeUpdater.
-     */
-    ExplorerUpdater getNodeUpdater() {
-        return nodeUpdater;
     }
 }
 

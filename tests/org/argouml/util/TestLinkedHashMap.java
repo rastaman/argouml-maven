@@ -43,58 +43,46 @@ import java.util.Iterator;
  */
 public class TestLinkedHashMap extends TestCase {
     
-    /**
-     * The constructor.
-     * 
-     * @param testName the name of the test
-     */
     public TestLinkedHashMap(java.lang.String testName) {
         super(testName);
     }
     
-    /**
-     * @param args the arguments given on the commandline
-     */
     public static void main(java.lang.String[] args) {
         junit.textui.TestRunner.run(suite());
     }
 
-    private Object key0 = "key0";
-    private Object key1 = "keyskdhj11";
-    private Object key2 = null;
-    private Object key3 = "keyloiduh3";
-    private Object key4 = "keyakbdfe4";
-    private Object key5 = "keykdfhsd5";
-    private Object key6 = "keyoiudsf6";
-    private Object key7 = "keykjdfsf7";
-    private Object key8 = "keyoiufhs8";
-    private Object key9 = "key9";
+    Object key0 = "key0";
+    Object key1 = "keyskdhj11";
+    Object key2 = null;
+    Object key3 = "keyloiduh3";
+    Object key4 = "keyakbdfe4";
+    Object key5 = "keykdfhsd5";
+    Object key6 = "keyoiudsf6";
+    Object key7 = "keykjdfsf7";
+    Object key8 = "keyoiufhs8";
+    Object key9 = "key9";
 
-    private Object value0 = "value0";
-    private Object value1 = "valueakbjf1";
-    private Object value2 = null;
-    private Object value3 = "valueplsdf3";
-    private Object value4 = "valuejdsfg4";
-    private Object value5 = "valueperhd5";
-    private Object value6 = "valuemnbfd6";
-    private Object value7and8 = "value7and8";
-    private Object value9 = "value9";
+    Object value0 = "value0";
+    Object value1 = "valueakbjf1";
+    Object value2 = null;
+    Object value3 = "valueplsdf3";
+    Object value4 = "valuejdsfg4";
+    Object value5 = "valueperhd5";
+    Object value6 = "valuemnbfd6";
+    Object value7and8 = "value7and8";
+    Object value9 = "value9";
 
-    private Object[] keys = {key0, key1, key2, key3, key4, 
-                             key5, key6, key7, key8, key9};
+    Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key7, key8, key9};
 
-    private Object[] values = {
+    Object[] values = {
 	value0, value1, value2, value3, value4, value5, value6,
 	value7and8,  // One of the values is repeated
 	value7and8,   //  but with different keys
 	value9
     };
 
-    private LinkedHashMap linkedHashMap;
+    LinkedHashMap linkedHashMap;
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
     public void setUp() {
         linkedHashMap = new LinkedHashMap();
         for (int i = 0; i < 10; ++i) {
@@ -102,32 +90,26 @@ public class TestLinkedHashMap extends TestCase {
         }
     }
     
-    /**
-     * @return the testsuite
-     */
     public static Test suite() {
         TestSuite suite = new TestSuite(TestLinkedHashMap.class);
         
         return suite;
     }
 
-    /**
-     * Check that the set returned by keySet() contains all the items in the
-     * keys array.
-     */
     public void testEntrySet() {
         System.out.println("testEntrySet");
         
+        // Check that the set returned by keySet() contains all the items in the
+        // keys array
         Set entrySet = linkedHashMap.entrySet();
         assertEntrySetAgainstArrays(entrySet, keys, values);
     }
     
     
-    public void testEntrySetRemove() {
+    public void testEntrySet_Remove() {
         System.out.println("testEntrySet_Remove");
         
-        // What happens when we remove an item from 
-        // the values that appear more than once?
+        // What happens when we remove an item from the values that appear more than once?
         Collection valuesCollection = linkedHashMap.values();
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
@@ -137,21 +119,17 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, 
-                           key4, key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
 
 
-    /** Test of keySet method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. 
-     */
+    /** Test of keySet method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testKeySet() {
         System.out.println("testKeySet");
         
@@ -161,11 +139,10 @@ public class TestLinkedHashMap extends TestCase {
         assertIteratorAgainstArray(keysSet.iterator(), keys);
     }
     
-    public void testKeySetRemove() {
+    public void testKeySet_Remove() {
         System.out.println("testKeySet_Remove");
         
-        // What happens when we remove an item from the values 
-        // that appear more than once?
+        // What happens when we remove an item from the values that appear more than once?
         Collection valuesCollection = linkedHashMap.values();
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
@@ -174,22 +151,19 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, 
-                           key4, key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
 
-    public void testKeySetIteratorRemove() {
+    public void testKeySet_Iterator_Remove() {
         System.out.println("testValues_Iterator_Remove");
         
-        // What happens when we remove an item from the values 
-        // that appear more than once?
+        // What happens when we remove an item from the values that appear more than once?
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
         Collection valuesCollection = linkedHashMap.values();
@@ -206,38 +180,31 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, 
-                           key4, key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
 
-    /** Test of values method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. 
-     */
+    /** Test of values method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testValues() {
         System.out.println("testValues");
         
-        // Check that the collection returned by values() 
-        // contains all the items in the
+        // Check that the collection returned by values() contains all the items in the
         // values array
         Collection valuesCollection = linkedHashMap.values();
         assertIteratorAgainstArray(valuesCollection.iterator(), values);
     }
     
-    /** Test of values method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. 
-     */
-    public void testValuesRemove() {
+    /** Test of values method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    
+    public void testValues_Remove() {
         System.out.println("testValues_Remove");
         
-        // What happens when we remove an item from the values 
-        // that appear more than once?
+        // What happens when we remove an item from the values that appear more than once?
         Collection valuesCollection = linkedHashMap.values();
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
@@ -246,26 +213,22 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, key4, 
-                           key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
 
     
-    /** Test of values method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. 
-     */
-    public void testValuesIteratorRemove() {
+    /** Test of values method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    
+    public void testValues_Iterator_Remove() {
         System.out.println("testValues_Iterator_Remove");
         
-        // What happens when we remove an item from the values 
-        // that appear more than once?
+        // What happens when we remove an item from the values that appear more than once?
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
         Collection valuesCollection = linkedHashMap.values();
@@ -282,22 +245,19 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, 
-                           key4, key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
 
-    public void testValuesIteratorRemove2() {
+    public void testValues_Iterator_Remove2() {
         System.out.println("testValues_Iterator_Remove2");
         
-        // What happens when we remove an item 
-        // from the values that appear more than once
+        // What happens when we remove an item from the values that appear more than once
         // removing the first one found?
         Set keySet = linkedHashMap.keySet();
         Set entrySet = linkedHashMap.entrySet();
@@ -315,22 +275,19 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, key4, 
-                           key5, key6, key8, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key8, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4, 
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
     
-    public void testValuesIteratorRemove3() {
+    public void testValues_Iterator_Remove3() {
         System.out.println("testValues_Iterator_Remove2");
         
-        // What happens when we remove an item from the values 
-        // that appear more than once
+        // What happens when we remove an item from the values that appear more than once
         // removing the second instance?
         int count = 0;
         Set keySet = linkedHashMap.keySet();
@@ -352,22 +309,19 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(9, keySet.size());
         assertEquals(9, entrySet.size());
         
-        Object[] myKeys = {key0, key1, key2, key3, key4, 
-                           key5, key6, key7, key9};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key7, key9};
 
-        Object[] myValues = {value0, value1, value2, value3, value4,  
-                             value5, value6, value7and8, value9};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value9};
 
-        assertIteratorAgainstArray(keySet.iterator(), myKeys);
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
-        assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
+        assertIteratorAgainstArray(keySet.iterator(), keys);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
+        assertEntrySetAgainstArrays(entrySet, keys, values);
     }
     
-    public void trueValuesIteratorRemove4() {
+    public void trueValues_Iterator_Remove4() {
         System.out.println("testValues_Iterator_Remove4");
         
-        // What happens when we remove an item after 
-        // an iterator has been created?
+        // What happens when we remove an item after an iterator has been created?
         boolean exceptionCaught = false;
         
         Set keySet = linkedHashMap.keySet();
@@ -388,44 +342,36 @@ public class TestLinkedHashMap extends TestCase {
         assertTrue(exceptionCaught);
     }
 
-    /** Test of put method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. 
-     */
+    /** Test of put method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testPut() {
         System.out.println("testPut");
         
         assertNull(linkedHashMap.put("newkey", values[4]));
-        Object[] myKeys = {key0, key1, key2, key3, key4, key5, 
-                           key6, key7, key8, key9, "newkey"};
+        Object[] keys = {key0, key1, key2, key3, key4, key5, key6, key7, key8, key9, "newkey"};
         Set keysSet = linkedHashMap.keySet();
-        assertIteratorAgainstArray(keysSet.iterator(), myKeys);
+        assertIteratorAgainstArray(keysSet.iterator(), keys);
         
-        Object[] myValues = {value0, value1, value2, value3, value4, value5, 
-                             value6, value7and8, value7and8, value9, value4};
+        Object[] values = {value0, value1, value2, value3, value4, value5, value6, value7and8, value7and8, value9, value4};
         Collection valuesCollection = linkedHashMap.values();
-        assertIteratorAgainstArray(valuesCollection.iterator(), myValues);
+        assertIteratorAgainstArray(valuesCollection.iterator(), values);
     }
     
-    /** Test of putAll method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    /** Test of putAll method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testPutAll() {
         System.out.println("testPutAll");
     }
     
-    /** Test of remove method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    /** Test of remove method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testRemove() {
         System.out.println("testRemove");
     }
     
-    /** Test of clear method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    /** Test of clear method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testClear() {
         System.out.println("testClear");
     }
     
-    /** Test of clone method, 
-     * of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
+    /** Test of clone method, of class uk.co.jbob.collections.j2sdk1_4.LinkedHashMap. */
     public void testClone() {
         System.out.println("testClone");
     }
@@ -440,8 +386,7 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(array.length , count);
     }
     
-    public void assertEntrySetAgainstArrays(Set entrySet, Object[] keyArray, 
-            Object[] valueArray) {
+    public void assertEntrySetAgainstArrays(Set entrySet, Object[] keyArray, Object[] valueArray) {
         // Check that the set returned by keySet() contains all the items in the
         // keys array
         int count = 0;

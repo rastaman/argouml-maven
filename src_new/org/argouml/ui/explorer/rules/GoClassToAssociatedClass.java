@@ -28,25 +28,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
-/**
- * Rule for Class->Associated Class.
- *
- */
 public class GoClassToAssociatedClass extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-	return Translator.localize ("Tree", "misc.class.associated-class");
+	return "Class->Associated Class";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAClass(parent)) {
 	    return ModelFacade.getAssociatedClasses(parent);
@@ -54,9 +43,6 @@ public class GoClassToAssociatedClass extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAClass(parent)) {
 	    Set set = new HashSet();

@@ -60,7 +60,7 @@ public abstract class Dialog extends JDialog implements ActionListener {
     public static final int OK_CANCEL_HELP_OPTION     = 6;
     public static final int DEFAULT_OPTION            = CLOSE_OPTION;
     
-    //TODO: These should be overridden on ArgoDialog to populate from
+    //TODO These should be overridden on ArgoDialog to populate from
     //the config file
     protected int leftBorder = 10;
     protected int rightBorder = 10;
@@ -70,28 +70,24 @@ public abstract class Dialog extends JDialog implements ActionListener {
     protected int labelGap = 5;
     protected int buttonGap = 5;
     
-    private JButton okButton = null;
-    private JButton cancelButton = null;
-    private JButton closeButton = null;
-    private JButton yesButton = null;
-    private JButton noButton = null;
-    private JButton helpButton = null;
+    private JButton _okButton = null;
+    private JButton _cancelButton = null;
+    private JButton _closeButton = null;
+    private JButton _yesButton = null;
+    private JButton _noButton = null;
+    private JButton _helpButton = null;
     
-    private JPanel mainPanel;
-    private JComponent content;
-    private JPanel buttonPanel;
+    private JPanel _mainPanel;
+    private JComponent _content;
+    private JPanel _buttonPanel;
     
-    private int optionType;
+    private int _optionType;
 
     /**
      * Creates a new Dialog with no content component. The default set of
      * button(s) will be displayed. After creating the Dialog, call setContent()
      * to configure the dialog before calling show() to display it.
-     *
-     * @param owner the owning Frame
-     * @param title the title String for the dialog
-     * @param modal true if the dialog is modal
-     */
+     **/
     public Dialog(Frame owner, String title, boolean modal) {
         this(owner, title, DEFAULT_OPTION, modal);
     }
@@ -101,41 +97,35 @@ public abstract class Dialog extends JDialog implements ActionListener {
      * optionType to determine the set of available buttons.
      * After creating the Dialog, call setContent()
      * to configure the dialog before calling show() to display it.
-     *
-     * @param owner the owning Frame
-     * @param title the title String for the dialog
-     * @param theOptionType defines which buttons will be 
-     *                      available on the dialog
-     * @param modal true if the dialog is modal
-     */
-    public Dialog(Frame owner, String title, int theOptionType, boolean modal) {
+     **/
+    public Dialog(Frame owner, String title, int optionType, boolean modal) {
         super(owner, title, modal);
         
-        optionType = theOptionType;
+        _optionType = optionType;
         
         JButton[] buttons = createButtons();
 
         nameButtons();
 
-        content = null;      
+        _content = null;      
             
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(0, bottomBorder));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(topBorder,
+        _mainPanel = new JPanel();
+        _mainPanel.setLayout(new BorderLayout(0, bottomBorder));
+        _mainPanel.setBorder(BorderFactory.createEmptyBorder(topBorder,
 							     leftBorder,
 							     bottomBorder,
 							     rightBorder));
-        getContentPane().add(mainPanel);
+        getContentPane().add(_mainPanel);
 
-        buttonPanel = new JPanel(new SerialLayout(Horizontal.getInstance(),
+        _buttonPanel = new JPanel(new SerialLayout(Horizontal.getInstance(),
 						   SerialLayout.EAST, 
 						   SerialLayout.LEFTTORIGHT,
 						   SerialLayout.TOP,
 						   buttonGap));
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        _mainPanel.add(_buttonPanel, BorderLayout.SOUTH);
 
         for (int i = 0; i < buttons.length; ++i) {
-            buttonPanel.add(buttons[i]);
+            _buttonPanel.add(buttons[i]);
             buttons[i].addActionListener(this);
         }
 
@@ -148,7 +138,7 @@ public abstract class Dialog extends JDialog implements ActionListener {
      * @return  main component displayed in dialog
      **/
     public JComponent getContent() {
-        return content;
+        return _content;
     }
 
     /**
@@ -157,14 +147,14 @@ public abstract class Dialog extends JDialog implements ActionListener {
      * in subclass constructors, and calling a class's overridable methods in
      * its own constructor is not good practice.
      *
-     * @param theContent   main component to display in dialog
+     * @param content   main component to display in dialog
      **/
-    public final void setContent(JComponent theContent) {
-        if (content != null) {
-            mainPanel.remove(content);
+    public final void setContent(JComponent content) {
+        if (_content != null) {
+            _mainPanel.remove(_content);
         }
-        content = theContent;
-        mainPanel.add(content, BorderLayout.CENTER);
+        _content = content;
+        _mainPanel.add(_content, BorderLayout.CENTER);
         
         pack();
         centerOnParent();
@@ -177,7 +167,7 @@ public abstract class Dialog extends JDialog implements ActionListener {
      * @param button the button to add to the dialog.
      **/
     public void addButton(JButton button) {
-        buttonPanel.add(button);
+        _buttonPanel.add(button);
     }
     
     /**
@@ -188,63 +178,43 @@ public abstract class Dialog extends JDialog implements ActionListener {
      * @param index  index at which to insert new button (0 for first button)
      **/
     public void addButton(JButton button, int index) {
-        buttonPanel.add(button, index);
+        _buttonPanel.add(button, index);
     }    
     
-    /**
-     * @return the requested button
-     */
     protected JButton getOkButton() {
-        return okButton;
+        return _okButton;
     }
 
-    /**
-     * @return the requested button
-     */
     protected JButton getCancelButton() {
-        return cancelButton;
+        return _cancelButton;
     }
 
-    /**
-     * @return the requested button
-     */
     protected JButton getCloseButton() {
-        return closeButton;
+        return _closeButton;
     }
 
-    /**
-     * @return the requested button
-     */
     protected JButton getYesButton() {
-        return yesButton;
+        return _yesButton;
     }
 
-    /**
-     * @return the requested button
-     */
     protected JButton getNoButton() {
-        return noButton;
+        return _noButton;
     }
 
-    /**
-     * @return the requested button
-     */
     protected JButton getHelpButton() {
-        return helpButton;
+        return _helpButton;
     }
     
     /**
      * Default implementation simply closes the dialog when
      * any of the standard buttons is pressed except the Help button.
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+     **/
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == okButton
-            || e.getSource() == cancelButton
-            || e.getSource() == closeButton
-            || e.getSource() == yesButton
-            || e.getSource() == noButton) {
+        if (e.getSource() == _okButton
+            || e.getSource() == _cancelButton
+            || e.getSource() == _closeButton
+            || e.getSource() == _yesButton
+            || e.getSource() == _noButton) {
             hide();
             dispose();
         }
@@ -255,65 +225,65 @@ public abstract class Dialog extends JDialog implements ActionListener {
      **/
     private JButton[] createButtons() {
         JButton[] buttons;       
-        switch(optionType) {
+        switch(_optionType) {
 	case YES_NO_OPTION:
-	    yesButton = new JButton();
-	    noButton = new JButton();
+	    _yesButton = new JButton();
+	    _noButton = new JButton();
 	    buttons = new JButton[] {
-		yesButton, noButton 
+		_yesButton, _noButton 
 	    };
 	    break;
         
 	case YES_NO_HELP_OPTION:
-	    yesButton = new JButton();
-	    noButton = new JButton();
-	    helpButton = new JButton();
+	    _yesButton = new JButton();
+	    _noButton = new JButton();
+	    _helpButton = new JButton();
 	    buttons = new JButton[] {
-		yesButton, noButton, helpButton 
+		_yesButton, _noButton, _helpButton 
 	    };
 	    break;
         
 	case YES_NO_CANCEL_OPTION:
-	    yesButton = new JButton();
-	    noButton = new JButton();
-	    cancelButton = new JButton();
+	    _yesButton = new JButton();
+	    _noButton = new JButton();
+	    _cancelButton = new JButton();
 	    buttons = new JButton[] {
-		yesButton, noButton, cancelButton 
+		_yesButton, _noButton, _cancelButton 
 	    };
 	    break;
         
 	case YES_NO_CANCEL_HELP_OPTION:
-	    yesButton = new JButton();
-	    noButton = new JButton();
-	    cancelButton = new JButton();
-	    helpButton = new JButton();
+	    _yesButton = new JButton();
+	    _noButton = new JButton();
+	    _cancelButton = new JButton();
+	    _helpButton = new JButton();
 	    buttons = new JButton[] {
-		yesButton, noButton, cancelButton, helpButton 
+		_yesButton, _noButton, _cancelButton, _helpButton 
 	    };
 	    break;
         
 	case OK_CANCEL_OPTION:
-	    okButton = new JButton();
-	    cancelButton = new JButton();
+	    _okButton = new JButton();
+	    _cancelButton = new JButton();
 	    buttons = new JButton[] {
-		okButton, cancelButton 
+		_okButton, _cancelButton 
 	    };
 	    break;
         
 	case OK_CANCEL_HELP_OPTION:
-	    okButton = new JButton();
-	    cancelButton = new JButton();
-	    helpButton = new JButton();
+	    _okButton = new JButton();
+	    _cancelButton = new JButton();
+	    _helpButton = new JButton();
 	    buttons = new JButton[] {
-		okButton, cancelButton, helpButton 
+		_okButton, _cancelButton, _helpButton 
 	    };
 	    break;
                 
 	case CLOSE_OPTION:
 	default:
-	    closeButton = new JButton();
+	    _closeButton = new JButton();
 	    buttons = new JButton[] {
-		closeButton 
+		_closeButton 
 	    };
 	    break;
         }

@@ -43,10 +43,6 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
 //attr critic
 public class CrOppEndConflict extends CrUML {
     
-    /**
-     * The constructor.
-     * 
-     */
     public CrOppEndConflict() {
         setHeadline("Rename MAssociation Roles");
         addSupportedDecision(CrUML.decINHERITANCE);
@@ -56,10 +52,6 @@ public class CrOppEndConflict extends CrUML {
         addTrigger("associationEnd");
     }
     
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
         boolean problem = NO_PROBLEM;
         if (ModelFacade.isAClassifier(dm)) {

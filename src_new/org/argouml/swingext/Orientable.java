@@ -35,9 +35,5 @@ package org.argouml.swingext;
  * @author  Bob Tarling
  */
 public interface Orientable {
-    /**
-     * Set the orientation.
-     * @param orientation the given orientation
-     */
     public void setOrientation(Orientation orientation);
 }

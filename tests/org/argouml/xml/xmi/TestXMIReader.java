@@ -32,11 +32,8 @@ import java.net.MalformedURLException;
 import junit.framework.TestCase;
 
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectFilePersister;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.IllegalFormatException;
-import org.argouml.kernel.XmiFilePersister;
-import org.argouml.kernel.ZargoFilePersister;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
@@ -64,35 +61,26 @@ public class TestXMIReader extends TestCase {
      * not work since ArgoUML crashes on a classcastexception that is catched by
      * our dear friends of NSUML. However you can use it to test things quite
      * easily :)
-     *
-     * @throws IOException
-     * @throws MalformedURLException
-     * @throws IllegalFormatException
-     * @throws Exception
      */
     public void testReadReturnParameter()
-        throws IOException, 
-               MalformedURLException, 
-               IllegalFormatException,
-	           Exception {
-        // next statement should be in an ArgoTestCase or something,  
-        // is almost always needed
+	throws IOException, MalformedURLException, IllegalFormatException,
+	       Exception
+    {
+        // next statement should be in a ArgoTestCase or something, is allmost 
+        // allways needed
         Project p = ProjectManager.getManager().makeEmptyProject();
-        Object clazz = CoreFactory.getFactory().buildClass(p.getModel());
+        MClass clazz = CoreFactory.getFactory().buildClass(p.getModel());
         MOperation oper = CoreFactory.getFactory().buildOperation(clazz);
         ModelFacade.setType(oper.getParameter(0), p.findType("String"));
         File file = new File("test.zargo");
 
-        XmiFilePersister persister = new XmiFilePersister();
-      
-        p.preSave();
-        persister.save(p, file);
-        p.postSave();
+	p.save(true, file);
 
         p = null;
         p = ProjectManager.getManager().makeEmptyProject();
 
-        URL url = file.toURL();
-        persister.loadProject(url);
+	URL url = file.toURL();
+	ProjectManager.getManager().loadProject(url);
     }
+
 }

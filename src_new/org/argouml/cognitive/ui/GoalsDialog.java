@@ -48,50 +48,41 @@ import org.argouml.i18n.Translator;
 import org.argouml.ui.ArgoDialog;
 
 
-/**
- * The dialog to set the user's goals.
- *
- */
 public class GoalsDialog extends ArgoDialog implements ChangeListener
 {
     ////////////////////////////////////////////////////////////////
     // constants
-    private final int width = 320;
-    private final int height = 400;
+    private final int WIDTH = 320;
+    private final int HEIGHT = 400;
   
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private JPanel  mainPanel = new JPanel();
-    private Hashtable slidersToDecisions = new Hashtable();
-    private Hashtable slidersToDigits = new Hashtable();
+    private JPanel  _mainPanel = new JPanel();
+    private Hashtable _slidersToDecisions = new Hashtable();
+    private Hashtable _slidersToDigits = new Hashtable();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /**
-     * The constructor.
-     * 
-     * @param parent the parent frame
-     */
     public GoalsDialog(Frame parent) {
 	super(parent, Translator.localize("dialog.title.design-goals"), false);
 
 	initMainPanel();
 
-	JScrollPane scroll = new JScrollPane(mainPanel);
-	scroll.setPreferredSize(new Dimension(width, height));
+	JScrollPane scroll = new JScrollPane(_mainPanel);
+	scroll.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         
 	setContent(scroll);
     }
 
 
-    private void initMainPanel() {
+    public void initMainPanel() {
 	GoalModel gm = Designer.TheDesigner.getGoalModel();
 	Vector goals = gm.getGoals();
 
 	GridBagLayout gb = new GridBagLayout();
-	mainPanel.setLayout(gb);
-	mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+	_mainPanel.setLayout(gb);
+	_mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 	GridBagConstraints c = new GridBagConstraints();
 	c.fill = GridBagConstraints.BOTH;
@@ -145,9 +136,9 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener
 
 
 	c.gridy = 1;
-	Enumeration elems = goals.elements();
-	while (elems.hasMoreElements()) {
-	    Goal d = (Goal) elems.nextElement();
+	Enumeration enum = goals.elements();
+	while (enum.hasMoreElements()) {
+	    Goal d = (Goal) enum.nextElement();
 	    JLabel decLabel = new JLabel(d.getName());
 	    JLabel valueLabel = new JLabel("    " + d.getPriority());
 	    JSlider decSlide = new JSlider(SwingConstants.HORIZONTAL,
@@ -161,28 +152,28 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener
 	    decSlide.setSize(smallSize);
 	    decSlide.setPreferredSize(smallSize);
 
-	    slidersToDecisions.put(decSlide, d);
-	    slidersToDigits.put(decSlide, valueLabel);
+	    _slidersToDecisions.put(decSlide, d);
+	    _slidersToDigits.put(decSlide, valueLabel);
 
 	    c.gridx = 0;
 	    c.gridwidth = 1;
 	    c.weightx = 0.0;
 	    c.ipadx = 3;
 	    gb.setConstraints(decLabel, c);
-	    mainPanel.add(decLabel);
+	    _mainPanel.add(decLabel);
 
 	    c.gridx = 1;
 	    c.gridwidth = 1;
 	    c.weightx = 0.0;
 	    c.ipadx = 0;
 	    gb.setConstraints(valueLabel, c);
-	    mainPanel.add(valueLabel);
+	    _mainPanel.add(valueLabel);
 
 	    c.gridx = 2;
 	    c.gridwidth = 6;
 	    c.weightx = 1.0;
 	    gb.setConstraints(decSlide, c);
-	    mainPanel.add(decSlide);
+	    _mainPanel.add(decSlide);
 
 	    c.gridy++;
 	}
@@ -191,13 +182,10 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener
     ////////////////////////////////////////////////////////////////
     // event handlers
   
-    /**
-     * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-     */
     public void stateChanged(ChangeEvent ce) {
 	JSlider srcSlider = (JSlider) ce.getSource();
-	Goal d = (Goal) slidersToDecisions.get(srcSlider);
-	JLabel valLab = (JLabel) slidersToDigits.get(srcSlider);
+	Goal d = (Goal) _slidersToDecisions.get(srcSlider);
+	JLabel valLab = (JLabel) _slidersToDigits.get(srcSlider);
 	int pri = srcSlider.getValue();
 	d.setPriority(pri);
 	if (pri == 0) valLab.setText(Translator.localize("label.off"));

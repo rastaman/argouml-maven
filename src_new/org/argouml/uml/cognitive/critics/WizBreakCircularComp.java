@@ -49,43 +49,33 @@ import org.tigris.gef.util.VectorSet;
  *  to make non-aggregate. */
 
 public class WizBreakCircularComp extends Wizard {
-    private static final Logger LOG =
+    protected static Logger cat =
 	Logger.getLogger(WizBreakCircularComp.class);
 						      
-    private String instructions1 =
-	"Please select one of the following classes. " 
-	+ "In the next two steps a association of that class will " 
-	+ "be made non-aggregate.";
+    protected String _instructions1 =
+	"Please select one of the following classes. " +
+	"In the next two steps a association of that class will " +
+	"be made non-aggregate.";
 							  
-    private String instructions2 =
-	"Please select one of the following associations. " 
-	+ "In the next step that association will " 
-	+ "be made non-aggregate.";
+    protected String _instructions2 =
+	"Please select one of the following associations. " +
+	"In the next step that association will " +
+	"be made non-aggregate.";
 							      
-    private String instructions3 =
+    protected String _instructions3 =
 	"Are you sure you want to make this association non-aggregate?";
 								  
-    private WizStepChoice step1 = null;
-    private WizStepChoice step2 = null;
-    private WizStepConfirm step3 = null;
+    protected WizStepChoice _step1 = null;
+    protected WizStepChoice _step2 = null;
+    protected WizStepConfirm _step3 = null;
 									      
-    private Object selectedCls = null;
-    private Object selectedAsc = null;
+    protected Object _selectedCls = null;
+    protected Object _selectedAsc = null;
 
-    /**
-     * The constructor.
-     * 
-     */
     public WizBreakCircularComp() { }
 
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
     public int getNumSteps() { return 3; }
 
-    /**
-     * @return
-     */
     protected Vector getOptions1() {
 	Vector res = new Vector();
 	if (_item != null) {
@@ -100,30 +90,23 @@ public class WizBreakCircularComp extends Wizard {
 	return res;
     }
  
-    /**
-     * @return
-     */
     protected Vector getOptions2() {
 	Vector res = new Vector();
-	if (selectedCls != null) {
-	    Collection aes = ModelFacade.getAssociationEnds(selectedCls);
+	if (_selectedCls != null) {
+	    Collection aes = ModelFacade.getAssociationEnds(_selectedCls);
 	    int size = aes.size();
-	    Object fromType = selectedCls;
-	    String fromName = 
-	        GeneratorDisplay.Generate(ModelFacade.getName(fromType));
+	    Object fromType = _selectedCls;
+	    String fromName = GeneratorDisplay.Generate(ModelFacade.getName(fromType));
 	    for (Iterator iter = aes.iterator(); iter.hasNext();) {
 		Object fromEnd = /*(MAssociationEnd)*/ iter.next();
 		Object asc = ModelFacade.getAssociation(fromEnd);
 		Object toEnd = /*(MAssociationEnd)*/
 		    new ArrayList(ModelFacade.getConnections(asc)).get(0);
 		if (toEnd == fromEnd)
-		    toEnd = /*(MAssociationEnd)*/ 
-		        new ArrayList(ModelFacade.getConnections(asc)).get(1);
+		    toEnd = /*(MAssociationEnd)*/ new ArrayList(ModelFacade.getConnections(asc)).get(1);
 		Object toType = ModelFacade.getType(toEnd);
-		String ascName = 
-		    GeneratorDisplay.Generate(ModelFacade.getName(asc));
-		String toName = 
-		    GeneratorDisplay.Generate(ModelFacade.getName(toType));
+		String ascName = GeneratorDisplay.Generate(ModelFacade.getName(asc));
+		String toName = GeneratorDisplay.Generate(ModelFacade.getName(toType));
 		String s = ascName + " from " + fromName + " to " + toName;
 		res.addElement(s);
 	    }
@@ -131,103 +114,85 @@ public class WizBreakCircularComp extends Wizard {
 	return res;
     }
 
-    /** 
-     * Create a new panel for the given step.
-     * 
-     * @see org.argouml.kernel.Wizard#makePanel(int)
-     */
+    /** Create a new panel for the given step.  */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
 	case 1:
-	    if (step1 == null) {
-		step1 = new WizStepChoice(this, instructions1, getOptions1());
-		step1.setTarget(_item);
+	    if (_step1 == null) {
+		_step1 = new WizStepChoice(this, _instructions1, getOptions1());
+		_step1.setTarget(_item);
 	    }
-	    return step1;
+	    return _step1;
 	case 2:
-	    if (step2 == null) {
-		step2 = new WizStepChoice(this, instructions2, getOptions2());
-		step2.setTarget(_item);
+	    if (_step2 == null) {
+		_step2 = new WizStepChoice(this, _instructions2, getOptions2());
+		_step2.setTarget(_item);
 	    }
-	    return step2;
+	    return _step2;
 	case 3:
-	    if (step3 == null) {
-		step3 = new WizStepConfirm(this, instructions3);
+	    if (_step3 == null) {
+		_step3 = new WizStepConfirm(this, _instructions3);
 	    }
-	    return step3;
+	    return _step3;
 	}
 	return null;
     }
 
-    /** 
-     * Take action at the completion of a step. For example, when the
-     * given step is 0, do nothing; and when the given step is 1, do
-     * the first action.  Argo non-modal wizards should take action as
-     * they do along, as soon as possible, they should not wait until
-     * the final step. 
-     * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
-     */
+    /** Take action at the completion of a step. For example, when the
+     *  given step is 0, do nothing; and when the given step is 1, do
+     *  the first action.  Argo non-modal wizards should take action as
+     *  they do along, as soon as possible, they should not wait until
+     *  the final step. */
     public void doAction(int oldStep) {
-	LOG.debug("doAction " + oldStep);
+	cat.debug("doAction " + oldStep);
 	int choice = -1;
 	VectorSet offs = _item.getOffenders();
 	switch (oldStep) {
 	case 1:
-	    if (step1 != null) choice = step1.getSelectedIndex();
+	    if (_step1 != null) choice = _step1.getSelectedIndex();
 	    if (choice == -1) {
 		throw new Error("nothing selected, should not get here");
 	    }
-	    selectedCls = /*(MClassifier)*/ offs.elementAt(choice);
+	    _selectedCls = /*(MClassifier)*/ offs.elementAt(choice);
 	    break;
 	    ////////////////
 	case 2:
-	    if (step2 != null) choice = step2.getSelectedIndex();
+	    if (_step2 != null) choice = _step2.getSelectedIndex();
 	    if (choice == -1) {
 		throw new Error("nothing selected, should not get here");
 	    }
 	    Object ae = null;
-	    Iterator iter = 
-	        ModelFacade.getAssociationEnds(selectedCls).iterator();
+	    Iterator iter = ModelFacade.getAssociationEnds(_selectedCls).iterator();
 	    for (int n = 0; n <= choice; n++)
 		ae = /*(MAssociationEnd)*/ iter.next();
-	    selectedAsc = ModelFacade.getAssociation(ae);
+	    _selectedAsc = ModelFacade.getAssociation(ae);
 	    break;
 	    ////////////////
 	case 3:
-	    if (selectedAsc != null) {
-		List conns = 
-		    new ArrayList(ModelFacade.getConnections(selectedAsc));
+	    if (_selectedAsc != null) {
+		List conns = new ArrayList(ModelFacade.getConnections(_selectedAsc));
 		Object ae0 = /*(MAssociationEnd)*/ conns.get(0);
 		Object ae1 = /*(MAssociationEnd)*/ conns.get(1);
 		try {
-		    ModelFacade.setAggregation(ae0, 
-		                        ModelFacade.NONE_AGGREGATIONKIND);
-		    ModelFacade.setAggregation(ae1, 
-		                        ModelFacade.NONE_AGGREGATIONKIND);
+		    ModelFacade.setAggregation(ae0, ModelFacade.NONE_AGGREGATIONKIND);
+		    ModelFacade.setAggregation(ae1, ModelFacade.NONE_AGGREGATIONKIND);
 		}
 		catch (Exception pve) {
-		    LOG.error("could not set aggregation", pve);
+		    cat.error("could not set aggregation", pve);
 		}
 	    }
 	    break;
 	}
     }
  
-    /**
-     * @see org.argouml.kernel.Wizard#canGoNext()
-     */
     public boolean canGoNext() { return canFinish(); }
 
-    /**
-     * @see org.argouml.kernel.Wizard#canFinish()
-     */
     public boolean canFinish() {
 	if (!super.canFinish()) return false;
 	if (_step == 0) return true;
-	if (_step == 1 && step1 != null && step1.getSelectedIndex() != -1)
+	if (_step == 1 && _step1 != null && _step1.getSelectedIndex() != -1)
 	    return true;
-	if (_step == 2 && step2 != null && step2.getSelectedIndex() != -1)
+	if (_step == 2 && _step2 != null && _step2.getSelectedIndex() != -1)
 	    return true;
 	return false;
     }

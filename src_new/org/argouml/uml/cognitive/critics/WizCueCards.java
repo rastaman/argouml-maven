@@ -41,22 +41,13 @@ import org.tigris.gef.util.VectorSet;
 
 public class WizCueCards extends Wizard {
 
-    private Vector cues = new Vector();
-    private WizStepCue steps[] = null;
+    protected Vector _cues = new Vector();
+    protected WizStepCue _steps[] = null;
 
-    /**
-     * The constructor.
-     */
     public WizCueCards() { }
 
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
-    public int getNumSteps() { return cues.size(); }
+    public int getNumSteps() { return _cues.size(); }
 
-    /**
-     * @return the offending modelelement
-     */
     public Object getModelElement() {
 	if (_item != null) {
 	    VectorSet offs = _item.getOffenders();
@@ -68,39 +59,26 @@ public class WizCueCards extends Wizard {
 	return null;
     }
 
-    /**
-     * @param s
-     */
-    public void addCue(String s) { cues.addElement(s); }
+    public void addCue(String s) { _cues.addElement(s); }
 
-    /** 
-     * Create a new panel for the given step.
-     * Returns a newly created panel or null if there isn't that many steps.
+    /** Create a new panel for the given step.
      *
-     * @see org.argouml.kernel.Wizard#makePanel(int)
+     * @return a newly created panel or null if there isn't that many steps.
      */
     public JPanel makePanel(int newStep) {
 	if (newStep <= getNumSteps()) {
-	    String c = (String) cues.elementAt(newStep - 1);
+	    String c = (String) _cues.elementAt(newStep - 1);
 	    return new WizStepCue(this, c);
 	}
 	return null;
     }
 
-    /**
-     * This wizard never takes action, it just displays step by step
-     * instructions.
-     * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
-     */
+    /** This wizard never takes action, it just displays step by step
+     *  instructions. */
     public void doAction(int oldStep) {  }
 
-    /** 
-     * This wizard cannot automatically finish the task. It can only be
-     * finished when the user is on the last step. 
-     * 
-     * @see org.argouml.kernel.Wizard#canFinish()
-     */
+    /** This wizard cannot automatically finish the task. It can only be
+     *  finished when the user is on the last step. */
     public boolean canFinish() {
 	return _step == getNumSteps();
     }

@@ -36,7 +36,7 @@ class ShortAST extends CommonAST {
     // Instance vars.
 
     // The short buffer.
-    private short shortValue = 0;
+    private short _shortValue = 0;
 
     
     ///////////////
@@ -64,7 +64,7 @@ class ShortAST extends CommonAST {
      * @return The value of the short buffer.
      */
     final short getShortValue() {
-	return shortValue;
+	return _shortValue;
     }
 
     /**
@@ -73,6 +73,6 @@ class ShortAST extends CommonAST {
      * @param val The new value for the buffer.
      */
     final void setShortValue(short val) {
-        shortValue = val;
+        _shortValue = val;
     }
 }

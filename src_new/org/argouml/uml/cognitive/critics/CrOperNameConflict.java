@@ -47,8 +47,7 @@ import org.argouml.model.ModelFacade;
  * classes have a lot of operations. See the {@link #predicate2}
  * method for possible solutions.<p>
  *
- * @see <a 
- * href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.oper_name_conflict">
+ * @see <a href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.oper_name_conflict">
  * ArgoUML User Manual: Change Names or Signatures in &lt;artifact&gt;
  * </a>
  * @author jrobbins@ics.uci.edu
@@ -118,7 +117,7 @@ public class CrOperNameConflict extends CrUML {
             return NO_PROBLEM;
         }
 
-	Iterator ops = ModelFacade.getOperations(dm).iterator();
+	Iterator enum = ModelFacade.getOperations(dm).iterator();
 
         // Get all the features (giving up if there are none). Then loop
         // through finding all operations. Each time we find one, we compare
@@ -127,9 +126,9 @@ public class CrOperNameConflict extends CrUML {
 
         Vector operSeen = new Vector();
 
-        while (ops.hasNext()) {
+        while (enum.hasNext()) {
 
-	    Object op = ops.next();
+	    Object op = enum.next();
 
             // Compare against all earlier operations. If there's a match we've
             // found the problem
@@ -166,7 +165,7 @@ public class CrOperNameConflict extends CrUML {
      * @return       The {@link javax.swing.Icon Icon} to use.
      */
     public Icon getClarifier() {
-        return ClOperationCompartment.getTheInstance();
+        return ClOperationCompartment.TheInstance;
     }
 
 

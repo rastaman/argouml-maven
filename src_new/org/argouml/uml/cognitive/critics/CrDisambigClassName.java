@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -44,10 +44,6 @@ import org.argouml.model.ModelFacade;
 
 public class CrDisambigClassName extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrDisambigClassName() {
 	setHeadline("Choose a Unique Name for <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decNAMING);
@@ -56,10 +52,6 @@ public class CrDisambigClassName extends CrUML {
 	addTrigger("elementOwnership");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;
@@ -77,9 +69,9 @@ public class CrDisambigClassName extends CrUML {
 	    Object ns = ModelFacade.getPackage(imp);
 	    Collection siblings = ModelFacade.getOwnedElements(ns);
 	    if (siblings == null) return NO_PROBLEM;
-	    Iterator elems = siblings.iterator();
-	    while (elems.hasNext()) {
-		Object eo = /*(MElementImport)*/ elems.next();
+	    Iterator enum = siblings.iterator();
+	    while (enum.hasNext()) {
+		Object eo = /*(MElementImport)*/ enum.next();
 		Object me = /*(MModelElement)*/ ModelFacade.getModelElement(eo);
 		if (!(ModelFacade.isAClassifier(me))) continue;
 		if (me == cls) continue;
@@ -91,16 +83,10 @@ public class CrDisambigClassName extends CrUML {
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClClassName.getTheInstance();
+	return ClClassName.TheInstance;
     }
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
-     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
@@ -112,10 +98,6 @@ public class CrDisambigClassName extends CrUML {
 	    ((WizMEName) w).setMustEdit(true);
 	}
     }
-    
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 

@@ -41,10 +41,6 @@ import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 
-/**
- * Test the ParserDisplay.
- *
- */
 public class TestParserDisplay extends TestCase {
     private final String clro01 = "/ roname : int";
     private final String clro02 = " : int , double / roname2 ";
@@ -55,11 +51,6 @@ public class TestParserDisplay extends TestCase {
     private final String nclro03 = "/ roname roname2 : int ";
     private final String nclro04 = "/ roname : int double ";
 
-    /**
-     * The constructor.
-     * 
-     * @param str the name of the test
-     */
     public TestParserDisplay(String str) {
 	super(str);
     }

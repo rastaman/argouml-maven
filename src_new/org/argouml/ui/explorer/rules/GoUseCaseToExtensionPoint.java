@@ -28,29 +28,33 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Use Case->Extension Point.
  * Provides a rule to display extension points in the navigation pane.<p>
  *
  * @author  16 Apr 2002. Jeremy Bennett (mail@jeremybennett.com).
  */
 public class GoUseCaseToExtensionPoint extends AbstractPerspectiveRule {
     /**
+     * @deprecated by Linus Tolke as of 0.16. Will be private.
+     */
+    protected static Logger cat =
+	Logger.getLogger(GoUseCaseToExtensionPoint.class);
+
+    /**
      * <p>Give a name to this rule.</p>
      *
      * @return  The name of the rule ("<code>Use Case->Extension
      *          Point</code>"). 
      */
+
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.use-case.extension-point");
+        return Translator.localize ("Tree", "Use Case->Extension Point");
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) { 
         if (ModelFacade.isAUseCase(parent)) {
             return ModelFacade.getExtensionPoints(parent);
@@ -58,9 +62,6 @@ public class GoUseCaseToExtensionPoint extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAUseCase(parent)) {
 	    Set set = new HashSet();

@@ -42,8 +42,7 @@ public class ArrowButton extends javax.swing.JButton {
      *
      * @param direction the direction the arrow will point, this being
      * one of the constants NORTH, SOUTH, EAST, WEST
-     * @param border the border for the arrow
-     */
+     */    
     public ArrowButton(int direction, Border border) {
         this(direction);
         setBorder(border);
@@ -66,9 +65,6 @@ public class ArrowButton extends javax.swing.JButton {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
-    /**
-     * @see java.awt.Component#getPreferredSize()
-     */
     public Dimension getPreferredSize() {
         return new Dimension(getIcon().getIconWidth(),
 			     getIcon().getIconHeight());

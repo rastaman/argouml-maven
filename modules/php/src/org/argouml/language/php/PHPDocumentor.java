@@ -47,7 +47,7 @@ import org.argouml.model.ModelFacade;
 /**
  * This class generates DocBlocks in PHPDocumentor style
  *
- * @author Kai Schr&ouml;der
+ * @author Kai Schröder
  * @since  ArgoUML 0.15.5
  */
 public final class PHPDocumentor {
@@ -132,7 +132,7 @@ public final class PHPDocumentor {
     /**
      * Zero-argument class constructor
      *
-     * @throws Exception never thrown in this case
+     * @throws Exception
      */
     public PHPDocumentor() throws Exception {
         super();
@@ -145,8 +145,7 @@ public final class PHPDocumentor {
      *
      * @param modelElement The model element to document.
      *
-     * @throws Exception IllegalArgumentException if the modelElement
-     *                   is not a Classifier, Attribute or Operation
+     * @throws Exception
      */
     public PHPDocumentor(Object modelElement) throws Exception {
         super();
@@ -160,8 +159,7 @@ public final class PHPDocumentor {
      * @param modelElement The model element to document.
      * @param iType        The type of DocBlock to generate.
      *
-     * @throws Exception IllegalArgumentException if the modelElement 
-     *                   is of the wrong type
+     * @throws Exception
      */
     public PHPDocumentor(Object modelElement, int iType) throws Exception {
         super();
@@ -648,7 +646,7 @@ public final class PHPDocumentor {
     /**
      * This class is the base class for PHPDocumentor DocBlock's.
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class DocBlock {
@@ -1133,9 +1131,9 @@ public final class PHPDocumentor {
                 return setTag(TAG_TYPE_VERSION, sTagValue);
             } else {
                 /* tags we ignore for PHP */
-                if (!sTagName.equals("src_lang") 
-                    && !sTagName.equals("transient") 
-                    && !sTagName.equals("volatile")) {
+                if (!sTagName.equals("src_lang") &&
+                    !sTagName.equals("transient") &&
+                    !sTagName.equals("volatile")) {
                     throw new IllegalArgumentException("Can not set value '"
                             + sTagValue + "' for tag '" + sTagName + "'");
                 } else {
@@ -1150,7 +1148,7 @@ public final class PHPDocumentor {
     /**
      * This class is the abstract base class for all PHPDocumentor tags.
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private abstract class Tag {
@@ -1216,7 +1214,7 @@ public final class PHPDocumentor {
     /**
      * This class is the base class for simple PHPDocumentor tags.
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private abstract class SimpleTag extends Tag {
@@ -1265,7 +1263,7 @@ public final class PHPDocumentor {
     /**
      * This class is the base class for boolean PHPDocumentor tags.
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private abstract class BooleanTag extends Tag {
@@ -1351,7 +1349,7 @@ public final class PHPDocumentor {
      * This class is the final implementation of
      * PHPDocumentor's @access tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class AccessTag extends Tag {
@@ -1457,7 +1455,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @author tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class AuthorTag extends Tag {
@@ -1559,7 +1557,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @abstract tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.7
      */
     private final class AbstractTag extends BooleanTag {
@@ -1577,7 +1575,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @deprecated tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class DeprecatedTag extends BooleanTag {
@@ -1595,7 +1593,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @package tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class PackageTag extends SimpleTag {
@@ -1701,7 +1699,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @return tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class ReturnTag extends SimpleTag {
@@ -1719,7 +1717,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @see tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class SeeTag extends SimpleTag {
@@ -1737,7 +1735,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @since tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class SinceTag extends SimpleTag {
@@ -1755,7 +1753,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @static tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class StaticTag extends BooleanTag {
@@ -1773,7 +1771,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @package tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class SubpackageTag extends SimpleTag {
@@ -1791,7 +1789,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @var tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class VarTag extends SimpleTag {
@@ -1809,7 +1807,7 @@ public final class PHPDocumentor {
      * This class is the final implementation to generate
      * PHPDocumentor's @version tag
      *
-     * @author  Kai Schr&ouml;der, k.schroeder@php.net
+     * @author  Kai Schröder, k.schroeder@php.net
      * @since   ArgoUML 0.15.5
      */
     private final class VersionTag extends SimpleTag {

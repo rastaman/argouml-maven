@@ -55,10 +55,6 @@ public class CrAlreadyRealizes extends CrUML {
 	addTrigger("realization");
     }
 						  
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
 	if (ModelFacade.isAClass(dm)) {

@@ -38,41 +38,24 @@ import org.xml.sax.InputSource;
  *   This class implements the abstract class Profile for use in modelling
  *   Java language projects.  Eventually, this class may be replaced by
  *   a configurable profile.
- * 
- * TODO: (MVW) I see only little Java specific stuff here. 
- * Most of this should be moved to a ProfileUML.java file, which 
- * should be used by default.
- * 
- * TODO: (MVW) Document the use of "argo.defaultModel" in 
- * the argo.user.properties file.
  *
  *   @author Curt Arnold
  */
 public class ProfileJava extends Profile {
-    
-    private static final Logger LOG = Logger.getLogger(ProfileJava.class);
-    
-    private static ProfileJava instance = null;
-    
-    /**
-     * @return the instance of this class
-     */
+    protected static Logger cat = Logger.getLogger(ProfileJava.class);
+    private static ProfileJava _instance = null;
     public static ProfileJava getInstance() {
-	if (instance == null)
-	    instance = new ProfileJava();
-	return instance;
+	if (_instance == null)
+	    _instance = new ProfileJava();
+	return _instance;
     }
 
-    private Object/*MModel*/ defaultModel;
+    Object/*MModel*/ _defaultModel;
 
     private ProfileJava() {
 	getProfileModel();
     }
 
-    /**
-     * @see org.argouml.uml.Profile#formatElement(java.lang.Object, 
-     * java.lang.Object)
-     */
     public String formatElement(Object/*MModelElement*/ element,
 				Object namespace) {
 	String value = null;
@@ -105,11 +88,6 @@ public class ProfileJava extends Profile {
 	return value;
     }
 
-    /**
-     * @param assocEnd the given association end name
-     * @param namespace the namespace
-     * @return the default name for the given associationend
-     */
     protected String defaultAssocEndName(Object/*MAssociationEnd*/ assocEnd,
 					 Object namespace) {
 	String name = null;
@@ -137,13 +115,6 @@ public class ProfileJava extends Profile {
 	return name;
     }
 
-    /**
-     * This function creates a default association name from its ends.
-     * 
-     * @param assoc the given association
-     * @param ns the namespace
-     * @return the default association name
-     */
     protected String defaultAssocName(Object/*MAssociation*/ assoc,
 				      Object ns) {
 	StringBuffer buf = new StringBuffer();
@@ -157,11 +128,6 @@ public class ProfileJava extends Profile {
 	return buf.toString();
     }
 
-    /**
-     * @param gen the given Generalization
-     * @param namespace the namespace
-     * @return the default generalization name
-     */
     protected String defaultGeneralizationName(Object/*MGeneralization*/ gen,
 					       Object namespace) {
 	Object/*MGeneralizableElement*/ child = ModelFacade.getChild(gen);
@@ -173,11 +139,6 @@ public class ProfileJava extends Profile {
 	return buf.toString();
     }
 
-    /**
-     * @param element the given modelelement
-     * @param namespace the namespace
-     * @return a default name for this modelelement
-     */
     protected String defaultName(Object/*MModelElement*/ element,
 				 Object namespace) {
 	String name = null;
@@ -188,7 +149,7 @@ public class ProfileJava extends Profile {
 		name = defaultAssocName(element, namespace);
 	    }
 	    if (ModelFacade.isAGeneralization(element)) {
-		name = defaultGeneralizationName(element, namespace);
+		name = defaultGeneralizationName(element,namespace);
 	    }
 	}
 	if (name == null)
@@ -196,18 +157,10 @@ public class ProfileJava extends Profile {
 	return name;
     }
 
-    /**
-     * @return the path separator (currently ".")
-     */
     protected String getPathSeparator() {
 	return ".";
     }
 
-    /**
-     * @param buffer (out) the buffer that will contain the path build
-     * @param element the given modelelement
-     * @param pathSep the path separator character(s)
-     */
     private void buildPath(StringBuffer buffer,
 			   Object/*MModelElement*/ element,
 			   String pathSep) {
@@ -225,24 +178,14 @@ public class ProfileJava extends Profile {
 	}
     }
 
-    /**
-     * @return the string that separates elements
-     */
     protected String getElementSeparator() {
 	return ", ";
     }
 
-    /**
-     * @return the string that represents an empty collection
-     */
     protected String getEmptyCollection() {
 	return "[empty]";
     }
 
-    /**
-     * @see org.argouml.uml.Profile#formatCollection(java.util.Iterator, 
-     * java.lang.Object)
-     */
     public String formatCollection(Iterator iter, Object namespace) {
 	String value = null;
 	if (iter.hasNext()) {
@@ -267,23 +210,13 @@ public class ProfileJava extends Profile {
 	return value;
     }
 
-    /**
-     * @see org.argouml.uml.Profile#getProfileModel()
-     */
     public Object/*MModel*/ getProfileModel() {
-	if (defaultModel == null) {
-	    defaultModel = loadProfileModel();
+	if (_defaultModel == null) {
+	    _defaultModel = loadProfileModel();
 	}
-	return defaultModel;
+	return _defaultModel;
     }
 	
-    /**
-     * This function loads the model object containing the default model from 
-     * either property "argo.defaultModel", or "/org/argouml/default.xmi".
-     * May result in null, if the files are not found.
-     * 
-     * @return the model object
-     */
     public static Object/*MModel*/ loadProfileModel() {
 	//
 	//    get a file name for the default model
@@ -306,10 +239,10 @@ public class ProfileJava extends Profile {
 	    //   no file found, try looking in the resources
 	    //
 	    catch (FileNotFoundException ex) {
-		is = new Object().getClass()
-		    .getResourceAsStream(defaultModelFileName);
+		is =
+		    new Object().getClass().getResourceAsStream(defaultModelFileName);
 		if (is == null) {
-		    LOG.error(
+		    cat.error(
 			      "Value of property argo.defaultModel ("
 			      + defaultModelFileName
 			      + ") did not correspond to an available file.\n");
@@ -336,7 +269,7 @@ public class ProfileJava extends Profile {
 		    is = 
 			new FileInputStream(defaultModelFileName.substring(1));
 		} catch (FileNotFoundException ex) {
-		    LOG.error("Default model ("
+		    cat.error("Default model ("
 			      + defaultModelFileName
 			      + ") not found.\n", ex);
 						
@@ -365,7 +298,7 @@ public class ProfileJava extends Profile {
 
 		return model;
 	    } catch (Exception ex) {
-		LOG.error("Error reading " + defaultModelFileName + "\n", ex);
+		cat.error("Error reading " + defaultModelFileName + "\n", ex);
 	    }
 	}
 

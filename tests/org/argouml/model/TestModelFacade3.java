@@ -41,8 +41,8 @@ import java.util.ArrayList;
 public class TestModelFacade3 extends TestCase {
     
 
-    private Method methodToTest = null;
-    private ModelFacade facade = null;
+    private Method _methodToTest = null;
+    private ModelFacade _facade = null;
 
     /**
      * Creates one of the test cases.
@@ -51,7 +51,7 @@ public class TestModelFacade3 extends TestCase {
      */
     public TestModelFacade3(Method method) {
 	super(method.toString());
-	methodToTest = method;
+	_methodToTest = method;
     }
  
     public static Test suite() {
@@ -73,19 +73,16 @@ public class TestModelFacade3 extends TestCase {
      * @return true if method is not eligible for testing (e.g. helper methods)
      */
     protected boolean methodForbidden() {
-        return methodToTest.getName().equals("getClassNull")
-	    || methodToTest.getName().startsWith("isA")
-	    || methodToTest.getName().equals("create");
+        return _methodToTest.getName().equals("getClassNull")
+	    || _methodToTest.getName().startsWith("isA")
+	    || _methodToTest.getName().equals("create");
     }
     
-    /**
-     * @see junit.framework.TestCase#runTest()
-     */
     protected void runTest() throws Throwable {
         if (!methodForbidden()) {
-            if (methodToTest.getParameterTypes() != null
-		&& methodToTest.getParameterTypes().length >= 1
-		&& Modifier.isPublic(methodToTest.getModifiers()) ) {
+            if (_methodToTest.getParameterTypes() != null
+		&& _methodToTest.getParameterTypes().length >= 1
+		&& Modifier.isPublic(_methodToTest.getModifiers()) ) {
                 testOneOrMoreParameters();
             }
         }
@@ -97,8 +94,8 @@ public class TestModelFacade3 extends TestCase {
      * from the UML domain, such as a plain Object.
      */
     public void testOneOrMoreParameters() {
-        int nrParameters = methodToTest.getParameterTypes().length;
-        Class[] params = methodToTest.getParameterTypes();
+        int nrParameters = _methodToTest.getParameterTypes().length;
+        Class[] params = _methodToTest.getParameterTypes();
         Object[] foo = new Object[nrParameters ];
         
         // set up all parameters. Some methods are invoked with
@@ -130,7 +127,7 @@ public class TestModelFacade3 extends TestCase {
             catch (InstantiationException e) {
                 fail("Cannot create an instance of : "
 		     + params[i].getName() + ", required for "
-		     + methodToTest.getName() + ". Check if "
+		     + _methodToTest.getName() + ". Check if "
 		     + "test needs reworking.");
             }
             catch (IllegalAccessException il) {
@@ -140,19 +137,19 @@ public class TestModelFacade3 extends TestCase {
         
         
         try {
-            methodToTest.invoke(facade,  foo);
-            fail(methodToTest.getName()
+            _methodToTest.invoke(_facade,  foo);
+            fail(_methodToTest.getName()
 		 + " does not deliver an IllegalArgumentException");
         }
         catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof IllegalArgumentException) {
                 return;
             }
-            fail("Test failed for " + methodToTest.toString()
+            fail("Test failed for " + _methodToTest.toString()
 		 + " because of: " + e.getTargetException());
         }
         catch (Exception e) {
-            fail("Test failed for " + methodToTest.toString()
+            fail("Test failed for " + _methodToTest.toString()
 		 + " because of: " + e.toString());
         }
         
@@ -163,7 +160,7 @@ public class TestModelFacade3 extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        facade = new ModelFacade();
-        assertNotNull("Cound not get ModelFacade", facade);
+        _facade = new ModelFacade();
+        assertNotNull("Cound not get ModelFacade", _facade);
     }
 }

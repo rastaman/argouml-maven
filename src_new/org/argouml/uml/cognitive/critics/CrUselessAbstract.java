@@ -46,10 +46,6 @@ import org.tigris.gef.util.VectorSet;
  *  itself of any subclasses). */
 public class CrUselessAbstract extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrUselessAbstract() {
 	setHeadline("Define Concrete (Sub)Class");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -58,10 +54,6 @@ public class CrUselessAbstract extends CrUML {
 	addTrigger("isAbstract");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return false;
 	Object cls = /*(MClass)*/ dm;
@@ -69,9 +61,10 @@ public class CrUselessAbstract extends CrUML {
 	    return false;  // original class was not abstract
 	VectorSet derived =
 	    (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
-	Enumeration subclasses = derived.elements();
-	while (subclasses.hasMoreElements()) {
-	    Object c = /*(MClass)*/ subclasses.nextElement();
+	Enumeration enum = derived.elements();
+	Object c;
+	while (enum.hasMoreElements()) {
+	    c = /*(MClass)*/ enum.nextElement();
 	    if (!ModelFacade.isAbstract(c))
 		return false;  // found a concrete subclass
 	}
@@ -92,13 +85,12 @@ class ChildGenDerivedClasses implements ChildGenerator {
 	// TODO: it would be nice to have a EnumerationXform
 	// and a Functor object in uci.util
 	Vector specClasses = new Vector(specs.size());
-	Enumeration elems = specs.elements();
-	while (elems.hasMoreElements()) {
-	    Object g = /*(MGeneralization)*/ elems.nextElement();
+	Enumeration enum = specs.elements();
+	while (enum.hasMoreElements()) {
+	    Object g = /*(MGeneralization)*/ enum.nextElement();
 	    Object ge = ModelFacade.getChild(g);
-	    if (ge != null) {
-		specClasses.addElement(ge);
-	    }
+	    // assert: ge != null
+	    if (ge != null) specClasses.addElement(ge);
 	}
 	return specClasses.elements();
     }

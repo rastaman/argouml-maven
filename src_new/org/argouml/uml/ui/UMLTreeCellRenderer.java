@@ -106,7 +106,7 @@ public class UMLTreeCellRenderer extends DefaultTreeCellRenderer {
             JLabel lab = (JLabel) r;
             
             Icon icon =
-                ResourceLoaderWrapper.getInstance().lookupIcon(
+                ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(
                     value);
 
             if (icon != null)

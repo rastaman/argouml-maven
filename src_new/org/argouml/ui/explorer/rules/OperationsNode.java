@@ -36,34 +36,26 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class OperationsNode implements WeakExplorerNode {
-    private Object parent;
-    
-    /** 
-     * Creates a new instance of OperationsNode
-     * 
-     * @param p the parent
-     */
-    public OperationsNode(Object p) {
-        parent = p;
-    }
     
     /**
-     * @return the parent
+     * @deprecated by Linus Tolke as of 0.16. Will be private.
      */
+    Object parent;
+    
+    /** Creates a new instance of OperationsNode */
+    public OperationsNode(Object parent) {
+        
+        this.parent = parent;
+    }
+    
     public Object getParent() {
 	return parent;
     }
         
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
 	return "Operations";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.WeakExplorerNode#subsumes(java.lang.Object)
-     */
     public boolean subsumes(Object obj) {
 	return obj instanceof OperationsNode;
     }

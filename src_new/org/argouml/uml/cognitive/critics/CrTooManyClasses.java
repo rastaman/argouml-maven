@@ -34,16 +34,16 @@ import org.argouml.cognitive.Designer;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
 /** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). 
- */
+ *  itself of any subclasses). */
+
 public class CrTooManyClasses extends CrUML {
 
-    private static final String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public CrTooManyClasses() {
 	// TODO: <ocl>self.name</ocl> is not expanded for diagram objects
 	setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
@@ -51,10 +51,8 @@ public class CrTooManyClasses extends CrUML {
 	setArg(THRESHOLD, new Integer(20));
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLClassDiagram)) return NO_PROBLEM;
 	UMLClassDiagram d = (UMLClassDiagram) dm;
