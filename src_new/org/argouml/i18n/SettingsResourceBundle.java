@@ -1,4 +1,4 @@
-// Copyright (c) 1996-01 The Regents of the University of California. All
+// Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,11 +21,45 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.layout;
+package org.argouml.i18n;
+import java.util.*;
+import org.argouml.util.*;
+import javax.swing.*;
+import java.awt.event.*;
 
 
-/**
- * This is a layouted edge in a diagram.
+/** Default Resource bundle for internationalization of Settings dialog
+ *
+ *  @author Thierry Lach
+ *  @since 0.9.4
  */
-public interface LayoutedEdge {
+public class SettingsResourceBundle extends ListResourceBundle {
+
+   static final Object[][] _contents = {
+        {"button_ok", "OK" },  
+        {"button_cancel", "Cancel" },  
+        {"button_apply", "Apply" },  
+        {"tab_user", "User" },  
+        {"label_user", "Full Name:" },  
+        {"label_email", "Email Address:" },  
+        {"label_splash", "Show Splash Panel" },  
+        {"label_preload", "Preload Common Classes" },  
+        {"label_edem", "Report Usage Statistics" },  
+        {"label_profile", "Report on Load Times" },  
+        {"label_reload_recent", "Reload last saved project on startup" },  
+        {"label_startup_directory", "Startup Directory" },  
+        {"tab_preferences", "Preferences" },  
+        {"tab_environment", "Environment" },  
+
+	{"tab_fonts", "Fonts" },
+	{"label_fonts_normal", "Normal size" },
+	{"label_fonts_big", "Big size" },
+	{"label_fonts_huge", "Huge size" },
+
+        {"caption_settings", "Settings" },
+   };
+
+     public Object[][] getContents() {
+        return _contents;
+     }
 }

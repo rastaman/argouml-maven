@@ -81,11 +81,7 @@ public class PropPanelComponent extends PropPanelClassifier {
   }
 
     protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return (baseClass.equals("Component") || 
-                baseClass.equals("Classifier") ||
-                baseClass.equals("GeneralizableElement") ||
-                baseClass.equals("Namespace")
-                );
+        return baseClass.equals("Component");
     }
 
 

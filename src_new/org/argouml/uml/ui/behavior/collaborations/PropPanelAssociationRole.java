@@ -134,8 +134,7 @@ public class PropPanelAssociationRole extends PropPanelModelElement {
     }
 
     protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return (baseClass.equals("AssociationRole") || 
-                baseClass.equals("Association"));
+        return baseClass.equals("AssociationRole");
     }
 
 

@@ -72,7 +72,7 @@ implements PluggableNotation {
   public static GeneratorDisplay getInstance() { return SINGLETON; }
 
 
-  private GeneratorDisplay() {
+  public GeneratorDisplay() {
      super(Notation.makeNotation("Uml", "1.3",
                 Argo.lookupIconResource("UmlNotation")));
   }

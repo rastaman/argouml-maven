@@ -72,14 +72,14 @@ implements PropertyChangeListener {
   /** The name of the default Argo notation.  This notation is
    *  part of Argo core distribution.
    */
-    private static NotationName NOTATION_ARGO = null;
-    // org.argouml.uml.generator.GeneratorDisplay.getInstance().getNotation();
+  public static final NotationName NOTATION_ARGO =
+         org.argouml.uml.generator.GeneratorDisplay.getInstance().getNotation();
 
   /** The name of the Argo java-like notation.  This notation is
    *  part of Argo core distribution.
    */
-    // public static final NotationName NOTATION_JAVA =
-    // org.argouml.language.java.generator.GeneratorJava.getInstance().getNotation();
+  public static final NotationName NOTATION_JAVA =
+         org.argouml.language.java.generator.GeneratorJava.getInstance().getNotation();
 
   /** The configuration key for the preferred notation
    */
@@ -136,14 +136,18 @@ implements PropertyChangeListener {
   private static boolean reportedNotationProblem = false;
 
   public static NotationName getDefaultNotation() {
-      NotationName n = NotationNameImpl.findNotation(Configuration.getString(KEY_DEFAULT_NOTATION, NOTATION_ARGO.getConfigurationValue()));
-      // Needs-more-work:
-      // This is needed for the case when the default notation is 
-      // not loaded at this point.
-      // We need then to refetch the default notation from the configuration
-      // at a later stage.
-      if (n == null)
-	  n = NotationNameImpl.findNotation("Uml.1.3");
+      String notationString = Configuration.getString(KEY_DEFAULT_NOTATION,
+                                NOTATION_ARGO.getConfigurationValue());
+      NotationName n = NotationNameImpl.findNotation(notationString);
+      if (n == null) {
+          if (! reportedNotationProblem) {
+              reportedNotationProblem = true;
+              Argo.log.warn ("Previously set default notation '" +
+                    notationString + "' not found, using '" +
+		    NOTATION_ARGO.getConfigurationValue() + "'");
+          }
+	  n = NOTATION_ARGO;
+      }
       cat.debug ("default notation is " + n.getConfigurationValue());
       return n;
   }
@@ -529,39 +533,34 @@ implements PropertyChangeListener {
   ////////////////////////////////////////////////////////////////
   // Static workers for dealing with notation names.
 
-    /** List of available notations.
-     */
-    public static ArrayList getAvailableNotations() {
+   /** List of available notations.
+    */
+   public static ArrayList getAvailableNotations() {
 	return NotationNameImpl.getAvailableNotations();
-    }
+   }
 
   /** Create an unversioned notation name.
    */
   public static NotationName makeNotation(String k1) {
-      return makeNotation(k1, null, null);
+      return NotationNameImpl.makeNotation(k1, null, null);
   }
 
   /** Create a versioned notation name.
    */
   public static NotationName makeNotation(String k1, String k2) {
-      return makeNotation(k1, k2, null);
+      return NotationNameImpl.makeNotation(k1, k2, null);
   }
 
   /** Create an unversioned notation name with an icon.
    */
   public static NotationName makeNotation(String k1, Icon icon) {
-      return makeNotation(k1, null, icon);
+      return NotationNameImpl.makeNotation(k1, null, icon);
   }
 
   /** Create a versioned notation name with an icon.
    */
   public static NotationName makeNotation(String k1, String k2, Icon icon) {
-      NotationName nn = NotationNameImpl.makeNotation(k1, k2, icon);
-      // Making the first created notation the default.
-      if (NOTATION_ARGO == null) {
-	  NOTATION_ARGO = nn;
-      }
-      return nn;
+      return NotationNameImpl.makeNotation(k1, k2, icon);
   }
 
   public static boolean getUseGuillemots() {

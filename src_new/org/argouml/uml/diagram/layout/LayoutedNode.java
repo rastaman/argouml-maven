@@ -30,7 +30,7 @@ import java.awt.*;
  * This interface has to be implemented by layouted nodes in 
  * diagrams (i.e. classes or interfaces in a classdiagram).
  */
-public interface LayoutedNode extends LayoutedObject {
+public interface LayoutedNode {
 
     /**
      * Operation getSize returns the size of this node.
