@@ -108,12 +108,8 @@ public abstract class UMLDiagram
   	super();
     }
   
-    public UMLDiagram(Object ns) {
+    public UMLDiagram(MNamespace ns) {
         this();
-        
-        if(!ModelFacade.isANamespace(ns))
-            throw new IllegalArgumentException();
-        
         setNamespace(ns);
     }
   

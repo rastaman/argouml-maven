@@ -38,7 +38,6 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.model_management.MModel;
@@ -68,24 +67,16 @@ public class UmlHelper {
      *  to the UmlModelListener.  This is useful when the MModel is
      *  not created by the UmlFactory.
      */
-    public void addListenersToModel(Object model) {
-        
-        if(!ModelFacade.isAModel(model))
-            throw new IllegalArgumentException();
-        
+    public void addListenersToModel(MModel model) {
 	addListenersToMBase(model);
     }
 
     /** 
      *  Internal recursive worker to add UmlModelListener.
      */
-    protected void addListenersToMBase(Object mbase) {     
-        
-        if(!ModelFacade.isABase(mbase))
-            throw new IllegalArgumentException();
-        
+    protected void addListenersToMBase(MBase mbase) {     
 	UmlFactory.getFactory().addListenersToModelElement(mbase);
-	Collection elements = ((MBase)mbase).getModelElementContents();
+	Collection elements = mbase.getModelElementContents();
 	if (elements != null) {
 	    Iterator iterator = elements.iterator();
 	    while (iterator.hasNext()) {

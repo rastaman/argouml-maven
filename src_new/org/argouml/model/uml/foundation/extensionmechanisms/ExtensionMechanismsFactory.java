@@ -34,7 +34,6 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Factory to create UML classes for the UML
@@ -142,8 +141,8 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
             UmlFactory.getFactory().delete(stereo);
             return stereo2;
         } else {
-            ((MModel)ProjectManager.getManager()
-		.getCurrentProject().getModel()).addOwnedElement(stereo);
+            ProjectManager.getManager()
+		.getCurrentProject().getModel().addOwnedElement(stereo);
             if (m != null)
                 stereo.addExtendedElement(m);
             return stereo;

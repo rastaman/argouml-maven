@@ -26,12 +26,7 @@ package org.argouml.cognitive.critics.ui;
 
 import java.beans.*;
 import java.util.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -109,8 +104,6 @@ public class CriticBrowserDialog extends ArgoDialog
     protected JButton _goButton      = new JButton("Go");
 
     protected Critic _target;
-    
-    protected List   _critics;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -124,15 +117,8 @@ public class CriticBrowserDialog extends ArgoDialog
 	// Critics Table
     
 	JPanel tablePanel = new JPanel(new BorderLayout(5, 5));
-    
-    _critics = new ArrayList(Agency.getCritics());
-    Collections.sort(_critics, new Comparator() {
-        public int compare(Object o1, Object o2) {
-            return ((Critic) o1).getHeadline().compareTo(((Critic) o2).getHeadline());
-        }
-    });
 
-	_tableModel.setTarget(_critics);
+	_tableModel.setTarget(Agency.getCritics());
 	_table.setModel(_tableModel);
 	_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	_table.setShowVerticalLines(false);
@@ -363,7 +349,8 @@ public class CriticBrowserDialog extends ArgoDialog
 	}
 	cat.debug("got valueChanged from " + src);
 	int row = _table.getSelectedRow();
-	setTarget(_critics.get(row));
+	Vector critics = Agency.getCritics();
+	setTarget(critics.elementAt(row));
     }
 
     public void insertUpdate(DocumentEvent e) {
@@ -406,7 +393,7 @@ class TableModelCritics extends AbstractTableModel
 	Category.getInstance(TableModelCritics.class);
     ////////////////
     // instance varables
-    List _target;
+    Vector _target;
 
     ////////////////
     // constructor
@@ -414,7 +401,7 @@ class TableModelCritics extends AbstractTableModel
 
     ////////////////
     // accessors
-    public void setTarget(List critics) {
+    public void setTarget(Vector critics) {
 	_target = critics;
 	//fireTableStructureChanged();
     }
@@ -447,7 +434,7 @@ class TableModelCritics extends AbstractTableModel
     }
 
     public Object getValueAt(int row, int col) {
-	Critic cr = (Critic) _target.get(row);
+	Critic cr = (Critic) _target.elementAt(row);
 	if (col == 0) return cr.isEnabled() ? Boolean.TRUE : Boolean.FALSE;
 	if (col == 1) return cr.getHeadline();
 	if (col == 2) return cr.isActive() ? "no" : "yes";
@@ -459,7 +446,7 @@ class TableModelCritics extends AbstractTableModel
 	if (columnIndex != 0) return;
 	if (!(aValue instanceof Boolean)) return;
 	Boolean enable = (Boolean) aValue;
-	Critic cr = (Critic) _target.get(rowIndex);
+	Critic cr = (Critic) _target.elementAt(rowIndex);
 	cr.setEnabled(enable.booleanValue());
 	fireTableRowsUpdated(rowIndex, rowIndex); //TODO
     }

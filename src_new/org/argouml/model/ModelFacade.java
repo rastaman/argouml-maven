@@ -169,7 +169,7 @@ public class ModelFacade {
 
     public static final short GUARDED = 1;
     public static final short SEQUENTIAL = 2;
-
+    
     // Types of line
     public static final Object ABSTRACTION      = MAbstraction.class;
     public static final Object ASSOCIATION      = MAssociation.class;
@@ -205,7 +205,7 @@ public class ModelFacade {
     public static final Object STATEVERTEX        = MStateVertex.class;
     public static final Object PSEUDOSTATE        = MPseudostate.class;
     public static final Object USE_CASE           = MUseCase.class;
-
+    
     // Invisible model elements
     public static final Object ACTION             = MAction.class;
     public static final Object ACTION_EXPRESSION  = MActionExpression.class;
@@ -221,20 +221,20 @@ public class ModelFacade {
     public static final Object OPERATION          = MOperation.class;
 
     public static final Object VISIBILITYKIND     = MVisibilityKind.class;
-
+    
     public static final Object MODELELEMENT       = MModelElement.class;
 
-    public static final Object INITIAL_PSEUDOSTATEKIND =
+    public static final Object INITIAL_PSEUDOSTATEKIND = 
         MPseudostateKind.INITIAL;
-    public static final Object DEEPHISTORY_PSEUDOSTATEKIND =
+    public static final Object DEEPHISTORY_PSEUDOSTATEKIND = 
         MPseudostateKind.DEEP_HISTORY;
-    public static final Object SHALLOWHISTORY_PSEUDOSTATEKIND =
+    public static final Object SHALLOWHISTORY_PSEUDOSTATEKIND = 
         MPseudostateKind.SHALLOW_HISTORY;
-    public static final Object FORK_PSEUDOSTATEKIND =
+    public static final Object FORK_PSEUDOSTATEKIND = 
         MPseudostateKind.FORK;
-    public static final Object JOIN_PSEUDOSTATEKIND =
+    public static final Object JOIN_PSEUDOSTATEKIND = 
         MPseudostateKind.JOIN;
-    public static final Object BRANCH_PSEUDOSTATEKIND =
+    public static final Object BRANCH_PSEUDOSTATEKIND = 
         MPseudostateKind.BRANCH;
 
     public static final Object PUBLIC_VISIBILITYKIND =
@@ -261,7 +261,7 @@ public class ModelFacade {
     public static boolean isAAbstraction(Object handle) {
         return handle instanceof MAbstraction;
     }
-
+    
     /** Recognizer for Action.
      *
      * @param handle candidate
@@ -270,7 +270,7 @@ public class ModelFacade {
     public static boolean isAAction(Object handle) {
         return handle instanceof MAction;
     }
-
+    
     /**
      * Recognizer for ActionSequence
      * @param handle
@@ -279,7 +279,7 @@ public class ModelFacade {
     public static boolean isAActionSequence(Object handle) {
         return handle instanceof MActionSequence;
     }
-
+    
     /**
      * Recognizer for Action state
      * @param handle
@@ -315,7 +315,7 @@ public class ModelFacade {
     public static boolean isAAssociationRole(Object handle) {
         return handle instanceof MAssociationRole;
     }
-
+    
     /** Recognizer for Attribute
      *
      * @param handle candidate
@@ -361,15 +361,6 @@ public class ModelFacade {
         return handle instanceof MBase;
     }
 
-    /** Recognizer for BehavioralFeature
-     *
-     * @param handle candidate
-     * @returns true if handle is a BehavioralFeature
-     */
-    public static boolean isABehavioralFeature(Object handle) {
-        return handle instanceof MBehavioralFeature;
-    }
-
     /** Recognizer for Class
      *
      * @param handle candidate
@@ -397,14 +388,7 @@ public class ModelFacade {
         return handle instanceof MComment;
     }
 
-    /** Recognizer for Collaboration
-     *
-     * @param handle candidate
-     * @returns true if handle is a Collaboration
-     */
-    public static boolean isACollaboration(Object handle) {
-        return handle instanceof MCollaboration;
-    }
+    
 
     /** Recognizer for Component
      *
@@ -432,7 +416,7 @@ public class ModelFacade {
     public static boolean isADataType(Object handle) {
         return handle instanceof MDataType;
     }
-
+    
     /** Recognizer for DataValue
      *
      * @param handle candidate
@@ -459,7 +443,7 @@ public class ModelFacade {
     public static boolean isACompositeState(Object handle) {
         return handle instanceof MCompositeState;
     }
-
+    
     /** Recognizer for Expression
      *
      * @param handle candidate
@@ -486,7 +470,7 @@ public class ModelFacade {
     public static boolean isAExtensionPoint(Object handle) {
         return handle instanceof MExtensionPoint;
     }
-
+    
 
     /** Recognizer for Feature
      *
@@ -532,8 +516,8 @@ public class ModelFacade {
     public static boolean isAInstance(Object handle) {
         return handle instanceof MInstance;
     }
-
-
+    
+    
     /** Recognizer for Interaction
      *
      * @param handle candidate
@@ -560,7 +544,7 @@ public class ModelFacade {
     public static boolean isALink(Object handle) {
         return handle instanceof MLink;
     }
-
+    
     /** Recognizer for Message
      *
      * @param handle candidate
@@ -653,7 +637,7 @@ public class ModelFacade {
     public static boolean isAPermission(Object handle) {
         return handle instanceof MPermission;
     }
-
+    
     /** Recognizer for Package
      *
      * @param handle candidate
@@ -694,7 +678,7 @@ public class ModelFacade {
     public static boolean isAReception(Object handle) {
         return handle instanceof MReception;
     }
-
+    
     /** Recognizer for Returnaction
      *
      * @param handle candidate
@@ -703,7 +687,7 @@ public class ModelFacade {
     public static boolean isAReturnAction(Object handle) {
 	return handle instanceof MReturnAction;
     }
-
+    
     /** Recognizer for Relationship
      *
      * @param handle candidate
@@ -712,7 +696,7 @@ public class ModelFacade {
     public static boolean isARelationship(Object handle) {
         return handle instanceof MRelationship;
     }
-
+    
     /** Recognizer for SendAction
      *
      * @param handle candidate
@@ -739,7 +723,7 @@ public class ModelFacade {
     public static boolean isAStateMachine(Object handle) {
         return handle instanceof MStateMachine;
     }
-
+    
     /** Recognizer for stimulus
      *
      * @param handle candidate
@@ -776,6 +760,7 @@ public class ModelFacade {
         return handle instanceof MStructuralFeature;
     }
 
+
     /** Recognizer for TaggedValue
      *
      * @param handle candidate
@@ -784,7 +769,7 @@ public class ModelFacade {
     public static boolean isATaggedValue(Object handle) {
         return handle instanceof MTaggedValue;
     }
-
+    
 
     /** Recognizer for Transition
      *
@@ -811,12 +796,12 @@ public class ModelFacade {
      */
     public static boolean isChangeable(Object handle) {
         if (handle != null && handle instanceof MAttribute) {
-	    MChangeableKind changeability =
+	    MChangeableKind changeability = 
 		((MAttribute) handle).getChangeability();
             return MChangeableKind.CHANGEABLE.equals(changeability);
-
+						
         } else if (handle != null && handle instanceof MAssociationEnd) {
-	    MChangeableKind changeability =
+	    MChangeableKind changeability = 
 		((MAssociationEnd) handle).getChangeability();
             return MChangeableKind.CHANGEABLE.equals(changeability);
         }
@@ -955,7 +940,7 @@ public class ModelFacade {
     public static boolean isPrimaryObject(Object handle) {
         if (handle instanceof MModelElement) {
             MModelElement element = (MModelElement) handle;
-            for (Iterator i = element.getTaggedValues().iterator();
+            for (Iterator i = element.getTaggedValues().iterator(); 
 		 i.hasNext();
 		 ) {
                 MTaggedValue tv = (MTaggedValue) i.next();
@@ -1020,7 +1005,7 @@ public class ModelFacade {
      * @param handle candidate
      * @param stereotype a string that is the stereotype name.
      * @return true if handle is a singleton.
-     * @deprecated As of ArgoUml version 0.13.5, {@link
+     * @deprecated As of ArgoUml version 0.13.5, {@link 
      * org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper#isStereotype(Object,String,String)}
      *             should be used instead. Since this should only ever
      *             be used together with predefined stereotypes the
@@ -1138,7 +1123,7 @@ public class ModelFacade {
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * The baseclass of some stereotype
      * @param handle the stereotype
@@ -1148,18 +1133,6 @@ public class ModelFacade {
         if (isAStereotype(handle)) {
             return ((MStereotype) handle).getBaseClass();
         }
-        throw new IllegalArgumentException("Unrecognized object " + handle);
-    }
-
-    /** Get the bases of a classifier role.
-     *
-     *
-     * @param handle classifier role.
-     * @return the bases.
-     */
-    public static Collection getBases(Object handle) {
-        if (handle instanceof MClassifierRole)
-            return ((MClassifierRole) handle).getBases();
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
@@ -1213,7 +1186,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Gets the clients of some dependency
      * @param handle the dependency
@@ -1268,7 +1241,7 @@ public class ModelFacade {
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the effect of some transition
      * @param handle
@@ -1280,7 +1253,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the entry action to a state
      * @param handle
@@ -1292,7 +1265,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the exit action to a state
      * @param handle
@@ -1378,7 +1351,7 @@ public class ModelFacade {
         throw new IllegalArgumentException(
 					   "Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the interaction for some message
      * @param handle
@@ -1403,21 +1376,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
-    /**
-     * Get the model of some model element
-     *
-     * @param handle to the model element.
-     * @return model for the model element.
-     */
-    public static Object getModel(Object handle) {
-        if (isAModelElement(handle)) {
-            MModel m = ((MModelElement) handle).getModel();
-            return m;
-        }
-        throw new IllegalArgumentException("Unrecognized object " + handle);
-    }
-
+    
     /**
      * Returns the container for the given modelelement. The container is the
      * owner of the modelelement. It will be null for elements that don't have
@@ -1434,7 +1393,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the context of some given statemachine or the context
      * of some given interaction
@@ -1444,14 +1403,14 @@ public class ModelFacade {
      */
     public static Object getContext(Object handle) {
         if (isAStateMachine(handle)) {
-            return ((MStateMachine) handle).getContext();
+            return ((MStateMachine) handle).getContext();            
         }
         if (isAInteraction(handle)) {
             return ((MInteraction) handle).getContext();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /** Get the dispatchaction of a stimulus.
      *
      * @param handle the stimulus that we are getting the dispatchaction of
@@ -1463,7 +1422,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the do activity action of a state
      * @param handle
@@ -1472,18 +1431,6 @@ public class ModelFacade {
     public static Object getDoActivity(Object handle) {
         if (handle instanceof MState) {
             return ((MState) handle).getDoActivity();
-        }
-        throw new IllegalArgumentException("Unrecognized object " + handle);
-    }
-
-    /**
-     * Gets a location of some extension point.
-     * @param extension point
-     * @returns the location
-     */
-    public static String getLocation(Object handle) {
-        if (handle instanceof MExtensionPoint) {
-            return ((MExtensionPoint) handle).getLocation();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
@@ -1533,7 +1480,7 @@ public class ModelFacade {
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the opposite end of an association end.
      * @param handle
@@ -1606,12 +1553,10 @@ public class ModelFacade {
      * @param n parameter number
      * @return parameter.
      */
-    public static Object getParameter(Object handle, int n) {
-        if (handle instanceof MOperation)
-            return ((MOperation) handle).getParameter(n);
-
-        // ...
-        throw new IllegalArgumentException("Unrecognized object " + handle);
+    public static Object getParameter(Object op, int n) {
+        if (op == null || !(op instanceof MOperation))
+            return null;
+        return ((MOperation) op).getParameter(n);
     }
 
     /** Get the parameters of an operation.
@@ -1643,7 +1588,7 @@ public class ModelFacade {
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /** returns the receptions of a signal
      * @param handle
      * @return receptions
@@ -1666,7 +1611,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns the script belonging to a given action
      * @param handle
@@ -1730,7 +1675,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
      * Returns a collection with all subvertices belonging to the given
      * composite state.
@@ -1825,7 +1770,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /** This method returns all attributes of a given Classifier.
      *
      * @param classifier the classifier you want to have the attributes for
@@ -1892,12 +1837,12 @@ public class ModelFacade {
      * @return a collection of the suppliers
      */
     public static Collection getSuppliers(Object handle) {
-        if (handle instanceof MAbstraction) {
-            return ((MAbstraction) handle).getSuppliers();
-		}
-        throw new IllegalArgumentException("Unrecognized object " + handle);
+        if (handle == null || !(handle instanceof MAbstraction
+				))
+            return null;
+        return ((MAbstraction) handle).getSuppliers();
     }
-
+    
     /**
      * Returns the action belonging to some message
      * @param handle
@@ -1909,9 +1854,9 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+    
     /**
-     * Returns the actual arguments for a given action.
+     * Returns the actual arguments for a given action. 
      * @param handle
      * @return
      */
@@ -1994,7 +1939,7 @@ public class ModelFacade {
 
     /**
        Return the tagged values iterator of a model element.
-
+    
        @param element The tagged values belong to this.
        @return The tagged values iterator
     */
@@ -2007,7 +1952,7 @@ public class ModelFacade {
 
     /**
        Return the tagged value with a specific tag.
-
+    
        @param element The tagged value belongs to this.
        @param name The tag.
        @return The found tag, null if not found
@@ -2029,7 +1974,7 @@ public class ModelFacade {
 
     /**
        Return the key (tag) of some tagged value.
-
+    
        @param tv The tagged value.
        @return The found value, null if not found
     */
@@ -2042,7 +1987,7 @@ public class ModelFacade {
 
     /**
        Return the value of some tagged value.
-
+    
        @param tv The tagged value.
        @return The found value, null if not found
     */
@@ -2148,32 +2093,18 @@ public class ModelFacade {
             ((MAbstraction) a).addSupplier((MClassifier) cls);
         }
     }
-
+    
     /**
      * Adds a supplier dependency to some modelelement
-     * @param supplier the supplier
+     * @param supplier the supplier 
      * @param dependency the dependency
      */
     public static void addSupplierDependency(Object supplier,
-					     Object dependency)
+					     Object dependency) 
     {
         if (isAModelElement(supplier) && isADependency(dependency)) {
 	    MModelElement me = (MModelElement) supplier;
 	    me.addSupplierDependency((MDependency) dependency);
-        }
-    }
-
-    /** This method adds a classifier to a classifier role.
-     *
-     * @param classifier role
-     * @param classifier
-     */
-    public static void addBase(Object o, Object c) {
-        if (o != null
-            && c != null
-            && o instanceof MClassifierRole
-            && c instanceof MClassifier) {
-            ((MClassifierRole) o).addBase((MClassifier) c);
         }
     }
 
@@ -2191,7 +2122,7 @@ public class ModelFacade {
             ((MAbstraction) a).addClient((MClassifier) cls);
         }
     }
-
+    
     /**
      * Adds a client dependency to some modelelement
      * @param handle the modelelement
@@ -2201,24 +2132,10 @@ public class ModelFacade {
         if (handle != null
 	    && dependency != null
 	    && isAModelElement(handle)
-	    && isADependency(dependency))
+	    && isADependency(dependency)) 
 	{
 	    MModelElement me = (MModelElement) handle;
 	    me.addClientDependency((MDependency) dependency);
-        }
-    }
-
-    /** This method removes a classifier from a classifier role.
-     *
-     * @param classifier role
-     * @param classifier
-     */
-    public static void removeBase(Object o, Object c) {
-        if (o != null
-            && c != null
-            && o instanceof MClassifierRole
-            && c instanceof MClassifier) {
-            ((MClassifierRole) o).removeBase((MClassifier) c);
         }
     }
 
@@ -2249,34 +2166,17 @@ public class ModelFacade {
             ((MClassifier) cls).removeFeature((MFeature) feature);
         }
     }
-
-    /** This method removes an extension point from a use case.
-     *
-     * @param use case
-     * @param extension point
-     */
-    public static void removeExtensionPoint(Object uc, Object ep) {
-        if (uc != null
-            && ep != null
-            && uc instanceof MUseCase
-            && ep instanceof MExtensionPoint) {
-            ((MUseCase) uc).removeExtensionPoint((MExtensionPoint) ep);
-        }
-    }
-
+    
     /**
      * Removes a owned modelelement from a namespace
      * @param handle
      * @param value
      */
     public static void removeOwnedElement(Object handle, Object value) {
-        if (handle != null
-            && value != null
-            && handle instanceof MNamespace
-            && value instanceof MModelElement) {
+        if (handle instanceof MNamespace && value instanceof MModelElement) {
             ((MNamespace) handle).removeOwnedElement((MModelElement) value);
         }
-        throw new IllegalArgumentException("Unrecognized object " + handle
+        throw new IllegalArgumentException("Unrecognized object " + handle 
 					   + " or " + value);
     }
 
@@ -2301,22 +2201,10 @@ public class ModelFacade {
      */
     public static void setBody(Object m, Object expr) {
         if (m != null
+            && expr != null
             && m instanceof MMethod
-            && (expr == null || expr instanceof MProcedureExpression)) {
+            && expr instanceof MProcedureExpression) {
             ((MMethod) m).setBody((MProcedureExpression) expr);
-        }
-    }
-
-    /**
-     * Sets a default value of some parameter.
-     * @param parameter
-     * @param expression
-     */
-    public static void setDefaultValue(Object p, Object expr) {
-        if (p != null
-            && p instanceof MParameter
-            && (expr == null || expr instanceof MExpression)) {
-            ((MParameter) p).setDefaultValue((MExpression) expr);
         }
     }
 
@@ -2327,23 +2215,13 @@ public class ModelFacade {
      */
     public static void setInitialValue(Object at, Object expr) {
         if (at != null
+            && expr != null
             && at instanceof MAttribute
-            && (expr == null || expr instanceof MExpression)) {
+            && expr instanceof MExpression) {
             ((MAttribute) at).setInitialValue((MExpression) expr);
         }
     }
-
-    /**
-     * Sets a location of some extension point.
-     * @param extension point
-     * @param location
-     */
-    public static void setLocation(Object ep, String loc) {
-        if (ep != null && ep instanceof MExtensionPoint) {
-            ((MExtensionPoint) ep).setLocation(loc);
-        }
-    }
-
+    
     /**
      * <p>Sets the container that owns the handle. This must be set
      * correctly so every modelelement except the root model does have
@@ -2353,7 +2231,7 @@ public class ModelFacade {
      * be warned that the sequence of the if then else tree DOES
      * matter.</b> Most notabely, do not move the setNamespace method
      * any level up in the tree.</p>
-     *
+     * 
      * <p><b>Warning: the implementation does not support setting the
      * owner of actions.</b> Use setState1 etc. on action for that
      * goal</p>
@@ -2370,12 +2248,12 @@ public class ModelFacade {
     {
         if (handle == null || container == null) {
             throw new IllegalArgumentException("Neither the modelelement to be "
-					       + "added as the container "
+					       + "added as the container " 
 					       + "nor the one to which "
 					       + "the modelelement is added "
 					       + "may be null");
         }
-        if (handle instanceof MPartition
+        if (handle instanceof MPartition 
 	    && container instanceof MActivityGraph) {
             ((MPartition) handle).setActivityGraph((MActivityGraph) container);
         } else if (handle instanceof MConstraint
@@ -2438,36 +2316,28 @@ public class ModelFacade {
         }
     }
 
+
     /**
      * Sets a multiplicity of some attribute or association end.
      * @param attribute or association end
-     * @param multiplicity as string OR multiplicity object
+     * @param multiplicity as string
      */
-    public static void setMultiplicity(Object o, Object mult) {
+    public static void setMultiplicity(Object o, String mult) {
         // FIXME: the implementation is ugly, because I have no spec at hand...
         if (o == null)
             return;
-        if (mult != null && !(mult instanceof MMultiplicity)) {
-			if (mult instanceof String) {
-                mult = ("1_N".equals(mult)) ? MMultiplicity.M1_N : MMultiplicity.M1_1;
-			} else
-                return;
-		}
         if (o instanceof MAttribute) {
-            ((MAttribute) o).setMultiplicity((MMultiplicity)mult);
+            if ("1_N".equals(mult))
+		((MAttribute) o).setMultiplicity(MMultiplicity.M1_N);
+            else
+                ((MAttribute) o).setMultiplicity(MMultiplicity.M1_1);
+            // default
         } else if (o instanceof MAssociationEnd) {
-            ((MAssociationEnd) o).setMultiplicity((MMultiplicity)mult);
-        }
-    }
-
-    /**
-     * Sets the classifiers of some instance.
-     * @param instance
-     * @param classifier vector
-     */
-    public static void setClassifiers(Object o, Vector v) {
-        if (o != null && o instanceof MInstance) {
-            ((MInstance) o).setClassifiers(v);
+            if ("1_N".equals(mult))
+		((MAssociationEnd) o).setMultiplicity(MMultiplicity.M1_N);
+            else
+                ((MAssociationEnd) o).setMultiplicity(MMultiplicity.M1_1);
+            // default
         }
     }
 
@@ -2490,7 +2360,8 @@ public class ModelFacade {
     public static void setNamespace(Object o, Object ns) {
         if (o != null
             && o instanceof MModelElement
-            && (ns == null || ns instanceof MNamespace)) {
+            && ns != null
+            && ns instanceof MNamespace) {
             ((MModelElement) o).setNamespace((MNamespace) ns);
         }
     }
@@ -2568,75 +2439,70 @@ public class ModelFacade {
             }
         }
     }
-
+    
     /**
      * Sets the dispatch action for some stimulus
      * @param handle
      * @param value
      */
     public static void setDispatchAction(Object handle, Object value) {
-        if (handle instanceof MStimulus
-            && (value == null || value instanceof MAction)) {
+        if (handle instanceof MStimulus && value instanceof MAction) {
             ((MStimulus) handle).setDispatchAction((MAction) value);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object " + handle
 					   + " or " + value);
     }
-
+    
     /**
      * Sets the do activity of a state
      * @param handle
      * @param value
      */
     public static void setDoActivity(Object handle, Object value) {
-        if (handle instanceof MState
-            && (value == null || value instanceof MAction)) {
+        if (handle instanceof MState && value instanceof MAction) {
             ((MState) handle).setDoActivity((MAction) value);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object " + handle
 					   + " or " + value);
     }
-
+    
     /**
      * Sets the effect of some transition
      * @param handle
      * @param value
      */
     public static void setEffect(Object handle, Object value) {
-        if (handle instanceof MTransition
-            && (value == null || value instanceof MAction)) {
+        if (handle instanceof MTransition && value instanceof MAction) {
             ((MTransition) handle).setEffect((MAction) value);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object " + handle
 					   + " or " + value);
     }
-
+    
     /**
      * Sets the entry action of some state
      * @param handle
      * @param value
      */
     public static void setEntry(Object handle, Object value) {
-        if (handle instanceof MState
-            && (value == null || value instanceof MAction)) {
+        if (handle instanceof MState && value instanceof MAction) {
             ((MState) handle).setEntry((MAction) value);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object " + handle
 					   + " or " + value);
     }
-
+    
     /**
      * Sets the exit action of some state
      * @param handle
      * @param value
      */
     public static void setExit(Object handle, Object value) {
-        if (handle instanceof MState
-            && (value == null || value instanceof MAction)) {
+        if (handle instanceof MState && value instanceof MAction) {
             ((MState) handle).setExit((MAction) value);
             return;
         }
@@ -2666,7 +2532,7 @@ public class ModelFacade {
 		ae.setChangeability(MChangeableKind.FROZEN);
         }
     }
-
+    
 
     /**
      * Sets if of some classifier is abstract.
@@ -2681,22 +2547,21 @@ public class ModelFacade {
 		((MOperation) o).setAbstract(flag);
         }
     }
-
+    
     /**
      * Sets the action to a message
      * @param message
      * @param action
      */
     public static void setAction(Object message, Object action) {
-        if (message instanceof MMessage
-            && (action == null || action instanceof MAction)) {
+        if (message instanceof MMessage && action instanceof MAction) {
             ((MMessage) message).setAction((MAction) action);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object " + message
 					   + " or " + action);
     }
-
+    
     /**
      * Sets the asynchronous property of an action
      * @param handle the action
@@ -2743,26 +2608,6 @@ public class ModelFacade {
     }
 
     /**
-     * Set some parameters kind to 'in/out'.
-     * @param parameter
-     */
-    public static void setKindToInOut(Object p) {
-        if (p != null && p instanceof MParameter) {
-            ((MParameter) p).setKind(MParameterDirectionKind.INOUT);
-        }
-    }
-
-    /**
-     * Set some parameters kind to 'out'.
-     * @param parameter
-     */
-    public static void setKindToOut(Object p) {
-        if (p != null && p instanceof MParameter) {
-            ((MParameter) p).setKind(MParameterDirectionKind.OUT);
-        }
-    }
-
-    /**
      * Set some parameters kind to 'return'.
      * @param parameter
      */
@@ -2778,7 +2623,7 @@ public class ModelFacade {
      * @param type
      */
     public static void setType(Object p, Object cls) {
-        if (p != null && (cls == null || cls instanceof MClassifier)) {
+        if (p != null && cls != null && cls instanceof MClassifier) {
             if (p instanceof MParameter)
 		((MParameter) p).setType((MClassifier) cls);
             else if (p instanceof MAssociationEnd)
@@ -2821,15 +2666,15 @@ public class ModelFacade {
      * @param stereo stereotype
      */
     public static void setStereotype(Object m, Object stereo) {
-        if (m != null && m instanceof MModelElement) {
-            MModelElement me = (MModelElement) m;
+        if (m instanceof MModelElement) {
+	    MModelElement me = (MModelElement) m;
             if (stereo != null
                 && stereo instanceof MStereotype
-                && me.getModel() != ((MStereotype) stereo).getModel()) {
+                && me.getModel() != ((MStereotype) stereo).getModel()) 
+	    {
                 ((MStereotype) stereo).setNamespace(me.getModel());
             }
-            if (stereo == null || stereo instanceof MStereotype)
-                me.setStereotype((MStereotype) stereo);
+            me.setStereotype((MStereotype) stereo);
         }
     }
 
@@ -2847,7 +2692,7 @@ public class ModelFacade {
         }
     }
 
-    /** getUMLClassName returns the name of the UML Model class, e.g. it
+    /** getUMLClassName returns the name of the UML Model class, e.g. it 
      *  it will return Class for an object of type MClass.
      * @param handle MBase
      * @return classname of modelelement
@@ -2869,7 +2714,7 @@ public class ModelFacade {
     private static Iterator emptyIterator() {
         return Collections.EMPTY_SET.iterator();
     }
-
+    
     private static Collection emptyCollection() {
         return Collections.EMPTY_LIST;
     }

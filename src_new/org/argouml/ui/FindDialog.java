@@ -77,7 +77,7 @@ public class FindDialog extends ArgoDialog
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    protected JButton     _search     = new JButton("Find");
+    protected JButton     _search     = new JButton("Search");
     protected JButton     _clearTabs  = new JButton("Clear Tabs");
     protected JTabbedPane _tabs       = new JTabbedPane();
     protected JPanel      _nameLocTab = new JPanel();
@@ -108,7 +108,7 @@ public class FindDialog extends ArgoDialog
     }
     
     public FindDialog() {
-        super(ProjectBrowser.getInstance(), "Find", ArgoDialog.OK_CANCEL_OPTION, false);
+        super(ProjectBrowser.getInstance(), "Search", false);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -162,8 +162,6 @@ public class FindDialog extends ArgoDialog
         //setSize(new Dimension(480, 550));
         
         setContent(mainPanel);
-        
-        getOkButton().setEnabled(false);
     }
 
     public void initNameLocTab() {
@@ -184,7 +182,7 @@ public class FindDialog extends ArgoDialog
         JLabel elementNameLabel = new JLabel("Element Name:");
         JLabel diagramNameLabel = new JLabel("In Diagram:");
         JLabel typeLabel = new JLabel("Element Type:");
-        JLabel locLabel = new JLabel("Find In:");
+        JLabel locLabel = new JLabel("Search In:");
 
         _location.addItem("Entire Project");
 
@@ -272,7 +270,7 @@ public class FindDialog extends ArgoDialog
         s =
             "Please follow these steps to find model elements:\n\n" +
             "1. Enter search information in the tabs at the top of this window.\n\n" +
-            "2. Press the \"Find\" button.  This will produce a new tab.\n\n" +
+            "2. Press the \"Search\" button.  This will produce a new tab.\n\n" +
             "3. The top half of each result tab lists each results.\n" +
             "   + Single clicking on a result shows more information about it,\n" +
             "     including a list of related objects.\n" +
@@ -321,27 +319,12 @@ public class FindDialog extends ArgoDialog
 
     }
 
-    protected void nameButtons() {
-        super.nameButtons();
-        nameButton(getOkButton(), "button.go-to-selection");
-        nameButton(getCancelButton(), "button.close");
-    }
-    
     ////////////////////////////////////////////////////////////////
     // event handlers
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == _search) {
-            doSearch();
-        } 
-        else if (e.getSource() == _clearTabs) {
-            doClearTabs();
-        } 
-        else if (e.getSource() == getOkButton()) {
-            doGoToSelection();
-        }
-        else {
-            super.actionPerformed(e);
-        }
+        super.actionPerformed(e);
+        if (e.getSource() == _search) doSearch();
+        if (e.getSource() == _clearTabs) doClearTabs();
         //     if (e.getSource() == _spawn) doSpawn();
         //     if (e.getSource() == _go) doGo();
         //     if (e.getSource() == _close) doClose();
@@ -371,7 +354,7 @@ public class FindDialog extends ArgoDialog
         String typeName = _type.getSelectedItem().toString();
         if (!typeName.equals("Any Type")) name += " " + typeName;
         if (name.length() == 0)
-            name = "Find" + (nextResultNum++);
+            name = "Search" + (nextResultNum++);
         if (name.length() > 15)
             name = name.substring(0, 12) + "...";
 
@@ -396,7 +379,6 @@ public class FindDialog extends ArgoDialog
         _resultTabs.addElement(newResults);
         _results.addTab(name, newResults);
         _clearTabs.setEnabled(true);
-        getOkButton().setEnabled(true);
         _results.setSelectedComponent(newResults);
         _location.addItem("In Tab: " + name);
         invalidate();
@@ -404,7 +386,6 @@ public class FindDialog extends ArgoDialog
         validate();
         newResults.run();
         newResults.requestFocus();
-        newResults.selectResult(0);
     }
 
     public void doClearTabs() {
@@ -413,7 +394,6 @@ public class FindDialog extends ArgoDialog
             _results.remove((Component) _resultTabs.elementAt(i));
         _resultTabs.removeAllElements();
         _clearTabs.setEnabled(false);
-        getOkButton().setEnabled(false);
         doResetFields(false);
     }
 
@@ -432,12 +412,6 @@ public class FindDialog extends ArgoDialog
 
     public void doResetFields() {
         doResetFields(true);
-    }
-    
-    public void doGoToSelection() {
-        if (_results.getSelectedComponent() instanceof TabResults) {
-            ((TabResults) _results.getSelectedComponent()).doDoubleClick();
-        }
     }
   
     //   public void doSpawn() { }

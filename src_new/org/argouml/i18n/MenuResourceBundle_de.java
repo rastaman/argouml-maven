@@ -1,5 +1,4 @@
-// $Id$
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -83,17 +82,17 @@ public class MenuResourceBundle_de extends ListResourceBundle {
         {"Align", "Ausrichten" },
         {"Distribute", "Verteilen" },
         {"Reorder", "Neu anordnen" },
-        {"Nudge", "Verschieben" },
+        {"Nudge", "Stupsen" },
         {"Generation", "Generieren" },
         {"Mnemonic_Generate", "G" },
-        {"Critique", "Hinweise" },
-        {"Mnemonic_Critique", "i" },
+        {"Critique", "Critique" },
+        {"Mnemonic_Critique", "R" },
         {"Help", "Hilfe" },
         {"Mnemonic_Help", "H" },
-        {"ToDoItem", "\"Noch zu bearbeiten\"-Element" },
+        {"ToDoItem", "ToDo Eintrag" },
         {"Javadocs", "Javadocs" },
         {"Source", "Sourcecode" },
-        {"Constraints", "Restriktionen" },
+        {"Constraints", "Bedingungen" },
         {"TaggedValues", "TaggedValues" },
         {"Checklist", "Checkliste" },
         {"History", "History" },

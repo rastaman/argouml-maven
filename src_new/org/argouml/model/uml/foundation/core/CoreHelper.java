@@ -73,7 +73,6 @@ import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.model_management.MPackage;
-import ru.novosoft.uml.model_management.MModel;
 /**
  * Helper class for UML Foundation::Core Package.
  *
@@ -444,12 +443,12 @@ public class CoreHelper {
 					      MModelElement from,
 					      MModelElement to) {
         MDependency dep = CoreFactory.getFactory().buildDependency(from, to);
-        MNamespace model = (MModel)
+        MNamespace model =
             ProjectManager.getManager().getCurrentProject().getModel();
         MStereotype stereo =
             ExtensionMechanismsFactory.getFactory()
 	    .buildStereotype(dep, "support",
-			     (MModel)ProjectManager.getManager()
+			     ProjectManager.getManager()
 			     .getCurrentProject().getModel());
         return dep;
     }
@@ -497,7 +496,7 @@ public class CoreHelper {
      */
     public Collection getAllBehavioralFeatures() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllBehavioralFeatures(model);
     }
     /**
@@ -505,7 +504,7 @@ public class CoreHelper {
      * @return Collection
      */
     public Collection getAllInterfaces() {
-        MNamespace model =(MModel)
+        MNamespace model =
             ProjectManager.getManager().getCurrentProject().getModel();
         return getAllInterfaces(model);
     }
@@ -535,7 +534,7 @@ public class CoreHelper {
      */
     public Collection getAllClasses() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllClasses(model);
     }
     /**
@@ -569,7 +568,7 @@ public class CoreHelper {
         Iterator it = clazz.getClientDependencies().iterator();
         List list = new ArrayList();
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         while (it.hasNext()) {
             Object o = it.next();
             if (ModelFacade.isAAbstraction(o)) {
@@ -696,7 +695,7 @@ public class CoreHelper {
      */
     public Collection getAllComponents() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllComponents(model);
     }
     /**
@@ -725,7 +724,7 @@ public class CoreHelper {
      */
     public Collection getAllDataTypes() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllDataTypes(model);
     }
     /**
@@ -754,7 +753,7 @@ public class CoreHelper {
      */
     public Collection getAllNodes() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllNodes(model);
     }
     /**
@@ -832,7 +831,7 @@ public class CoreHelper {
      */
     public Collection getAllClassifiers() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllClassifiers(model);
     }
     /**
@@ -1288,7 +1287,7 @@ public class CoreHelper {
         if (m == null)
             return ret;
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getRoot();
+            ProjectManager.getManager().getCurrentProject().getRoot();
         if (isValidNamespace(m, model))
             ret.add(model);
         Iterator it =

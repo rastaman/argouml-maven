@@ -85,7 +85,7 @@ public class CollaborationsHelper {
     // TODO: The ProjectManager shall not be reference from the model.
     public Collection getAllClassifierRoles() {
 	MNamespace model =
-	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+	    ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllClassifierRoles(model);
     }
 	

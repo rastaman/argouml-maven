@@ -138,8 +138,8 @@ public class ArgoDiagram extends Diagram {
     }
     
     public void damage() {
-        if (getLayer() != null && getLayer().getEditors() != null) {
-            Iterator it = getLayer().getEditors().iterator();
+        if (_lay != null && _lay.getEditors() != null) {
+            Iterator it = _lay.getEditors().iterator();
             while (it.hasNext()) {
                 ((Editor) it.next()).damageAll();
             }

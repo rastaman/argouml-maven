@@ -78,7 +78,7 @@ public class ModelManagementHelper {
      */
     public Collection getAllSubSystems() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllSubSystems(model);
     }
 
@@ -110,7 +110,7 @@ public class ModelManagementHelper {
      */
     public Collection getAllNamespaces() {
         MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllNamespaces(model);
     }
 
@@ -142,7 +142,7 @@ public class ModelManagementHelper {
         if (kind == null)
             return new ArrayList();
         Project p = ProjectManager.getManager().getCurrentProject();
-        MNamespace model = (MModel)p.getRoot();
+        MNamespace model = p.getRoot();
         Collection col = getAllModelElementsOfKind(model, kind);
         return col;
     }
@@ -173,28 +173,6 @@ public class ModelManagementHelper {
         }
         return list;
 
-    }
-    
-    /**
-     * helper method for {@link #getAllModelElementsOfKind(Object, Class)}
-     *
-     * @param kind name of class to find, this implementation will add the "M"
-     *             for NSUML.
-     */
-    public Collection getAllModelElementsOfKind(Object nsa, String kind) {
-
-        if (nsa == null || kind == null)
-            return new ArrayList();
-        if (!ModelFacade.isANamespace(nsa))
-            throw new IllegalArgumentException(
-                "given argument " + nsa + " is not a namespace");
-        Collection col=null;
-        try{
-            col= getAllModelElementsOfKind(nsa, Class.forName("M"+kind));
-        }catch(ClassNotFoundException cnfe){
-            return new ArrayList();
-        }
-        return col;
     }
 
     /**
@@ -267,6 +245,30 @@ public class ModelManagementHelper {
     }
 
     /**
+     * Move a modelelement to a new namespace. The way this is currently
+     * implemented this means that ALL modelelements that share the same
+     * namespace as the element to be moved are moved.
+     * TODO: make this into a copy function
+     * TODO: make this only move/copy the asked element
+     * @param element
+     * @param to
+     * @deprecated As of ArgoUml version 0.13.5, 
+     *             You should use 
+     *          {@link #getCorrespondingElement(MModelElement,MModel,boolean)} 
+     *             instead.
+     */
+    public void moveElement(MModelElement element, MModel to) {
+        MModel currentModel = element.getModel();
+        if (currentModel != to) {
+            if (element.getNamespace() != currentModel) { // handle packages
+                moveElement(element.getNamespace(), to);
+            } else {
+                element.setNamespace(to);
+            }
+        }
+    }
+
+    /**
      * Utility function for managing several overlayed models, eg a user
      * model to which elements from some profile models is imported when
      * needed. This version of the function assumes it is permissible to
@@ -280,7 +282,8 @@ public class ModelManagementHelper {
      * @return An element of the same type and at the same position in the
      *  model as elem, or if that would turn out impossible then null.
      */
-    public Object getCorrespondingElement(Object elem, Object model) {
+    public MModelElement getCorrespondingElement(MModelElement elem,
+						 MModel model) {
 	return getCorrespondingElement(elem, model, true);
     }
 
@@ -301,13 +304,13 @@ public class ModelManagementHelper {
      * @return An element of the same type and at the same position in the
      *  model as elem, or if that would turn out impossible then null.
      */
-    public Object getCorrespondingElement(Object elem,
-					 Object model, boolean canCreate) {
-	if (elem == null || model == null || !(elem instanceof MModelElement))
- 	    throw new NullPointerException();
+    public MModelElement getCorrespondingElement(MModelElement elem,
+					 MModel model, boolean canCreate) {
+	if (elem == null || model == null)
+	    throw new NullPointerException();
 
 	// Trivial case
-	if (((MModelElement)elem).getModel() == model)
+	if (elem.getModel() == model)
 	    return elem;
 
 	// Base case
@@ -316,7 +319,7 @@ public class ModelManagementHelper {
 
 	// The cast is actually safe
 	MNamespace ns = (MNamespace) getCorrespondingElement(
-					((MModelElement)elem).getNamespace(),
+					elem.getNamespace(),
 					model,
 					canCreate);
 	if (ns == null)
@@ -325,10 +328,10 @@ public class ModelManagementHelper {
 	Iterator it = ns.getOwnedElements().iterator();
 	while (it.hasNext()) {
 	    MModelElement e = (MModelElement) it.next();
-	    if (e.getClass() == ((MModelElement)elem).getClass()
-		&& ((((MModelElement)elem).getName() == null && e.getName() == null)
-		    || (((MModelElement)elem).getName() != null
-			&& ((MModelElement)elem).getName().equals(e.getName()))))
+	    if (e.getClass() == elem.getClass()
+		&& ((elem.getName() == null && e.getName() == null)
+		    || (elem.getName() != null
+			&& elem.getName().equals(e.getName()))))
 	    {
 		return (MModelElement) e;
 	    }
@@ -337,7 +340,7 @@ public class ModelManagementHelper {
 	if (!canCreate)
 	    return null;
 
-	return CopyHelper.getHelper().copy((MModelElement)elem, ns);
+	return CopyHelper.getHelper().copy(elem, ns);
     }
 
     /**
@@ -367,7 +370,7 @@ public class ModelManagementHelper {
      * Checks if a child for some ownershiprelationship (as in a
      * namespace A is owned by a namespace B) is allready in the
      * ownerhship relation.
-     * @param parent The current leaf for the ownership relation
+     * @param parent The current leaf for the ownership relation 
      * @param child The child that should be owned by the parent
      * @return true if the child is allready in the ownership relationship
      */

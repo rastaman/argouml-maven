@@ -41,7 +41,6 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MSubsystem;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Helper class for UML BehavioralElements::UseCases Package.
@@ -93,7 +92,7 @@ public class UseCasesHelper {
      */
     public Collection getAllUseCases() {
     	MNamespace model =
-	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+	    ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllUseCases(model);
     }
 	
@@ -123,7 +122,7 @@ public class UseCasesHelper {
      */
     public Collection getAllActors() {
     	MNamespace model =
-	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+	    ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllActors(model);
     }
 	

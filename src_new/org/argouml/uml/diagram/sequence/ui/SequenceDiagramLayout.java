@@ -103,10 +103,8 @@ public class SequenceDiagramLayout extends LayerPerspective {
 
     public Vector getFigSeqObjects() {
 	Vector figSeqObjects = new Vector();
-        Iterator it = getContents().iterator();
-	while (it.hasNext()) {
-            Object o = it.next();
-	    if (o instanceof FigSeqObject) figSeqObjects.add(o);
+	for (int i = 0; i < _contents.size(); i++) {
+	    if (_contents.elementAt(i) instanceof FigSeqObject) figSeqObjects.add( _contents.elementAt(i) );
 	}
 	return figSeqObjects;
     }
@@ -115,12 +113,9 @@ public class SequenceDiagramLayout extends LayerPerspective {
     /** return all instances of FigSeqLink in the active layer */
     public Vector getFigSeqLinks() {
 	Vector figSeqLinks = new Vector();
-        Iterator it = getContents().iterator();
-	while (it.hasNext()) {
-            Object o = it.next();
-	    if (o instanceof FigSeqLink) { 
-		figSeqLinks.add(o);
-            }
+	for (int i = 0; i < _contents.size(); i++) {
+	    if (_contents.elementAt(i) instanceof FigSeqLink) 
+		figSeqLinks.add( _contents.elementAt(i) );
 	}
 	return figSeqLinks;
     }
@@ -128,10 +123,8 @@ public class SequenceDiagramLayout extends LayerPerspective {
     public Vector getFigSeqStimuli() {
 
 	Vector figSeqStimuli = new Vector();
-        Iterator it = getContents().iterator();
-	while (it.hasNext()) {
-            Object o = it.next();
-	    if (o instanceof FigSeqStimulus) figSeqStimuli.add(o);
+	for (int i = 0; i < _contents.size(); i++) {
+	    if (_contents.elementAt(i) instanceof FigSeqStimulus) figSeqStimuli.add( _contents.elementAt(i) );
 	}
 	return figSeqStimuli;
 
@@ -222,7 +215,7 @@ public class SequenceDiagramLayout extends LayerPerspective {
 
 	for (i = 0; i < linkSize; i++) {
 	    FigSeqLink link = (FigSeqLink) figSeqLinks.elementAt(i);
-	    int portNumber = link.getPortNumber(getContents());
+	    int portNumber = link.getPortNumber(_contents);
 	    FigSeqObject sourcePort = (FigSeqObject) link.getSourceFigNode();
 	    FigSeqObject destPort = (FigSeqObject) link.getDestFigNode();
 
