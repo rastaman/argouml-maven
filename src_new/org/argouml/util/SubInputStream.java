@@ -29,34 +29,17 @@ import java.util.zip.*;
 
 public class SubInputStream extends java.io.FilterInputStream
 {
-    private ZipInputStream in;
-    
-    /**
-     * The constructor.
-     * 
-     * @param z the zip input stream
-     */
+    ZipInputStream in;
     public SubInputStream(ZipInputStream z)
     {
 	super(z);
 	in = z;
     } 
-    
-    /**
-     * @see java.io.InputStream#close()
-     */
     public void close() throws IOException 
     {
 	in.closeEntry();
     }
 
-    /**
-     * Reads the next ZIP file entry and positions stream at the beginning
-     * of the entry data.
-     * 
-     * @return the ZipEntry just read
-     * @throws IOException if an I/O error has occurred
-     */
     public ZipEntry getNextEntry() throws IOException
     {
 	return in.getNextEntry();

@@ -28,11 +28,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Operation->Collaboration.
  * Go rule for navigation in the navpane from an operation to the collaboration
  * representing it.
  * @since Oct 1, 2002
@@ -40,12 +38,7 @@ import org.argouml.model.ModelFacade;
  */
 public class GoOperationToCollaboration extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() {
-        return Translator.localize ("Tree", "misc.operation.collaboration");
-    }
+    public String getRuleName() { return "Operation->Collaboration"; }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
@@ -57,9 +50,6 @@ public class GoOperationToCollaboration extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAOperation(parent)) {
 	    Set set = new HashSet();

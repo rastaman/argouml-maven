@@ -48,7 +48,7 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
 
     /** Singleton instance.
      */
-    private static final ExtensionMechanismsFactory SINGLETON =
+    private static ExtensionMechanismsFactory SINGLETON =
 	new ExtensionMechanismsFactory();
 
     /**
@@ -89,44 +89,28 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
 
     /**
      * Builds a stereotype for some kind of modelelement.
-     *
-     * TODO: MVW: This needs rethinking/rework! I have the following questions:
-     *       Why does it not search for a stereotype in the namespace using
-     *       properties and only create a new stereotype if it will actually
-     *       be used? Ie, why is there not a
-     *       getStereotype(String name, String baseClass)? (edited by d00mst)
-     * 
-     * @param theModelElementObject    a Model Element that the stereotype
-     *                                 will be applied to. The stereotype will
-     *                                 have its BaseClass set to an appropriate
-     *                                 value for this kind of Model Elements.
-     * @param theName                  the name for the stereotype
-     * @param theNamespaceObject       the namespace the stereotype will be
-     *                                 created within.
-     * @return                         the resulting stereotype object
-     * @throws IllegalArgumentException if either argument is null.
      */
-    public MStereotype buildStereotype(Object theModelElementObject,
-                                       Object theName,
-                                       Object theNamespaceObject) {
-        MModelElement me = (MModelElement) theModelElementObject;
-        String text = (String) theName;
-        MNamespace ns = (MNamespace) theNamespaceObject;
-    	if (me == null || text == null || ns == null)
+    public MStereotype buildStereotype(Object mObj,
+                                       Object textObj,
+                                       Object nsObj) {
+        MModelElement m = (MModelElement) mObj;
+        String text = (String) textObj;
+        MNamespace ns = (MNamespace) nsObj;
+    	if (m == null || text == null || ns == null)
 	    throw new IllegalArgumentException("one of the arguments is null");
     	MStereotype stereo = (MStereotype) createStereotype();
     	stereo.setName(text);
     	stereo.setBaseClass(ExtensionMechanismsHelper.getHelper()
-			    .getMetaModelName(me));
+			    .getMetaModelName(m));
     	MStereotype stereo2 =
 	    ExtensionMechanismsHelper.getHelper().getStereotype(ns, stereo);
     	if (stereo2 != null) {
-	    stereo2.addExtendedElement(me);
+	    stereo2.addExtendedElement(m);
 	    UmlFactory.getFactory().delete(stereo);
 	    return stereo2;
     	} else {
 	    ns.addOwnedElement(stereo);
-	    stereo.addExtendedElement(me);
+	    stereo.addExtendedElement(m);
 	    return stereo;
     	}
     }
@@ -135,7 +119,7 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
      * Builds an initialized stereotype.
      *
      * @param text is the name of the stereotype
-     * @param ns namespace where the stereotype lives (is known)
+     * @param ns namespace
      * @return an initialized stereotype.
      */
     public Object/*MStereotype*/ buildStereotype(String text, Object ns) {
@@ -146,34 +130,27 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
     	return stereo;
     }
 
-    /**
-     * Builds an initialized stereotype.
-     * 
-     * @param theModelElementObject the baseclass for the new stereotype
-     * @param theName               the name for the new stereotype
-     * @return                      the new stereotype
-     */
-    public MStereotype buildStereotype(Object theModelElementObject,
-				       String theName) {
-        MModelElement me = (MModelElement) theModelElementObject;
-        // if (me == null && text == null)
+    public MStereotype buildStereotype(Object/*MModelElement*/ modelElement,
+				       String text) {
+        MModelElement m = (MModelElement) modelElement;
+        // if (m == null && text == null)
 	//  throw new IllegalArgumentException("one of the arguments is null");
         MStereotype stereo = (MStereotype) createStereotype();
-        stereo.setName(theName);
+        stereo.setName(text);
         stereo.setBaseClass(ExtensionMechanismsHelper.getHelper()
-			    .getMetaModelName(me));
+			    .getMetaModelName(m));
         MStereotype stereo2 =
 	    ExtensionMechanismsHelper.getHelper().getStereotype(stereo);
         if (stereo2 != null) {
-            stereo2.addExtendedElement(me);
+            stereo2.addExtendedElement(m);
             UmlFactory.getFactory().delete(stereo);
             return stereo2;
         } else {
             ((MModel) ProjectManager.getManager().getCurrentProject()
 		    .getModel())
 		.addOwnedElement(stereo);
-            if (me != null)
-                stereo.addExtendedElement(me);
+            if (m != null)
+                stereo.addExtendedElement(m);
             return stereo;
         }
     }
@@ -192,14 +169,8 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
         return tv;
     }
 
-    /**
-     * @param elem the stereotype
-     */
     public void deleteStereotype(MStereotype elem) { }
 
-    /**
-     * @param elem the taggedvalue
-     */
     public void deleteTaggedValue(MTaggedValue elem) { }
 
     /**
@@ -218,8 +189,10 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
 
     /**
      * Used by the copy functions. Do not call this function directly.
+     * TODO: Why is this public? I think it shouldn't be.
+     * @deprecated by Linus Tolke as of 0.15.4. Will be private.
      */
-    private void doCopyStereotype(MStereotype source, MStereotype target) {
+    public void doCopyStereotype(MStereotype source, MStereotype target) {
 	CoreFactory.getFactory().doCopyGeneralizableElement(source, target);
 	target.setBaseClass(source.getBaseClass());
 	target.setIcon(source.getIcon());

@@ -54,58 +54,43 @@ public class SystemInfoDialog extends ArgoDialog {
     ////////////////////////////////////////////////////////////////
     // instance varaibles
 
-    private JTextArea   info = new JTextArea();
-    private JButton     runGCButton = new JButton();
-    private JButton     copyButton = new JButton();
+    JTextArea   _info = new JTextArea();
+    JButton     _runGCButton = new JButton();
+    JButton     _copyButton = new JButton();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /**
-     * The constructor.
-     * 
-     */
     public SystemInfoDialog() {
 	this((Frame) null, false);
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param owner the parent frame
-     */
     public SystemInfoDialog(Frame owner) {
 	this(owner, false);
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param owner the parent frame
-     * @param modal true if the dialog is modal
-     */
     public SystemInfoDialog(Frame owner, boolean modal) {
 	super(owner, Translator.localize("dialog.title.system-information"),
 		ArgoDialog.CLOSE_OPTION, modal);
 
-	info.setEditable(false);
+	_info.setEditable(false);
     
-	runGCButton.addActionListener(new ActionListener() {
+	_runGCButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		runGCActionPerformed(e);
+		runGC_actionPerformed(e);
 	    }
 	});
-	copyButton.addActionListener(new ActionListener() {
+	_copyButton.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
-		copyActionPerformed(e);
+		copy_actionPerformed(e);
 	    }
 	});
     
-	nameButton(copyButton, "button.copy-to-clipboard");    
-	nameButton(runGCButton, "button.run-gc");    
-	addButton(copyButton, 0);
-	addButton(runGCButton, 0);
-	setContent(new JScrollPane(info));
+	nameButton(_copyButton, "button.copy-to-clipboard");    
+	nameButton(_runGCButton, "button.run-gc");    
+	addButton(_copyButton, 0);
+	addButton(_runGCButton, 0);
+	setContent(new JScrollPane(_info));
 	updateInfo();
 	addWindowListener(new WindowAdapter() {
 	    public void windowActivated(WindowEvent e) {
@@ -115,54 +100,48 @@ public class SystemInfoDialog extends ArgoDialog {
         pack();
     } // end SystemInfoDialog()
 
-    /**
-     * @param e the action
-     */
-    private void runGCActionPerformed(ActionEvent e) {
+    void runGC_actionPerformed(ActionEvent e) {
 	Runtime.getRuntime().gc();
 	updateInfo();
     } // end runGC_actionPerformed()
 
-    /**
-     * @param e the action
-     */
-    private void copyActionPerformed(ActionEvent e) {
-	String infoText = info.getText();
-	StringSelection contents = new StringSelection(infoText);
+    void copy_actionPerformed(ActionEvent e) {
+	String info = _info.getText();
+	StringSelection contents = new StringSelection(info);
 	Clipboard clipboard = getToolkit().getSystemClipboard();
 	clipboard.setContents(contents, defaultClipboardOwner);
     } // end copy_actionPerformed()
 
     void updateInfo() {
-	StringBuffer s = new StringBuffer();
-	s.append("Java Version		: ");
-	s.append(System.getProperty("java.version", "") + "\n" );
-	s.append("Java Vendor		: ");
-	s.append(System.getProperty("java.vendor", "") + "\n" );
-	s.append("Java Vendor URL	: ");
-	s.append(System.getProperty("java.vendor.url", "") + "\n" );
-	s.append("Java Home Directory	: ");
-	s.append(System.getProperty("java.home", "") + "\n" );
-	s.append("Java Classpath		: ");
-	s.append(System.getProperty("java.class.path", "") + "\n" );
-	s.append("Operation System	: ");
-	s.append(System.getProperty("os.name", ""));
-	s.append(", Version ");
-	s.append(System.getProperty("os.version", "") + "\n" );
-	s.append("Architecture		: ");
-	s.append(System.getProperty("os.arch", "") + "\n" );
-	s.append("User Name		: ");
-	s.append(System.getProperty("user.name", "") + "\n" );
-	s.append("User Home Directory	: ");
-	s.append(System.getProperty("user.home", "") + "\n" );
-	s.append("Current Directory	: ");
-	s.append(System.getProperty("user.dir", "") + "\n" );
-	s.append("JVM Total Memory	: ");
-	s.append(String.valueOf(Runtime.getRuntime().totalMemory()) + "\n" );
-	s.append("JVM Free Memory	: ");
-	s.append(String.valueOf(Runtime.getRuntime().freeMemory()) + "\n" );
+	StringBuffer info = new StringBuffer();
+	info.append("Java Version		: ");
+	info.append(System.getProperty("java.version", "") + "\n" );
+	info.append("Java Vendor		: ");
+	info.append(System.getProperty("java.vendor", "") + "\n" );
+	info.append("Java Vendor URL	: ");
+	info.append(System.getProperty("java.vendor.url", "") + "\n" );
+	info.append("Java Home Directory	: ");
+	info.append(System.getProperty("java.home", "") + "\n" );
+	info.append("Java Classpath		: ");
+	info.append(System.getProperty("java.class.path", "") + "\n" );
+	info.append("Operation System	: ");
+	info.append(System.getProperty("os.name", ""));
+	info.append(", Version ");
+	info.append(System.getProperty("os.version", "") + "\n" );
+	info.append("Architecture		: ");
+	info.append(System.getProperty("os.arch", "") + "\n" );
+	info.append("User Name		: ");
+	info.append(System.getProperty("user.name", "") + "\n" );
+	info.append("User Home Directory	: ");
+	info.append(System.getProperty("user.home", "") + "\n" );
+	info.append("Current Directory	: ");
+	info.append(System.getProperty("user.dir", "") + "\n" );
+	info.append("JVM Total Memory	: ");
+	info.append(String.valueOf(Runtime.getRuntime().totalMemory()) + "\n" );
+	info.append("JVM Free Memory	: ");
+	info.append(String.valueOf(Runtime.getRuntime().freeMemory()) + "\n" );
     
-	info.setText(s.toString());
+	_info.setText(info.toString());
     } //end updateInfo()
 
     private static ClipboardOwner defaultClipboardOwner =

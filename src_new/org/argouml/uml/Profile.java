@@ -31,8 +31,7 @@ import java.util.Iterator;
  *
  *   @author Curt Arnold
  */
-public abstract class Profile {
-    
+abstract public class Profile {
     /**
      *    This method produces a string that represents the specific
      *    model element in the context of the specified namespace.
@@ -40,7 +39,7 @@ public abstract class Profile {
      *    @param namespace context namespace (may be null).
      *    @return a string representing the model element
      */
-    public abstract String formatElement(Object/*MModelElement*/ element,
+    abstract public String formatElement(Object/*MModelElement*/ element,
 					 Object namespace);
     /**
      *   This method produces a string the represents the collection
@@ -49,10 +48,7 @@ public abstract class Profile {
      *   @param namespace context namespace (may be null).
      *   @return a string representing the collection
      */
-    public abstract String formatCollection(Iterator iter,
+    abstract public String formatCollection(Iterator iter,
 					    Object namespace);
-    /**
-     * @return
-     */
-    public abstract Object/*MModel*/ getProfileModel();
+    abstract public Object/*MModel*/ getProfileModel();
 }

@@ -30,30 +30,22 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
- * Rule for Class->Summary.
  *
  * $Revision$
  *
  * @author  alexb, $Author$
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
-public class GoClassToSummary extends AbstractPerspectiveRule {
+public class GoClassToSummary extends AbstractPerspectiveRule{
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-	return Translator.localize ("Tree", "misc.class.summary");
+	return "Class->Summary";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAClass(parent)) {
 	    ArrayList list = new ArrayList();
@@ -82,9 +74,6 @@ public class GoClassToSummary extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAClass(parent)) {
 	    Set set = new HashSet();
@@ -133,10 +122,8 @@ public class GoClassToSummary extends AbstractPerspectiveRule {
             ModelFacade.getSupplierDependencies(parent).iterator();
         Iterator outgoingIt =
             ModelFacade.getClientDependencies(parent).iterator();
-        Iterator generalizationsIt = 
-            ModelFacade.getGeneralizations(parent).iterator();
-        Iterator specializationsIt = 
-            ModelFacade.getSpecializations(parent).iterator();
+        Iterator generalizationsIt = ModelFacade.getGeneralizations(parent).iterator();
+        Iterator specializationsIt = ModelFacade.getSpecializations(parent).iterator();
 
 	if (generalizationsIt.hasNext())
 	    return true;

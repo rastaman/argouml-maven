@@ -58,21 +58,19 @@ public class ExtensionMechanismsHelper {
 
     /** Singleton instance.
      */
-    private static ExtensionMechanismsHelper singleton =
+    private static ExtensionMechanismsHelper SINGLETON =
 	new ExtensionMechanismsHelper();
 
 
     /**
      * Singleton instance access method.
-     *
-     * @return the singleton
      */
     public static ExtensionMechanismsHelper getHelper() {
-        return singleton;
+        return SINGLETON;
     }
 
     /**
-     * Returns all stereotypes in a namespace, but not those in a subnamespace.
+     * Returns all stereotypes in a namespace.
      *
      * @param ns is the namespace.
      * @return a Collection with the stereotypes.
@@ -93,10 +91,6 @@ public class ExtensionMechanismsHelper {
     /**
      * Returns all stereotypes in some model.
      *
-     * TODO: This method can never be called, and you would probably not want
-     * to since it does exactly the same thing as the method above (which is
-     * the one you will call if you try).
-     *
      * @param ns is the model.
      * @return Collection The stereotypes found. An empty arraylist is returned
      * if nothing is found.
@@ -115,12 +109,8 @@ public class ExtensionMechanismsHelper {
     }
 
     /**
-     * Finds a stereotype in some namespace, but not in its subnamespaces.
-     * Returns null if no such stereotype is found.
-     *
-     * TODO: What if stereo.getName() or stereo.getBaseClass() is null?
-     * Then you know immediately that none will be found, but is that the
-     * correct answer?
+     * Finds a stereotype in some namespace. Returns null if no such
+     * stereotype is found.
      *
      * @return the stereotype found or null.
      * @param ns is the namespace.
@@ -146,12 +136,7 @@ public class ExtensionMechanismsHelper {
     }
 
     /**
-     * Searches for a stereotype just like the given stereotype in all models 
-     * in the current project.
-     * The given stereotype can not have its namespace set yet; 
-     * otherwise it will be returned itself!
-     *
-     * TODO: Should it only search for stereotypes owned by the Model object?
+     * Searches the given stereotype in all models in the current project.
      *
      * @param stereo is the given stereotype
      * @return MStereotype
@@ -181,19 +166,11 @@ public class ExtensionMechanismsHelper {
         return null;
     }
 
-    /**
-     * @param m the ModelElement
-     * @return the meta name of the ModelElement
-     */
     public String getMetaModelName(MModelElement m) {
         if (m == null) return null;
         return getMetaModelName(m.getClass());
     }
 
-    /**
-     * @param clazz the UML class
-     * @return the meta name of the UML class
-     */
     protected String getMetaModelName(Class clazz) {
         if (clazz == null) return null;
         String name = clazz.getName();
@@ -229,15 +206,7 @@ public class ExtensionMechanismsHelper {
         return ret;
     }
 
-    /**
-     * This function answers the question: 
-     * Can we apply the given stereotype to the given class?
-     * 
-     * @param clazz the class we want to apply the stereotype to 
-     * @param stereo the given stereotype
-     * @return true if the stereotype may be applied
-     */
-    private boolean isValidStereoType(Class clazz, Object stereo) {
+    protected boolean isValidStereoType(Class clazz, Object stereo) {
         if (clazz == null || stereo == null) return false;
         if (getMetaModelName(clazz).equals(ModelFacade.getBaseClass(stereo)))
             return true;
@@ -252,22 +221,15 @@ public class ExtensionMechanismsHelper {
      * equals the baseclass of the given modelelement or one of the
      * superclasses of the given modelelement.
      *
-     * @param theModelElement is the model element
-     * @param theStereotype   is the stereotype
+     * @param m is the model element
+     * @param stereo is the stereotype
      * @return boolean
      */
-    public boolean isValidStereoType(Object theModelElement, 
-            Object theStereotype) {
-        if (theModelElement == null) return false;
-	return isValidStereoType(theModelElement.getClass(), theStereotype);
+    public boolean isValidStereoType(Object m, Object stereo) {
+        if (m == null) return false;
+	return isValidStereoType(m.getClass(), stereo);
     }
 
-    /**
-     * TODO: Should it only search for stereotypes owned by the Model objects?
-     *
-     * @return the collection of stereotypes in all models 
-     *         in the current project
-     */
     public Collection getStereotypes() {
         List ret = new ArrayList();
         Project p = ProjectManager.getManager().getCurrentProject();

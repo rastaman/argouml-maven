@@ -166,7 +166,7 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 {
             if (((UMLComboBoxModel2) getModel()).contains(anObject)) {
                 editor.setText(((UMLListCellRenderer2) getRenderer()).makeText(anObject));
                 if (_showIcon)
-                    _panel.setIcon(ResourceLoaderWrapper.getInstance().lookupIcon(anObject));
+                    _panel.setIcon(ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(anObject));
             } else
                 super.setItem(anObject);
 
@@ -241,7 +241,7 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 {
      * @see org.argouml.uml.ui.UMLComboBox2#UMLComboBox2(UMLComboBoxModel2, UMLAction)
      */
     public UMLEditableComboBox(UMLComboBoxModel2 arg0, UMLAction selectAction) {
-        this(arg0, selectAction, true);
+        this(arg0, selectAction, false);
     }
 
     /**

@@ -37,12 +37,12 @@ import org.argouml.model.ModelFacade;
 
 public class CrTooManyTransitions extends CrUML {
 
-    private static final String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public CrTooManyTransitions() {
 	setHeadline("Reduce Transitions on <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
@@ -52,10 +52,8 @@ public class CrTooManyTransitions extends CrUML {
 
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	Object sv = /*(MStateVertex)*/ dm;

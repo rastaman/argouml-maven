@@ -42,12 +42,8 @@ import org.argouml.model.ModelFacade;
 //of references to elements of other packages?
 
 public class CrEmptyPackage extends CrUML {
-    private static final Logger LOG = Logger.getLogger(CrEmptyPackage.class);
+    protected static Logger cat = Logger.getLogger(CrEmptyPackage.class);
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrEmptyPackage() {
 	setHeadline("Add Elements to Package <ocl>self</ocl>");
        
@@ -55,16 +51,12 @@ public class CrEmptyPackage extends CrUML {
 	addTrigger("ownedElement");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
-//	LOG.debug("predicate2 on " + dm);
+//	cat.debug("predicate2 on " + dm);
 	if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
 	Collection elems = ModelFacade.getOwnedElements(dm);
-	if (elems.size() == 0) {
-            LOG.debug("PROBLEM_FOUND on " + dm);
+	if (elems.size() == 0){
+            cat.debug("PROBLEM_FOUND on " + dm);
             return PROBLEM_FOUND;
         }
 	return NO_PROBLEM;

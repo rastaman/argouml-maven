@@ -30,27 +30,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
 
-/**
- * Rule for Project->Collaboration.
- *
- */
 public class GoProjectToCollaboration extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() {
-        return Translator.localize ("Tree", "misc.project.collaboration");
-    }
+    public String getRuleName() { return "Project->Collaboration"; }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	Collection col = new ArrayList();
 	if (parent instanceof Project) {
@@ -64,9 +51,6 @@ public class GoProjectToCollaboration extends AbstractPerspectiveRule {
 	return col;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (parent instanceof Project) {
 	    Set set = new HashSet();

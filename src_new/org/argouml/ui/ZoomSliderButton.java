@@ -93,12 +93,12 @@ public class ZoomSliderButton extends PopupButton {
     /**
      * The slider component.
      */
-    private JSlider             slider = null;
+    private JSlider             _slider = null;
     
     /**
      * The text field which shows the current zoom magnification value.
      */
-    private JTextField          currentValue = null;
+    private JTextField          _currentValue = null;
 
     /**
      * Constructs a new ZoomSliderButton.
@@ -106,7 +106,7 @@ public class ZoomSliderButton extends PopupButton {
     public ZoomSliderButton() {
         super();
 
-        Icon icon = ResourceLoaderWrapper.
+        Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().
             lookupIconResource(Translator.getImageBinding(RESOURCE_NAME),
 			       Translator.localize(RESOURCE_NAME));
                 
@@ -118,51 +118,51 @@ public class ZoomSliderButton extends PopupButton {
      * Creates the slider popup component.
      */
     private void createPopupComponent() {
-        slider = new JSlider(
+        _slider = new JSlider(
             JSlider.VERTICAL, 
             MINIMUM_ZOOM, 
             MAXIMUM_ZOOM, 
             MINIMUM_ZOOM);
-        slider.setInverted(true);
-        slider.setMajorTickSpacing(MAXIMUM_ZOOM / 10);
-        slider.setMinorTickSpacing(MAXIMUM_ZOOM / 20);
-        slider.setPaintTicks(true);
-        slider.setPaintTrack(true);
-        int sliderBaseWidth = slider.getPreferredSize().width;
-        slider.setPaintLabels(true);
+        _slider.setInverted(true);
+        _slider.setMajorTickSpacing(MAXIMUM_ZOOM / 10);
+        _slider.setMinorTickSpacing(MAXIMUM_ZOOM / 20);
+        _slider.setPaintTicks(true);
+        _slider.setPaintTrack(true);
+        int sliderBaseWidth = _slider.getPreferredSize().width;
+        _slider.setPaintLabels(true);
         
-        for (Enumeration components = slider.getLabelTable().elements();
-             components.hasMoreElements();) {
-            ((Component) components.nextElement()).setFont(LABEL_FONT);
+        for (Enumeration enum = _slider.getLabelTable().elements(); 
+            enum.hasMoreElements();) {
+            ((Component) enum.nextElement()).setFont(LABEL_FONT);
         }
         
-        slider.setToolTipText(Translator.localize(BUNDLE, 
+        _slider.setToolTipText(Translator.localize(BUNDLE, 
             "button.zoom.slider-tooltip"));   
         
-        slider.addChangeListener(new ChangeListener() {
+        _slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 handleSliderValueChange();
             }            
         });
         
-        int labelWidth = slider.getFontMetrics(LABEL_FONT).stringWidth(
+        int labelWidth = _slider.getFontMetrics(LABEL_FONT).stringWidth(
             String.valueOf(MAXIMUM_ZOOM)) + 6;
         
-        slider.setPreferredSize(new Dimension(
+        _slider.setPreferredSize(new Dimension(
             sliderBaseWidth + labelWidth, SLIDER_HEIGHT));
         
-        currentValue = new JTextField(5);
-        currentValue.setHorizontalAlignment(JLabel.CENTER);
-        currentValue.setFont(LABEL_FONT);
-        currentValue.setToolTipText(Translator.localize(
+        _currentValue = new JTextField(5);
+        _currentValue.setHorizontalAlignment(JLabel.CENTER);
+        _currentValue.setFont(LABEL_FONT);
+        _currentValue.setToolTipText(Translator.localize(
             BUNDLE, "button.zoom.current-zoom-magnification"));
         updateCurrentValueLabel();
-        currentValue.addActionListener(new ActionListener() {
+        _currentValue.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 handleTextEntry();
             }
         });
-        currentValue.addFocusListener(new FocusAdapter() {
+        _currentValue.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 handleTextEntry();
             }
@@ -170,10 +170,10 @@ public class ZoomSliderButton extends PopupButton {
         
         JPanel currentValuePanel = new JPanel(new FlowLayout(
             FlowLayout.CENTER, 0, 0));
-        currentValuePanel.add(currentValue);
+        currentValuePanel.add(_currentValue);
         
         JPanel zoomPanel = new JPanel(new BorderLayout(0, 0));
-        zoomPanel.add(slider, BorderLayout.CENTER);
+        zoomPanel.add(_slider, BorderLayout.CENTER);
         zoomPanel.add(currentValuePanel, BorderLayout.NORTH);
                 
         setPopupComponent(zoomPanel);
@@ -183,18 +183,18 @@ public class ZoomSliderButton extends PopupButton {
      * Update the slider value every time the popup is shown.
      */
     protected void showPopup() {
-        if (slider == null) {
+        if (_slider == null) {
             createPopupComponent();
         }
         
         Editor ed = Globals.curEditor();
         if (ed != null) {
-            slider.setValue((int) (ed.getScale() * 100d));
+            _slider.setValue((int) (ed.getScale() * 100d));
         } 
         
         super.showPopup();
         
-        slider.requestFocus();
+        _slider.requestFocus();
     }
 
     /**
@@ -204,7 +204,7 @@ public class ZoomSliderButton extends PopupButton {
         updateCurrentValueLabel();
                 
         //if (!source.getValueIsAdjusting()) {
-        double zoomPercentage = slider.getValue() / 100d;
+        double zoomPercentage = _slider.getValue() / 100d;
                 
         Editor ed = Globals.curEditor();
         if (ed == null || zoomPercentage <= 0.0) {
@@ -222,7 +222,7 @@ public class ZoomSliderButton extends PopupButton {
      * Called when the text field value changes.
      */
     private void handleTextEntry() {
-        String value = currentValue.getText();
+        String value = _currentValue.getText();
         if (value.endsWith("%")) {
             value = value.substring(0, value.length() - 1);
         }
@@ -231,7 +231,7 @@ public class ZoomSliderButton extends PopupButton {
             if (newZoom < MINIMUM_ZOOM || newZoom > MAXIMUM_ZOOM) {
                 throw new NumberFormatException();
             }
-            slider.setValue(newZoom);
+            _slider.setValue(newZoom);
         }
         catch (NumberFormatException ex) {
             updateCurrentValueLabel();
@@ -242,6 +242,6 @@ public class ZoomSliderButton extends PopupButton {
      * Sets the current value label's text to the current slider value.
      */
     private void updateCurrentValueLabel() {
-        currentValue.setText(String.valueOf(slider.getValue()) + '%');
+        _currentValue.setText(String.valueOf(_slider.getValue()) + '%');
     }   
 }

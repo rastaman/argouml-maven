@@ -39,12 +39,9 @@ import org.tigris.gef.util.VectorSet;
  * @author jrobbins@ics.uci.edu
  */
 public class CrCircularComposition extends CrUML {
-    private static final Logger LOG =
+    protected static Logger cat =
 	Logger.getLogger(CrCircularComposition.class);
 						      
-    /**
-     * The constructor.
-     */
     public CrCircularComposition() {
 	setHeadline("Remove Circular Composition");
 	addSupportedDecision(CrUML.decCONTAINMENT);
@@ -52,49 +49,33 @@ public class CrCircularComposition extends CrUML {
 	// no good trigger
     }
 							  
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	VectorSet reach =
-	    (new VectorSet(dm)).reachable(GenCompositeClasses.getSINGLETON());
+	    (new VectorSet(dm)).reachable(GenCompositeClasses.SINGLETON);
 	if (reach.contains(dm)) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }
 							      
-    /**
-     * @see org.argouml.cognitive.critics.Critic#toDoItem(java.lang.Object, 
-     * org.argouml.cognitive.Designer)
-     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	
         VectorSet offs = computeOffenders(dm);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 								  
-    /**
-     * @param dm is the UML entity (an NSUML object) that is being checked
-     * @return the list of offenders
-     */
     protected VectorSet computeOffenders(Object dm) {
 	VectorSet offs = new VectorSet(dm);
-	VectorSet above = offs.reachable(GenCompositeClasses.getSINGLETON());
-	Enumeration elems = above.elements();
-	while (elems.hasMoreElements()) {
-	    Object cls2 = elems.nextElement();
-	    VectorSet trans = (new VectorSet(cls2))
-	        .reachable(GenCompositeClasses.getSINGLETON());
+	VectorSet above = offs.reachable(GenCompositeClasses.SINGLETON);
+	Enumeration enum = above.elements();
+	while (enum.hasMoreElements()) {
+	    Object cls2 = enum.nextElement();
+	    VectorSet trans =
+		(new VectorSet(cls2)).reachable(GenCompositeClasses.SINGLETON);
 	    if (trans.contains(dm)) offs.addElement(cls2);
 	}
 	return offs;
     }
 								      
-    /**
-     * @see org.argouml.cognitive.Poster#stillValid(
-     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
-     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -102,15 +83,12 @@ public class CrCircularComposition extends CrUML {
 	if (!predicate(dm, dsgr)) return false;
 	VectorSet newOffs = computeOffenders(dm);
 	boolean res = offs.equals(newOffs);
-	LOG.debug("offs=" + offs.toString()
+	cat.debug("offs=" + offs.toString()
 		  + " newOffs=" + newOffs.toString()
 		  + " res = " + res);
 	return res;
     }
 									  
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
     public Class getWizardClass(ToDoItem item) {
 	return WizBreakCircularComp.class;
     }

@@ -40,29 +40,17 @@ import java.awt.event.*;
  */
 public class SplitterLayout extends ProportionalLayout {
 
-    private SplitterMouseListener splitterMouseListener;
+    SplitterMouseListener splitterMouseListener;
 
-    /**
-     * The constructor.
-     */
     public SplitterLayout() {
         this(HORIZONTAL);
     }
 
-    /**
-     * The constructor. 
-     * 
-     * @param orientation the orientation
-     */
     public SplitterLayout(Orientation orientation) {
         super(orientation);
         splitterMouseListener = new SplitterMouseListener();
     }
 
-    /**
-     * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, 
-     * java.awt.Component)
-     */
     public void addLayoutComponent(String name, Component comp) {
         super.addLayoutComponent(name, comp);
 
@@ -121,25 +109,24 @@ public class SplitterLayout extends ProportionalLayout {
         // Find the total proportional size of all visible components
         double totalProportionalLength = 0;
 
-        Enumeration enumKeys = getComponentTable().keys();
+        Enumeration enumKeys = componentTable.keys();
         while (enumKeys.hasMoreElements()) {
             Component comp = (Component) enumKeys.nextElement();
-            String size = (String) (getComponentTable().get(comp));
+            String size = (String) (componentTable.get(comp));
             if (size.length() != 0) {
-                totalProportionalLength += getMyOrientation().getLength(comp);
+                totalProportionalLength += _orientation.getLength(comp);
             }
         }
 
-        enumKeys = getComponentTable().keys();
+        enumKeys = componentTable.keys();
         while (enumKeys.hasMoreElements()) {
             Component comp = (Component) enumKeys.nextElement();
-            String size = (String) (getComponentTable().get(comp));
+            String size = (String) (componentTable.get(comp));
             if (size.length() != 0) {
                 double proportionalLength =
-		    getMyOrientation().getLength(comp) * 100
+		    _orientation.getLength(comp) * 100
 		    / totalProportionalLength;
-                getComponentTable()
-                    .put(comp, Double.toString(proportionalLength));
+                componentTable.put(comp, Double.toString(proportionalLength));
             }
         }
     }
@@ -151,14 +138,12 @@ public class SplitterLayout extends ProportionalLayout {
 				      Component eastComponent)
     {
         String westProportionalLength =
-	    (String) (getComponentTable().get(westComponent));
+	    (String) (componentTable.get(westComponent));
         String eastProportionalLength =
-	    (String) (getComponentTable().get(eastComponent));
+	    (String) (componentTable.get(eastComponent));
 
-        double westComponentLength = 
-            getMyOrientation().getLength(westComponent);
-        double eastComponentLength = 
-            getMyOrientation().getLength(eastComponent);
+        double westComponentLength = _orientation.getLength(westComponent);
+        double eastComponentLength = _orientation.getLength(eastComponent);
         double totalProportionalLength =
 	    Double.parseDouble(westProportionalLength)
 	    + Double.parseDouble(eastProportionalLength);
@@ -167,17 +152,13 @@ public class SplitterLayout extends ProportionalLayout {
 	    / (westComponentLength + eastComponentLength);
         double newEastProportionalLength =
 	    totalProportionalLength - newWestProportionalLength;
-        getComponentTable().put(westComponent,
+        componentTable.put(westComponent,
 			   Double.toString(newWestProportionalLength));
-        getComponentTable().put(eastComponent,
+        componentTable.put(eastComponent,
 			   Double.toString(newEastProportionalLength));
         return;
     }
 
-    /**
-     * @param comp the given component
-     * @return the position of the component in the container
-     */
     public int getComponentPosition(Component comp) {
 	Component parent = comp.getParent();
         if (parent instanceof Container) {
@@ -202,9 +183,9 @@ public class SplitterLayout extends ProportionalLayout {
             // components registered
             if (westComponent != null && eastComponent != null) {
                 String westProportionalLength =
-		    (String) (getComponentTable().get(westComponent));
+		    (String) (componentTable.get(westComponent));
                 String eastProportionalLength =
-		    (String) (getComponentTable().get(eastComponent));
+		    (String) (componentTable.get(eastComponent));
                 if (westProportionalLength.length() != 0
 		    && eastProportionalLength.length() != 0)
 		{

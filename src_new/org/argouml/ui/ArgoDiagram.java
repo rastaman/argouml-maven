@@ -27,6 +27,7 @@ package org.argouml.ui;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.argouml.cognitive.ItemUID;
 import org.argouml.kernel.ProjectManager;
@@ -39,28 +40,21 @@ import org.tigris.gef.presentation.Fig;
 
 public class ArgoDiagram extends Diagram {
 
-    private ItemUID id;
+    ItemUID _id;
 
-    /**
-     * hack to use vetocheck in constructing names
-     */
-    private static ArgoDiagram theInstance = new ArgoDiagram(); 
+    // hack to use vetocheck in constructing names
+    protected static ArgoDiagram TheInstance = new ArgoDiagram(); 
   
-    /**
-     * The constructor.
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructors
+
     public ArgoDiagram() { 
         super();
         // really dirty hack to remove unwanted listeners
         getLayer().getGraphModel().removeGraphEventListener(getLayer());
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param diagramName the name of the diagram
-     */
-    public ArgoDiagram(String diagramName) {
+    public ArgoDiagram(String diagramName ) {
   	// next line patch to issue 596 (hopefully)
   	super(diagramName);
 	try { setName(diagramName); }
@@ -70,33 +64,21 @@ public class ArgoDiagram extends Diagram {
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    /**
-     * @see org.tigris.gef.base.Diagram#setName(java.lang.String)
-     */
     public void setName(String n) throws PropertyVetoException {
 	super.setName(n);
     }
 
-    /**
-     * @param i the new id
-     */
-    public void setItemUID(ItemUID i) {
-	id = i;
+    public void setItemUID(ItemUID id) {
+	_id = id;
     }
 
-    /**
-     * @return the item UID
-     */
     public ItemUID getItemUID() {
-	return id;
+	return _id;
     }
 
     ////////////////////////////////////////////////////////////////
     // event management
 
-    /**
-     * @param change
-     */
     public void addChangeRegistryAsListener( ChangeRegistry change ) {
 	getGraphModel().addGraphEventListener( change );
     }
@@ -144,7 +126,7 @@ public class ArgoDiagram extends Diagram {
 		|| ModelFacade.isAAttribute(obj)) {
 
                 // get all the classes from the diagram
-                Iterator it = getNodes(null).iterator();
+                Iterator it = getNodes().iterator();
                 while (it.hasNext()) {
                     Object o = it.next();
                     if (ModelFacade.isAClassifier(o)) {
@@ -165,13 +147,9 @@ public class ArgoDiagram extends Diagram {
 	ProjectManager.getManager().getCurrentProject().setActiveDiagram(this);
     }
     
-    /**
-     * This will mark the entire visible area of all Editors to be repaired
-     *  from any damage - i.e. repainted.
-     */
     public void damage() {
-        if (getLayer() != null && getLayer().getEditors() != null) {
-            Iterator it = getLayer().getEditors().iterator();
+        if (getLayer() != null && getLayer().getEditors(null) != null) {
+            Iterator it = getLayer().getEditors(null).iterator();
             while (it.hasNext()) {
                 ((Editor) it.next()).damageAll();
             }
@@ -189,6 +167,16 @@ public class ArgoDiagram extends Diagram {
     }
 
     /**
+     * @deprecated 0.15.3 in favour of getNodes(Collection)
+     */
+    public Vector getNodes() {
+        if (getGraphModel() != null) {
+            return getGraphModel().getNodes();
+        }
+        return new Vector (getNodes(null));
+    }
+    
+    /**
      * @see Diagram#getNodes(Collection)
      */
     public Collection getNodes(Collection c) {
@@ -198,9 +186,6 @@ public class ArgoDiagram extends Diagram {
         return super.getNodes(c);
     }
     
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
         return "Diagram: " + _name;
     }

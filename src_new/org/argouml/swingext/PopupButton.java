@@ -46,7 +46,7 @@ public class PopupButton extends ModalButton {
     /**
      * The popup component.
      */
-    private Component component = null;
+    private Component   _component = null;
     
     /**
      * Constructs a new PopupButton with no popup assigned.
@@ -78,7 +78,7 @@ public class PopupButton extends ModalButton {
      */
     public PopupButton(Component c, Icon icon) {
         this();
-        component = c;
+        _component = c;
         setIcon(icon);
     }
     
@@ -88,7 +88,7 @@ public class PopupButton extends ModalButton {
      * @return  the popup component
      */
     public Component getPopupComponent() {
-        return component;
+        return _component;
     }
     
     /**
@@ -97,7 +97,7 @@ public class PopupButton extends ModalButton {
      * @param   c   the new popup component
      */
     public void setPopupComponent(Component c) {
-        component = c;
+        _component = c;
     }
     
     /**
@@ -121,9 +121,9 @@ public class PopupButton extends ModalButton {
      * method to perform actions before the popup is shown.
      */
     protected void showPopup() {
-        if (component != null) {
+        if (_component != null) {
             JPopupMenu popupMenu = new JPopupMenu();
-            popupMenu.add(component);
+            popupMenu.add(_component);
             popupMenu.pack();            
             popupMenu.show(this, 0, getHeight());
         }

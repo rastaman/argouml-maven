@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,16 +37,8 @@ import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-/**
- * The critic for ambiguous names.
- *
- */
 public class CrDisambigStateName extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrDisambigStateName() {
 	setHeadline("Choose a Unique Name for <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decNAMING);
@@ -55,10 +47,6 @@ public class CrDisambigStateName extends CrUML {
 	addTrigger("parent");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAState(dm))) return NO_PROBLEM;
 	Object state = /*(MState)*/ dm;
@@ -75,9 +63,9 @@ public class CrDisambigStateName extends CrUML {
 	    if (ns == null) return NO_PROBLEM;
 	    Collection oes = ModelFacade.getOwnedElements(ns);
 	    if (oes == null) return NO_PROBLEM;
-	    Iterator elems = oes.iterator();
-	    while (elems.hasNext()) {
-		Object eo = /*(MElementImport)*/ elems.next();
+	    Iterator enum = oes.iterator();
+	    while (enum.hasNext()) {
+		Object eo = /*(MElementImport)*/ enum.next();
 		Object me = /*(MModelElement)*/ ModelFacade.getModelElement(eo);
 		if (!(ModelFacade.isAClassifier(me))) continue;
 		if (me == state) continue;
@@ -89,11 +77,8 @@ public class CrDisambigStateName extends CrUML {
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClClassName.getTheInstance();
+	return ClClassName.TheInstance;
     }
 
 } /* end class CrDisambigStateName */

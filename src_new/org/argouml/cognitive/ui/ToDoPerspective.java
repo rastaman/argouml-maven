@@ -45,26 +45,23 @@ public abstract class ToDoPerspective extends TreeModelComposite
     implements Serializable 
 {
     
-    private static final Logger LOG = Logger.getLogger(ToDoPerspective.class);
+    private static Logger cat = Logger.getLogger(ToDoPerspective.class);
     
     ////////////////////////////////////////////////////////////////
     // instance variables
     
     /** todoList specific */
-    private boolean flat;
+    protected boolean _flat;
     
     /** todoList specific */
-    private Vector flatChildren;
+    protected Vector _flatChildren;
     
-    /**
-     * The constructor.
-     * 
-     * @param name the name that will be localized
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public ToDoPerspective(String name) {
         
         super(name);
-        flatChildren = new Vector();
+        _flatChildren = new Vector();
     }
     
     ////////////////////////////////////////////////////////////////
@@ -78,70 +75,54 @@ public abstract class ToDoPerspective extends TreeModelComposite
      * @return the child found at index. Null if index is out of bounds.
      */
     public Object getChild(Object parent, int index) {
-        if (flat && parent == getRoot()) {
-            return flatChildren.elementAt(index);
+        if (_flat && parent == _root) {
+            return _flatChildren.elementAt(index);
         }
         return super.getChild( parent,  index);
     }
     
-    /**
-     * @see javax.swing.tree.TreeModel#getChildCount(java.lang.Object)
-     */
+    /** needs documenting */
     public int getChildCount(Object parent) {
-        if (flat && parent == getRoot()) {
-            return flatChildren.size();
+        if (_flat && parent == _root) {
+            return _flatChildren.size();
         }
         return super.getChildCount( parent);
     }
     
-    /**
-     * @see javax.swing.tree.TreeModel#getIndexOfChild(java.lang.Object, 
-     * java.lang.Object)
-     */
+    /** needs documenting */
     public int getIndexOfChild(Object parent, Object child) {
-        if (flat && parent == getRoot()) {
-            return flatChildren.indexOf(child);
+        if (_flat && parent == _root) {
+            return _flatChildren.indexOf(child);
         }
         return super.getIndexOfChild(parent, child);
     }
     
     // ------------ other methods ------------
     
-    /** 
-     * todoList specific
-     * @param b true if flat
-     */
+    /** todoList specific */
     public void setFlat(boolean b) {
-        flat = false;
+        _flat = false;
         if (b) calcFlatChildren();
-        flat = b;
+        _flat = b;
     }
     
-    /** 
-     * todoList specific
-     * 
-     * @return the flatness: true if flat
-     */
-    public boolean getFlat() { return flat; }
+    /** todoList specific */
+    public boolean getFlat() { return _flat; }
     
     /** todoList specific */
     public void calcFlatChildren() {
-        flatChildren.removeAllElements();
-        addFlatChildren(getRoot());
+        _flatChildren.removeAllElements();
+        addFlatChildren(_root);
     }
     
-    /** 
-     * todoList specific
-     * 
-     * @param node the object to be added
-     */
+    /** todoList specific */
     public void addFlatChildren(Object node) {
         if (node == null) return;
-        LOG.debug("addFlatChildren");
+        cat.debug("addFlatChildren");
         // hack for to do items only, should check isLeaf(node), but that
         // includes empty folders. Really I need alwaysLeaf(node).
-        if ((node instanceof ToDoItem) && !flatChildren.contains(node))
-            flatChildren.addElement(node);
+        if ((node instanceof ToDoItem) && !_flatChildren.contains(node))
+            _flatChildren.addElement(node);
         
         int nKids = getChildCount(node);
         for (int i = 0; i < nKids; i++) {

@@ -31,14 +31,12 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
 /**
- * Rule for Operation->Collaboration Diagram.
  * @since Oct 7, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -69,9 +67,6 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;
@@ -81,8 +76,7 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", 
-                "misc.operation.collaboration-diagram");
+        return "Operation->Collaboration Diagram";
     }
 
 }

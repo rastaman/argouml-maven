@@ -36,41 +36,26 @@ import org.tigris.gef.presentation.FigText;
 
 
 
-/**
- * The clarifier (the red wavy line) for the classname.
- *
- */
 public class ClClassName implements Clarifier {
-    private static ClClassName theInstance = new ClClassName();
-    private static final int WAVE_LENGTH = 4;
-    private static final int WAVE_HEIGHT = 2;
+    public static ClClassName TheInstance = new ClClassName();
+    public static int WAVE_LENGTH = 4;
+    public static int WAVE_HEIGHT = 2;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private Fig fig;
+    Fig _fig;
 
-    /**
-     * @see org.argouml.ui.Clarifier#setFig(org.tigris.gef.presentation.Fig)
-     */
-    public void setFig(Fig f) { fig = f; }
-    
-    /**
-     * @see org.argouml.ui.Clarifier#setToDoItem(org.argouml.cognitive.ToDoItem)
-     */
+    public void setFig(Fig f) { _fig = f; }
     public void setToDoItem(ToDoItem i) { }
 
-    /**
-     * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, 
-     * int, int)
-     */
     public void paintIcon(Component c, Graphics g, int x, int y) {
 	FigText ft = null;
-	if (fig instanceof FigNodeModelElement) {
-	    FigNodeModelElement fnme = (FigNodeModelElement) fig;
+	if (_fig instanceof FigNodeModelElement) {
+	    FigNodeModelElement fnme = (FigNodeModelElement) _fig;
 	    ft = fnme.getNameFig();
 	}
-	if (fig instanceof FigEdgeModelElement) {
-	    FigEdgeModelElement feme = (FigEdgeModelElement) fig;
+	if (_fig instanceof FigEdgeModelElement) {
+	    FigEdgeModelElement feme = (FigEdgeModelElement) _fig;
 	    ft = feme.getNameFig();
 	}
 	if (ft != null) {
@@ -95,42 +80,25 @@ public class ClClassName implements Clarifier {
 		i += WAVE_LENGTH;
 		if (i >= right) break;
 	    }
-	    fig = null;
+	    _fig = null;
 	}
     }
 
-    /**
-     * @see javax.swing.Icon#getIconWidth()
-     */
     public int getIconWidth() { return 0; }
-    
-    /**
-     * @see javax.swing.Icon#getIconHeight()
-     */
     public int getIconHeight() { return 0; }
 
-    /**
-     * @see org.argouml.ui.Clarifier#hit(int, int)
-     */
     public boolean hit(int x, int y) {
 	FigText ft = null;
-	if (fig instanceof FigNodeModelElement) {
-	    FigNodeModelElement fnme = (FigNodeModelElement) fig;
+	if (_fig instanceof FigNodeModelElement) {
+	    FigNodeModelElement fnme = (FigNodeModelElement) _fig;
 	    ft = fnme.getNameFig();
 	}
-	if (fig instanceof FigEdgeModelElement) {
-	    FigEdgeModelElement feme = (FigEdgeModelElement) fig;
+	if (_fig instanceof FigEdgeModelElement) {
+	    FigEdgeModelElement feme = (FigEdgeModelElement) _fig;
 	    ft = feme.getNameFig();
 	}
-	fig = null;
+	_fig = null;
 	return (ft != null) && ft.contains(x, y);
-    }
-
-    /**
-     * @return Returns the theInstance.
-     */
-    public static ClClassName getTheInstance() {
-        return theInstance;
     }
 
 } /* end class ClClassName */

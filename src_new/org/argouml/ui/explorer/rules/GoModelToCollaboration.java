@@ -30,23 +30,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 
 /**
- * Rule for Model->Collaboration.
  * @since Oct 1, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class GoModelToCollaboration extends AbstractPerspectiveRule {
+public class GoModelToCollaboration extends AbstractPerspectiveRule{
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() {
-        return Translator.localize ("Tree", "misc.model.collaboration");
-    }
+    public String getRuleName() { return "Model->Collaboration"; }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
@@ -56,14 +49,14 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
             Object model = /*(MModel)*/ parent;
             Collection col = ModelManagementHelper.getHelper()
 		.getAllModelElementsOfKind(model,
-                    (Class) ModelFacade.COLLABORATION);
+                    (Class)ModelFacade.COLLABORATION);
             List returnList = new ArrayList();
             Iterator it = col.iterator();
             while (it.hasNext()) {
                 Object collab = /*(MCollaboration)*/ it.next();
-                if (ModelFacade.getRepresentedClassifier(collab) == null 
-                        && ModelFacade.getRepresentedOperation(collab) == null) 
-                {
+                if (ModelFacade.getRepresentedClassifier(collab) == null && 
+                    ModelFacade.getRepresentedOperation(collab) == null) {
+                        
                     returnList.add(collab);
                 }
             }
@@ -72,9 +65,6 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
 	// TODO: What?
 	return null;

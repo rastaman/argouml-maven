@@ -90,8 +90,7 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
     public void testVisibilityProtected() {
 	if (group == null) return; // Inconclusive
         elem.setVisibility(MVisibilityKind.PROTECTED);
-        assertEquals(group.getSelection(), 
-                     group.getProtectedButton().getModel());
+        assertEquals(group.getSelection(), group.getProtectedButton().getModel());
     }
 
 
@@ -102,8 +101,7 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         super.setUp();
         elem = new MClassImpl();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        MockUMLUserInterfaceContainer cont = 
-            new MockUMLUserInterfaceContainer();
+        MockUMLUserInterfaceContainer cont = new MockUMLUserInterfaceContainer();
         cont.setTarget(elem);
 
 	// If we cannot create the group, we assume that it is because

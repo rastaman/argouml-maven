@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -37,7 +36,6 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 
 /**
- * The rule for Behavioral Feature->Statechart diagram.
  * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 30, 2002
@@ -50,7 +48,7 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
     public Collection getChildren(Object parent) {
         
         if (ModelFacade.isABehavioralFeature(parent)) {
-            Object operation = parent; //MBehavioralFeature
+            Object operation = parent;//MBehavioralFeature
             Collection col = ModelFacade.getBehaviors(operation);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
@@ -58,9 +56,8 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
             Iterator it = diagrams.iterator();
             while (it.hasNext()) {
                 ArgoDiagram diagram = (ArgoDiagram) it.next();
-                if (diagram instanceof UMLStateDiagram 
-                    && col.contains(((UMLStateDiagram) diagram)
-                            .getStateMachine())) {
+                if (diagram instanceof UMLStateDiagram &&
+                    col.contains(((UMLStateDiagram) diagram).getStateMachine())) {
                     ret.add(diagram);
                 }
                 
@@ -70,9 +67,6 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         // TODO: what?
 	return null;
@@ -82,7 +76,6 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", 
-                "misc.behavioral-feature.statechart-diagram");
+        return "Behavioral Feature->Statechart diagram";
     }
 }

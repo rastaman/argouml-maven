@@ -28,7 +28,7 @@ import junit.framework.*;
 
 class ClassFinder {
     // The cumulative list of classes found.
-    private final Vector classNameList = new Vector ();
+    final private Vector classNameList = new Vector ();
 
     /**
      * Find all classes stored in classfiles in classPathRoot
@@ -39,22 +39,20 @@ class ClassFinder {
     }
 
     /**
-     * Recursive method that adds all class names 
-     * related to classfiles it finds in
+     * Recursive method that adds all class names related to classfiles it finds in
      * the currentDirectory (and below).
      */
     private void findAndStoreTestClasses(final File currentDirectory,
-					 final String packageprefix) 
-        throws IOException
+					 final String packageprefix) throws IOException
     {
 	String files[] = currentDirectory.list();
 	for (int i = 0; i < files.length; i++) {
 	    File file = new File(currentDirectory, files[i]);
 	    String fileBase = file.getName ();
 	    int idx = fileBase.indexOf(".class");
-	    final int classExtensionLength = 6;
+	    final int CLASS_EXTENSION_LENGTH = 6;
 	    if (idx != -1 
-		&& (fileBase.length() - idx) == classExtensionLength
+		&& (fileBase.length() - idx) == CLASS_EXTENSION_LENGTH
 		&& fileBase.startsWith("Test")) {
 		String fname = packageprefix + "." + fileBase.substring(0, idx);
 
@@ -81,7 +79,7 @@ class ClassFinder {
 
 
 class TestCaseLoader {
-    private final Vector classList = new Vector ();
+    final private Vector classList = new Vector ();
 
     public void loadTestCases (final Iterator classNamesIterator) {
 	while (classNamesIterator.hasNext ()) {
@@ -104,10 +102,6 @@ class TestCaseLoader {
     }
 }
 
-/**
- * The class that will test everything...
- *
- */
 public class TestAll extends TestCase {
     private static int addAllTests(final TestSuite suite,
 				   final Iterator classIterator)
@@ -123,10 +117,6 @@ public class TestAll extends TestCase {
 	return testClassCount;
     }
 
-    /**
-     * @return the test
-     * @throws Throwable
-     */
     public static Test suite()
 	throws Throwable {
 	try {
@@ -138,8 +128,7 @@ public class TestAll extends TestCase {
 	    TestCaseLoader testCaseLoader = new TestCaseLoader();
 	    testCaseLoader.loadTestCases(classFinder.getClasses());
 	    int numberOfTests = addAllTests(suite, testCaseLoader.getClasses());
-	    System.out.println("Number of test classes found: " 
-                + numberOfTests);
+	    System.out.println("Number of test classes found: " + numberOfTests);
 	    return suite;
 	} catch (Throwable t) {
 	    // This ensures we have extra information.
@@ -150,10 +139,9 @@ public class TestAll extends TestCase {
     }
 
     /**
-     * The basic constructor - called by the test runners.
-     *
-     * @param s the name of the test
+     * Basic constructor - called by the test runners.
      */
+
     public TestAll(String s) {
 	super(s);
     }

@@ -54,15 +54,11 @@ public class SettingsTabAppearance
     implements SettingsTabPanel
 {
 
-    private JComboBox	lookAndFeel;
-    private JComboBox	metalTheme;
-    private JLabel      metalLabel;
-    private JCheckBox   smoothEdges;
+    private JComboBox	_lookAndFeel;
+    private JComboBox	_metalTheme;
+    private JLabel      _metalLabel;
+    private JCheckBox   _smoothEdges;
     
-    /**
-     * The constructor.
-     * 
-     */
     public SettingsTabAppearance() {
         super();
 
@@ -73,33 +69,33 @@ public class SettingsTabAppearance
         JPanel top = new JPanel(new LabelledLayout(labelGap, componentGap));
 
         JLabel label = createLabel("label.look-and-feel");
-        lookAndFeel =
+        _lookAndFeel =
 	    new JComboBox(LookAndFeelMgr.getInstance()
 			  .getAvailableLookAndFeelNames());
-        lookAndFeel.addActionListener(new ActionListener() {
+        _lookAndFeel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
                 setMetalThemeState();
             }
         });
-        label.setLabelFor(lookAndFeel);
+        label.setLabelFor(_lookAndFeel);
         top.add(label);
-        top.add(lookAndFeel);
+        top.add(_lookAndFeel);
 
-        metalLabel = createLabel("label.metal-theme");
+        _metalLabel = createLabel("label.metal-theme");
 
-        metalTheme = new JComboBox(LookAndFeelMgr.getInstance()
-                .getAvailableThemeNames());
-        metalLabel.setLabelFor(metalTheme);
-        top.add(metalLabel);
-        top.add(metalTheme);
+        _metalTheme =
+	    new JComboBox(LookAndFeelMgr.getInstance().getAvailableThemeNames());
+        _metalLabel.setLabelFor(_metalTheme);
+        top.add(_metalLabel);
+        top.add(_metalTheme);
         
-        smoothEdges = createCheckBox("label.smooth-edges");
+        _smoothEdges = createCheckBox("label.smooth-edges");
         JLabel emptyLabel = new JLabel();
-        emptyLabel.setLabelFor(smoothEdges);
+        emptyLabel.setLabelFor(_smoothEdges);
         
         top.add(emptyLabel);
-        top.add(smoothEdges);
+        top.add(_smoothEdges);
         
         top.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(top, BorderLayout.CENTER);
@@ -119,13 +115,13 @@ public class SettingsTabAppearance
     **/
     private void setMetalThemeState()
     {
-        String lafName = (String) lookAndFeel.getSelectedItem();
+        String lafName = (String) _lookAndFeel.getSelectedItem();
         boolean enabled =
 	    LookAndFeelMgr.getInstance().isThemeCompatibleLookAndFeel(
-		LookAndFeelMgr.getInstance().getLookAndFeelFromName(lafName));
+		    LookAndFeelMgr.getInstance().getLookAndFeelFromName(lafName));
 
-        metalLabel.setEnabled(enabled);
-        metalTheme.setEnabled(enabled);
+        _metalLabel.setEnabled(enabled);
+        _metalTheme.setEnabled(enabled);
     }
 
     /**
@@ -135,10 +131,10 @@ public class SettingsTabAppearance
         String laf = LookAndFeelMgr.getInstance().getCurrentLookAndFeelName();
     	String theme = LookAndFeelMgr.getInstance().getCurrentThemeName();
 
-        lookAndFeel.setSelectedItem(laf);
-        metalTheme.setSelectedItem(theme);		
+        _lookAndFeel.setSelectedItem(laf);
+        _metalTheme.setSelectedItem(theme);		
         
-        smoothEdges.setSelected(Configuration.getBoolean(
+        _smoothEdges.setSelected(Configuration.getBoolean(
             Argo.KEY_SMOOTH_EDGES, false));
     }
 
@@ -148,14 +144,14 @@ public class SettingsTabAppearance
     public void handleSettingsTabSave() {
         LookAndFeelMgr.getInstance().setCurrentLookAndFeel(
             LookAndFeelMgr.getInstance().getLookAndFeelFromName(
-                (String) lookAndFeel.getSelectedItem()));
+                (String) _lookAndFeel.getSelectedItem()));
     
         LookAndFeelMgr.getInstance().setCurrentTheme(
             LookAndFeelMgr.getInstance().getThemeFromName(
-                (String) metalTheme.getSelectedItem()));
+                (String) _metalTheme.getSelectedItem()));
     
         Configuration.setBoolean(Argo.KEY_SMOOTH_EDGES, 
-            smoothEdges.isSelected());
+            _smoothEdges.isSelected());
     }
 
     /**

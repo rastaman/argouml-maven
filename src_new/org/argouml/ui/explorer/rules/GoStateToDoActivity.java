@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -58,9 +57,6 @@ public class GoStateToDoActivity extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAState(parent)) {
 	    Set set = new HashSet();
@@ -74,7 +70,7 @@ public class GoStateToDoActivity extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state.do-activity");
+        return "State->Do Activity"; 
     }
 
 }

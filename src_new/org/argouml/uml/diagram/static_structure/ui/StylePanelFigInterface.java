@@ -45,18 +45,15 @@ import org.argouml.ui.StylePanelFigNodeModelElement;
  */
 public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
 
-    private JCheckBox operCheckBox = new JCheckBox("Operations");
+    protected JCheckBox _operCheckBox = new JCheckBox("Operations");
 
-    private JLabel displayLabel = new JLabel("Display: ");
+    protected JLabel _displayLabel = new JLabel("Display: ");
 
     /**
      * Flag to indicate that a refresh is going on.
      */
-    private boolean refreshTransaction = false;
+    private boolean _refreshTransaction = false;
 
-    /**
-     * The constructor.
-     */
     public StylePanelFigInterface() {
         super();
         GridBagLayout gb = (GridBagLayout) getLayout();
@@ -69,8 +66,8 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
         c.gridwidth = 1;
         c.gridy = 0;
         c.weightx = 0.0;
-        gb.setConstraints(displayLabel, c);
-        add(displayLabel);
+        gb.setConstraints(_displayLabel, c);
+        add(_displayLabel);
 
         c.gridx = 1;
         c.gridwidth = 1;
@@ -78,54 +75,44 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
         c.weightx = 0.0;
         JPanel pane = new JPanel();
         pane.setLayout(new FlowLayout(FlowLayout.LEFT));
-        pane.add(operCheckBox);
+        pane.add(_operCheckBox);
         gb.setConstraints(pane, c);
         add(pane);
 
-        operCheckBox.setSelected(false);
-        operCheckBox.addItemListener(this);
+        _operCheckBox.setSelected(false);
+        _operCheckBox.addItemListener(this);
     }
 
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    /**
-     * @see org.argouml.ui.TabTarget#refresh()
-     */
     public void refresh() {
-        refreshTransaction = true;
-        super.refresh();
-        FigInterface ti = (FigInterface) _target;
-        operCheckBox.setSelected(ti.isOperationsVisible());
-        refreshTransaction = false;
+	_refreshTransaction = true;
+	super.refresh();
+	if (_target instanceof FigInterface) {
+	    FigInterface ti = (FigInterface) _target;
+	    _operCheckBox.setSelected(ti.isOperationVisible());
+	}
+        _refreshTransaction = false;
     }
 
     ////////////////////////////////////////////////////////////////
     // event handling
 
-    /**
-     * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
-     */
     public void insertUpdate(DocumentEvent e) {
         super.insertUpdate(e);
     }
 
-    /**
-     * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
-     */
     public void removeUpdate(DocumentEvent e) {
         insertUpdate(e);
     }
 
-    /**
-     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-     */
     public void itemStateChanged(ItemEvent e) {
-        if (!refreshTransaction) {
+        if (!_refreshTransaction) {
             Object src = e.getSource();
 
-            if (src == operCheckBox) {
-                ((FigInterface) _target).setOperationsVisible(operCheckBox
+            if (src == _operCheckBox) {
+                ((FigInterface) _target).setOperationVisible(_operCheckBox
                         .isSelected());
                 markNeedsSave();
             } else

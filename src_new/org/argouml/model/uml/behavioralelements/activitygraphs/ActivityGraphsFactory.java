@@ -24,7 +24,6 @@
 
 package org.argouml.model.uml.behavioralelements.activitygraphs;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.AbstractUmlModelFactory;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFactory;
 
@@ -35,9 +34,6 @@ import ru.novosoft.uml.behavior.activity_graphs.MClassifierInState;
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
 import ru.novosoft.uml.behavior.activity_graphs.MPartition;
 import ru.novosoft.uml.behavior.activity_graphs.MSubactivityState;
-import ru.novosoft.uml.behavior.state_machines.MCompositeState;
-import ru.novosoft.uml.behavior.state_machines.MSimpleState;
-import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -56,15 +52,14 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
 
     /** Singleton instance.
      */
-    private static ActivityGraphsFactory sINGLETON =
+    private static ActivityGraphsFactory SINGLETON =
 	new ActivityGraphsFactory();
 
     /**
      * Singleton instance access method.
-     * @return the singleton
      */
     public static ActivityGraphsFactory getFactory() {
-        return sINGLETON;
+        return SINGLETON;
     }
 
     /** Don't allow instantiation
@@ -152,9 +147,9 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
      * Builds an activity graph owned by the given context.<p>
      *
      * @param theContext is a ModelElement that will own the graph.
-     * @return the new MActivityGraph as Object
+     * @return the new MActivityGraph
      */
-    public Object buildActivityGraph(Object theContext) {
+    public MActivityGraph buildActivityGraph(Object theContext) {
         MModelElement context = (MModelElement) theContext;
     	if (context != null
 	    && (context instanceof MBehavioralFeature
@@ -176,76 +171,18 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
 					       + "context null or not legal");
     }
     
-    /**
-     * Builds an objectflowstate. The objectflowstate will be a subvertix of
-     * the given compositestate. The parameter compositeState is of
-     * type Object to decouple the factory and NSUML as much as
-     * possible from the rest of ArgoUML.
-     *
-     * @author MVW
-     * @param compositeState the given compositestate
-     * @return Object the newly build objectflow state 
-     */
-    public Object buildObjectFlowState(Object compositeState) {
-        if (compositeState instanceof MCompositeState) {
-            MObjectFlowState state = createObjectFlowState();           
-            state.setContainer((MCompositeState) compositeState);
-            return state;
-        }
-        return null;
-    }
-
-    /**
-     * Builds a ClassifierInState. Links it to the 2 required objects: 
-     * the classifier that forms the type of this classifierInState, 
-     * and the state.
-     * @param classifier the classifier (type)
-     * @param state the state (inState)
-     * @return the newly build classifierInState
-     */
-    public Object buildClassifierInState(Object classifier, Object state) {
-        if (classifier instanceof MClassifier && state instanceof MState) {
-            MClassifierInState c = createClassifierInState();
-            ModelFacade.setType(c, classifier);
-            ModelFacade.addInState(c, state);
-        }
-        return null;
-    }
-    
-    
-    /**
-     * @param elem the ActionState to be deleted
-     */
     public void deleteActionState(Object elem) { }
     
-    /**
-     * @param elem the ActivityGraph to be deleted
-     */
     public void deleteActivityGraph(MActivityGraph elem) { }
     
-    /**
-     * @param elem the CallState to be deleted
-     */
     public void deleteCallState(MCallState elem) { }
     
-    /**
-     * @param elem the ClassifierInState to be deleted
-     */
     public void deleteClassifierInState(MClassifierInState elem) { }
     
-    /**
-     * @param elem ObjectFlowState
-     */
     public void deleteObjectFlowState(MObjectFlowState elem) { }
     
-    /**
-     * @param elem Partition
-     */
     public void deletePartition(MPartition elem) { }
     
-    /**
-     * @param elem SubactivityState
-     */
     public void deleteSubactivityState(MSubactivityState elem) { }
 
 }

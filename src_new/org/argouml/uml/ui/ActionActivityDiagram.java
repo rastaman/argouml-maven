@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsFactory;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -35,14 +36,17 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  */
 public class ActionActivityDiagram extends ActionStateDiagram {
 
-    /**
-     * The singleton.
-     */
-    public static final ActionActivityDiagram SINGLETON = 
-        new ActionActivityDiagram();
+    public static ActionActivityDiagram SINGLETON = new ActionActivityDiagram();
 
     /**
-     * Constructor.
+     * @deprecated since V0.15.5. Make your own logger instead.
+     */
+    protected static Logger cat =
+	Logger.getLogger(org.argouml.uml.ui.ActionActivityDiagram.class);
+
+    /**
+     * Constructor
+     *
      */
     private ActionActivityDiagram() {
         super("action.activity-diagram");
@@ -55,7 +59,7 @@ public class ActionActivityDiagram extends ActionStateDiagram {
         Object target = TargetManager.getInstance().getModelTarget();
         Object/*MActivityGraph*/ graph =
 	    ActivityGraphsFactory.getFactory().buildActivityGraph(target);
-        /*if (ModelFacade.isABehavioralFeature(target)) {
+        /*if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
             ns = ModelFacade.getNamespace(target); 
             // this fails always, see issue 1817
         }*/
@@ -68,8 +72,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
      */
     public boolean shouldBeEnabled() {
         return super.shouldBeEnabled()
-	    || ModelFacade.isAPackage(TargetManager.getInstance()
-	            .getModelTarget());
+	    || org.argouml.model.ModelFacade.isAPackage(TargetManager
+                .getInstance().getModelTarget());
     }
 
     /**

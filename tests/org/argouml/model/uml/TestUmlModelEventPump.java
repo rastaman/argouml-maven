@@ -174,6 +174,23 @@ public class TestUmlModelEventPump extends TestCase {
     }
 
     /**
+     * Tests wether an exception is thrown if one tries to register a listener
+     * to a class that is no subclass of MBase
+     */
+    public void testAddNonMBaseClassListener() {
+        try {
+            UmlModelEventPump.getPump()
+		.addClassModelEventListener(listener,
+					    Object.class,
+					    new String[] {
+						"name"
+					    });
+            fail();
+        } catch (Exception ex) {
+        }
+    }
+
+    /**
      * Tests wether it is possible (it should not be) to give empty arguments
      * while registring a listener
      */
@@ -532,16 +549,14 @@ public class TestUmlModelEventPump extends TestCase {
     /*
       public void testListensDependencyToSuperClass() {
       MDependency dep = CoreFactory.getFactory().createDependency();
-      UmlModelEventPump.getPump().addClassModelEventListener(listener2, 
-          dep.getClass(), "behavior");
+      UmlModelEventPump.getPump().addClassModelEventListener(listener2, dep.getClass(), "behavior");
       dep.addBehavior(StateMachinesFactory.getFactory().createStateMachine());
       assertTrue(eventcalled);
       }
     
       public void testListensSuperClassToDependency() {
       MDependency dep = CoreFactory.getFactory().createDependency();
-      UmlModelEventPump.getPump().addClassModelEventListener(listener2, 
-          MModelElement.class, "behavior");
+      UmlModelEventPump.getPump().addClassModelEventListener(listener2, MModelElement.class, "behavior");
       dep.addBehavior(StateMachinesFactory.getFactory().createStateMachine());
       assertTrue(eventcalled);
       }

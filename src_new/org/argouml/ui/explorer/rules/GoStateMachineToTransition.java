@@ -28,23 +28,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Statemachine->Transition.
- * 
  * @author Jaap
  *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
  */
 public class GoStateMachineToTransition extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state-machine.transition");
-    }
+    public String getRuleName() { return "Statemachine->Transition"; }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
@@ -56,9 +52,6 @@ public class GoStateMachineToTransition extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAStateMachine(parent)) {
 	    Set set = new HashSet();

@@ -38,57 +38,57 @@ import org.tigris.gef.ui.ColorRenderer;
 /**
  * StylePanel class which provides additional parameters for changing Text
  * elements provided by GEF.
- *  TODO: i18n
+ *  
  */
 public class StylePanelFigText extends StylePanelFig {
 
-    private static final String FONT_NAMES[] = {
+    protected static String FONT_NAMES[] = {
 	"dialog", "serif", "sanserif",
 	"monospaced",
     };
 
-    private static final Integer COMMON_SIZES[] = {
+    protected static Integer COMMON_SIZES[] = {
 	new Integer(8), new Integer(9),
 	new Integer(10), new Integer(12), new Integer(16), new Integer(18),
 	new Integer(24), new Integer(36), new Integer(48), new Integer(72),
 	new Integer(96),
     };
 
-    private static final String STYLES[] = {
+    protected static String STYLES[] = {
 	"Plain", "Bold", "Italic",
 	"Bold-Italic",
     };
 
-    private static final String JUSTIFIES[] = {
+    protected static String JUSTIFIES[] = {
 	"Left", "Right", "Center",
     };
 
-    private JLabel fontLabel = new JLabel("Font: ");
+    protected JLabel _fontLabel = new JLabel("Font: ");
 
-    private JComboBox fontField = new JComboBox(FONT_NAMES);
+    protected JComboBox _fontField = new JComboBox(FONT_NAMES);
 
-    private JLabel sizeLabel = new JLabel("Size: ");
+    protected JLabel _sizeLabel = new JLabel("Size: ");
 
-    private JComboBox sizeField = new JComboBox(COMMON_SIZES);
+    protected JComboBox _sizeField = new JComboBox(COMMON_SIZES);
 
-    private JLabel styleLabel = new JLabel("Style: ");
+    protected JLabel _styleLabel = new JLabel("Style: ");
 
-    private JComboBox styleField = new JComboBox(STYLES);
+    protected JComboBox _styleField = new JComboBox(STYLES);
 
-    private JLabel justLabel = new JLabel("Justify: ");
+    protected JLabel _justLabel = new JLabel("Justify: ");
 
-    private JComboBox justField = new JComboBox(JUSTIFIES);
+    protected JComboBox _justField = new JComboBox(JUSTIFIES);
 
-    private JLabel textColorLabel = new JLabel("Text Color: ");
+    protected JLabel _textColorLabel = new JLabel("Text Color: ");
 
-    private JComboBox textColorField = new JComboBox();
+    protected JComboBox _textColorField = new JComboBox();
 
-    private JLabel textFillLabel = new JLabel("Text Fill: ");
+    protected JLabel _textFillLabel = new JLabel("Text Fill: ");
 
-    private JComboBox textFillField = new JComboBox();
+    protected JComboBox _textFillField = new JComboBox();
 
     /**
-     * Construct default style panel for text elements.
+     * construct default style panel for text elements.
      *  
      */
     public StylePanelFigText() {
@@ -99,94 +99,91 @@ public class StylePanelFigText extends StylePanelFig {
         c.ipadx = 0;
         c.ipady = 0;
 
-        fontField.addItemListener(this);
-        sizeField.addItemListener(this);
-        styleField.addItemListener(this);
-        justField.addItemListener(this);
-        textColorField.addItemListener(this);
-        textFillField.addItemListener(this);
+        _fontField.addItemListener(this);
+        _sizeField.addItemListener(this);
+        _styleField.addItemListener(this);
+        _justField.addItemListener(this);
+        _textColorField.addItemListener(this);
+        _textFillField.addItemListener(this);
 
-        textColorField.setRenderer(new ColorRenderer());
-        textFillField.setRenderer(new ColorRenderer());
+        _textColorField.setRenderer(new ColorRenderer());
+        _textFillField.setRenderer(new ColorRenderer());
 
         c.weightx = 0.0;
         c.gridx = 0;
         c.gridwidth = 1;
         c.gridy = 5;
-        gb.setConstraints(textColorLabel, c);
-        add(textColorLabel);
+        gb.setConstraints(_textColorLabel, c);
+        add(_textColorLabel);
         c.gridy = 6;
-        gb.setConstraints(textFillLabel, c);
-        add(textFillLabel);
+        gb.setConstraints(_textFillLabel, c);
+        add(_textFillLabel);
 
         c.gridx = 3;
         c.gridwidth = 1;
         c.gridy = 1;
-        gb.setConstraints(fontLabel, c);
-        add(fontLabel);
+        gb.setConstraints(_fontLabel, c);
+        add(_fontLabel);
         c.gridy = 2;
-        gb.setConstraints(sizeLabel, c);
-        add(sizeLabel);
+        gb.setConstraints(_sizeLabel, c);
+        add(_sizeLabel);
         c.gridy = 3;
-        gb.setConstraints(styleLabel, c);
-        add(styleLabel);
+        gb.setConstraints(_styleLabel, c);
+        add(_styleLabel);
         // row 4 left blank for some reason...
         c.gridy = 5;
-        gb.setConstraints(justLabel, c);
-        add(justLabel);
+        gb.setConstraints(_justLabel, c);
+        add(_justLabel);
 
         c.weightx = 1.0;
         c.gridx = 1;
         c.gridy = 5;
-        gb.setConstraints(textColorField, c);
-        add(textColorField);
+        gb.setConstraints(_textColorField, c);
+        add(_textColorField);
         c.gridy = 6;
-        gb.setConstraints(textFillField, c);
-        add(textFillField);
+        gb.setConstraints(_textFillField, c);
+        add(_textFillField);
         c.gridx = 4;
         c.gridy = 1;
-        gb.setConstraints(fontField, c);
-        add(fontField);
+        gb.setConstraints(_fontField, c);
+        add(_fontField);
         c.gridy = 2;
-        gb.setConstraints(sizeField, c);
-        add(sizeField);
+        gb.setConstraints(_sizeField, c);
+        add(_sizeField);
         c.gridy = 3;
-        gb.setConstraints(styleField, c);
-        add(styleField);
+        gb.setConstraints(_styleField, c);
+        add(_styleField);
         c.gridy = 5;
-        gb.setConstraints(justField, c);
-        add(justField);
+        gb.setConstraints(_justField, c);
+        add(_justField);
         initChoices2();
     }
 
-    /**
-     * Second part of the default style panel construction.
-     */
     protected void initChoices2() {
-        textColorField.addItem(Color.black);
-        textColorField.addItem(Color.white);
-        textColorField.addItem(Color.gray);
-        textColorField.addItem(Color.lightGray);
-        textColorField.addItem(Color.darkGray);
-        textColorField.addItem(Color.red);
-        textColorField.addItem(Color.blue);
-        textColorField.addItem(Color.green);
-        textColorField.addItem(Color.orange);
-        textColorField.addItem(Color.pink);
-        textColorField.addItem("Custom...");
+        _textColorField.addItem(Color.black);
+        _textColorField.addItem(Color.white);
+        _textColorField.addItem(Color.gray);
+        _textColorField.addItem(Color.lightGray);
+        _textColorField.addItem(Color.darkGray);
+        _textColorField.addItem(Color.red);
+        _textColorField.addItem(Color.blue);
+        _textColorField.addItem(Color.green);
+        _textColorField.addItem(Color.orange);
+        _textColorField.addItem(Color.pink);
+        _textColorField.addItem("Custom...");
 
-        textFillField.addItem("No Fill");
-        textFillField.addItem(Color.black);
-        textFillField.addItem(Color.white);
-        textFillField.addItem(Color.gray);
-        textFillField.addItem(Color.lightGray);
-        textFillField.addItem(Color.darkGray);
-        textFillField.addItem(Color.red);
-        textFillField.addItem(Color.blue);
-        textFillField.addItem(Color.green);
-        textFillField.addItem(Color.orange);
-        textFillField.addItem(Color.pink);
-        textFillField.addItem("Custom...");
+        _textFillField.addItem("No Fill");
+        _textFillField.addItem(Color.black);
+        _textFillField.addItem(Color.white);
+        _textFillField.addItem(Color.gray);
+        _textFillField.addItem(Color.lightGray);
+        _textFillField.addItem(Color.darkGray);
+        _textFillField.addItem(Color.red);
+        _textFillField.addItem(Color.blue);
+        _textFillField.addItem(Color.green);
+        _textFillField.addItem(Color.orange);
+        _textFillField.addItem(Color.pink);
+        _textFillField.addItem("Custom...");
 
     }
 
@@ -197,36 +194,41 @@ public class StylePanelFigText extends StylePanelFig {
      */
     public void refresh() {
         super.refresh();
+
+	if (!(_target instanceof FigText)) {
+	    return;
+	}
+
         FigText ft = (FigText) _target;
         String fontName = ft.getFontFamily();
         int size = ft.getFontSize();
         String styleName = STYLES[0];
 
-        fontField.setSelectedItem(fontName);
-        sizeField.setSelectedItem(new Integer(size));
+        _fontField.setSelectedItem(fontName);
+        _sizeField.setSelectedItem(new Integer(size));
         if (ft.getBold()) styleName = STYLES[1];
         if (ft.getItalic()) styleName = STYLES[2];
         if (ft.getBold() && ft.getItalic()) styleName = STYLES[3];
-        styleField.setSelectedItem(styleName);
+        _styleField.setSelectedItem(styleName);
 
         String justName = JUSTIFIES[0];
         int justCode = ft.getJustification();
         if (justCode >= 0 && justCode <= JUSTIFIES.length)
                 justName = JUSTIFIES[justCode];
-        justField.setSelectedItem(justName);
+        _justField.setSelectedItem(justName);
 
         Color c = ft.getTextColor();
-        textColorField.setSelectedItem(c);
-        if (c != null && !textColorField.getSelectedItem().equals(c)) {
-            textColorField.insertItemAt(c, textColorField.getItemCount() - 1);
-            textColorField.setSelectedItem(c);
+        _textColorField.setSelectedItem(c);
+        if (c != null && !_textColorField.getSelectedItem().equals(c)) {
+            _textColorField.insertItemAt(c, _textColorField.getItemCount() - 1);
+            _textColorField.setSelectedItem(c);
         }
 
         c = ft.getTextFillColor();
-        getFillField().setSelectedItem(c);
-        if (c != null && !getFillField().getSelectedItem().equals(c)) {
-            getFillField().insertItemAt(c, getFillField().getItemCount() - 1);
-            getFillField().setSelectedItem(c);
+        _fillField.setSelectedItem(c);
+        if (c != null && !_fillField.getSelectedItem().equals(c)) {
+            _fillField.insertItemAt(c, _fillField.getItemCount() - 1);
+            _fillField.setSelectedItem(c);
         }
     }
 
@@ -236,7 +238,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetFont() {
         if (_target == null) return;
-        String fontStr = (String) fontField.getSelectedItem();
+        String fontStr = (String) _fontField.getSelectedItem();
         if (fontStr.length() == 0) return;
         ((FigText) _target).setFontFamily(fontStr);
         _target.endTrans();
@@ -248,7 +250,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetSize() {
         if (_target == null) return;
-        Integer size = (Integer) sizeField.getSelectedItem();
+        Integer size = (Integer) _sizeField.getSelectedItem();
         ((FigText) _target).setFontSize(size.intValue());
         _target.endTrans();
     }
@@ -260,7 +262,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetStyle() {
         if (_target == null) return;
-        String styleStr = (String) styleField.getSelectedItem();
+        String styleStr = (String) _styleField.getSelectedItem();
         if (styleStr == null) return;
         boolean bold = (styleStr.indexOf("Bold") != -1);
         boolean italic = (styleStr.indexOf("Italic") != -1);
@@ -275,7 +277,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetJustification() {
         if (_target == null) return;
-        String justStr = (String) justField.getSelectedItem();
+        String justStr = (String) _justField.getSelectedItem();
         if (justStr == null) return;
         ((FigText) _target).setJustificationByName(justStr);
         _target.endTrans();
@@ -287,7 +289,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetTextFill() {
         if (_target == null) return;
-        Object c = textFillField.getSelectedItem();
+        Object c = _textFillField.getSelectedItem();
         if (c instanceof Color)
                 ((FigText) _target).setTextFillColor((Color) c);
         ((FigText) _target).setTextFilled(c instanceof Color);
@@ -300,7 +302,7 @@ public class StylePanelFigText extends StylePanelFig {
      */
     protected void setTargetTextColor() {
         if (_target == null) return;
-        Object c = textColorField.getSelectedItem();
+        Object c = _textColorField.getSelectedItem();
         if (c instanceof Color) ((FigText) _target).setTextColor((Color) c);
         _target.endTrans();
     }
@@ -310,17 +312,17 @@ public class StylePanelFigText extends StylePanelFig {
      */
     public void itemStateChanged(ItemEvent e) {
         Object src = e.getSource();
-        if (src == fontField)
+        if (src == _fontField)
             setTargetFont();
-        else if (src == sizeField)
+        else if (src == _sizeField)
             setTargetSize();
-        else if (src == styleField)
+        else if (src == _styleField)
             setTargetStyle();
-        else if (src == justField)
+        else if (src == _justField)
             setTargetJustification();
-        else if (src == textColorField)
+        else if (src == _textColorField)
             setTargetTextColor();
-        else if (src == textFillField)
+        else if (src == _textFillField)
             setTargetTextFill();
         else
             super.itemStateChanged(e);

@@ -34,14 +34,11 @@ import java.util.Iterator;
  * class and is provided to give the same functionality for previous
  * versions of JDK.<p>
  *
- * @see <a 
- * href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/LinkedHashMap.html">
- * LinkedHashMap in JDK1.4</a>
+ * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/LinkedHashMap.html">LinkedHashMap in JDK1.4</a>
  * @author Bob Tarling
  */
 public class LinkedHashMap extends java.util.HashMap {
 
-    // TODO: Not used. Is this intentional?
     private boolean accessOrder;
 
     private transient KeySet keySet = new KeySet();
@@ -53,40 +50,19 @@ public class LinkedHashMap extends java.util.HashMap {
         super();
     }
     
-    /**
-     * The constructor.
-     * 
-     * @param initialCapacity the initial capacity
-     */
     public LinkedHashMap(int initialCapacity) {
         super(initialCapacity);
     }
     
-    /**
-     * The constructor.
-     * 
-     * @param initialCapacity the initial capacity
-     * @param loadFactor the load factor
-     */
     public LinkedHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
     
-    /**
-     * The constructor.
-     * 
-     * @param initialCapacity the initial capacity
-     * @param loadFactor the load factor
-     * @param accessOrder ignored TODO: Is this intentional?
-     */
     public LinkedHashMap(int initialCapacity, float loadFactor,
 			 boolean accessOrder) {
         super(initialCapacity, loadFactor);
     }
     
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
     public Object put(Object key, Object value) {
         keySet.add(key);
         values.add(value);
@@ -104,9 +80,6 @@ public class LinkedHashMap extends java.util.HashMap {
         //}
     //}
     
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
     public Object remove(Object key) {
         if (containsKey(key)) {
             int index = keySet.indexOf(key);
@@ -133,18 +106,12 @@ public class LinkedHashMap extends java.util.HashMap {
     //}
     
 
-    /**
-     * @see java.util.Map#clear()
-     */
     public void clear() {
         keySet.clear();
         values.clear();
         super.clear();
     }
     
-    /**
-     * @see java.lang.Object#clone()
-     */
     public Object clone() {
         LinkedHashMap linkedHashMap = (LinkedHashMap) super.clone();
         linkedHashMap.entrySet = (EntrySet) entrySet.clone();
@@ -153,23 +120,14 @@ public class LinkedHashMap extends java.util.HashMap {
         return linkedHashMap;
     }
     
-    /**
-     * @see java.util.Map#keySet()
-     */
     public Set keySet() {
         return keySet;
     }
     
-    /**
-     * @see java.util.Map#values()
-     */
     public Collection values() {
         return values;
     }
     
-    /**
-     * @see java.util.Map#entrySet()
-     */
     public Set entrySet() {
         return entrySet;
     }

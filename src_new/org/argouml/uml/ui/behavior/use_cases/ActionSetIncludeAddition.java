@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -55,29 +55,24 @@ public class ActionSetIncludeAddition extends UMLChangeAction {
         super.actionPerformed(e);
         Object source = e.getSource();
         Object newAddition = null;
-        Object oldBase = null;
-        Object include = null;
+        Object inc = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newAddition = /*(MUseCase)*/ combo.getSelectedItem();
-            Object o = combo.getTarget();
-            if (org.argouml.model.ModelFacade.isAInclude(o)) {
-                include = /*(MInclude)*/ o;
-                o = combo.getSelectedItem();
-                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
-                    newAddition = /*(MUseCase)*/ o;
-                    oldBase = ModelFacade.getAddition(include);
-                    if (newAddition != oldBase) {
-                        ModelFacade.setAddition(include, newAddition);
-                    }
-                } else {
-                    if (o != null && o.equals("")) {
-                        ModelFacade.setAddition(include, null);
-                    }
-                }
-
+            if (org.argouml.model.ModelFacade.isAInclude(combo.getTarget())) {
+                inc = /*(MInclude)*/ combo.getTarget();
             }
+        }
 
+	if (inc == null) {
+	    return;
+	}
+
+        Object oldAddition = ModelFacade.getAddition(inc);
+        // oldbase can never be null
+        if (oldAddition == null || newAddition == null) throw new IllegalStateException("Base of inc is null!");
+        if (oldAddition != newAddition) {
+            ModelFacade.setAddition(inc, newAddition);
         }
     }
 

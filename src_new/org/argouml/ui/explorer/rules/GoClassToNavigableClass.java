@@ -31,25 +31,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
-/**
- * Rule for Class->Navigable Class.
- *
- */
 public class GoClassToNavigableClass extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.class.navigable-class");
+        return "Class->Navigable Class";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         if (!ModelFacade.isAClass(parent))
             return null;
@@ -60,9 +49,9 @@ public class GoClassToNavigableClass extends AbstractPerspectiveRule {
         if (ends == null)
             return null;
         
-        Iterator it = ends.iterator();
-        while (it.hasNext()) {
-            Object ae = /*(MAssociationEnd)*/ it.next();
+        Iterator enum = ends.iterator();
+        while (enum.hasNext()) {
+            Object ae = /*(MAssociationEnd)*/ enum.next();
             Object asc = ModelFacade.getAssociation(ae);
             Collection allEnds = ModelFacade.getConnections(asc);
             
@@ -90,9 +79,6 @@ public class GoClassToNavigableClass extends AbstractPerspectiveRule {
         return childClasses;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAClass(parent)) {
 	    Set set = new HashSet();

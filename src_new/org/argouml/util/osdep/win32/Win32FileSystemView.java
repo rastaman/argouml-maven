@@ -54,19 +54,13 @@ import javax.swing.filechooser.FileSystemView;
 
 public class Win32FileSystemView extends FileSystemView { 
 
-    /**
-     * The constructor.
-     * 
-     */
     public Win32FileSystemView() {
         super();
     }
 
     /** 
     * Returns true if the given file is a root. 
-    *
-    * @see javax.swing.filechooser.FileSystemView#isRoot(java.io.File)
-    */
+    */ 
     public boolean isRoot(File f) { 
         if (!f.isAbsolute()) { 
             return false; 
@@ -82,10 +76,8 @@ public class Win32FileSystemView extends FileSystemView {
     } 
     
     /** 
-    * Creates a new folder with a default folder name. 
-    *
-    * @see javax.swing.filechooser.FileSystemView#createNewFolder(java.io.File)
-    */
+    * creates a new folder with a default folder name. 
+    */ 
     public File createNewFolder(File containingDir) throws IOException { 
         if (containingDir == null) { 
             throw new IOException("Containing directory is null:"); 
@@ -101,8 +93,8 @@ public class Win32FileSystemView extends FileSystemView {
         } 
     
         if (newFolder.exists()) { 
-            throw new IOException("Directory already exists:" 
-	                          + newFolder.getAbsolutePath()); 
+            throw new IOException("Directory already exists:" +
+	                          newFolder.getAbsolutePath()); 
         } else { 
             newFolder.mkdirs(); 
         } 
@@ -111,12 +103,10 @@ public class Win32FileSystemView extends FileSystemView {
     } 
     
     /** 
-     * Returns whether a file is hidden or not. On Windows 
-     * there is currently no way to get this information from 
-     * io.File, therefore always return false. 
-     *
-     * @see javax.swing.filechooser.FileSystemView#isHiddenFile(java.io.File)
-     */
+    * Returns whether a file is hidden or not. On Windows 
+    * there is currently no way to get this information from 
+    * io.File, therefore always return false. 
+    */ 
     public boolean isHiddenFile(File f) { 
         return false; 
     } 
@@ -128,9 +118,7 @@ public class Win32FileSystemView extends FileSystemView {
     * Note - This appears to bypass the B drive!  Should
     * we treat the B drive the same as the A drive, or should
     * we continue to bypass it?
-    *
-    * @see javax.swing.filechooser.FileSystemView#getRoots()
-    */
+    */ 
     public File[] getRoots() { 
     
         Vector rootsVector = new Vector(); 

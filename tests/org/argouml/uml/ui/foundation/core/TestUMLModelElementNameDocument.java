@@ -26,7 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
@@ -43,7 +42,7 @@ import ru.novosoft.uml.model_management.MModel;
  */
 public class TestUMLModelElementNameDocument extends TestCase {
     
-    private Object elem = null;
+    private MModelElement elem = null;
     private int oldEventPolicy;
     private UMLModelElementNameDocument model;
     private MModel ns;
@@ -65,8 +64,7 @@ public class TestUMLModelElementNameDocument extends TestCase {
         elem = CoreFactory.getFactory().buildClass(ns);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        MockUMLUserInterfaceContainer cont = 
-            new MockUMLUserInterfaceContainer();
+        MockUMLUserInterfaceContainer cont = new MockUMLUserInterfaceContainer();
         //cont.setTarget(elem);
         model = new UMLModelElementNameDocument();
         model.setTarget(elem);
@@ -85,24 +83,27 @@ public class TestUMLModelElementNameDocument extends TestCase {
         model = null;
     }
     
-    public void testSetName() throws BadLocationException {
-        ModelFacade.setName(elem, "test");
-        assertEquals("test", model.getText(0, model.getLength()));
+    public void testSetName()
+	throws BadLocationException
+    {
+        elem.setName("test");
+	assertEquals("test", model.getText(0, model.getLength()));
     }
     
-    public void testRemoveName() throws BadLocationException
+    public void testRemoveName()
+	throws BadLocationException
     {
-        ModelFacade.setName(elem, "test");
-        ModelFacade.setName(elem, "");
-        assertEquals("", model.getText(0, model.getLength()));
+        elem.setName("test");
+        elem.setName(null);
+	assertEquals("", model.getText(0, model.getLength()));
     }
     
     public void testInsertString()
 	throws BadLocationException
     {
-        ModelFacade.setName(elem, "");
-    	model.insertString(0, "test", null);
-        assertEquals("test", ModelFacade.getName(elem));
+        elem.setName("");
+	model.insertString(0, "test", null);
+        assertEquals("test", elem.getName());
     }
     
     public void testRemoveString() 
@@ -110,30 +111,30 @@ public class TestUMLModelElementNameDocument extends TestCase {
     {
 	model.insertString(0, "test", null);
 	model.remove(0, model.getLength());
-        assertEquals("", ModelFacade.getName(elem));
+        assertEquals("", elem.getName());
     }
     
     public void testAppendString()
 	throws BadLocationException
     {
-        ModelFacade.setName(elem, "test");
-    	model.insertString(model.getLength(), "test", null);
-        assertEquals("testtest", ModelFacade.getName(elem));
+        elem.setName("test");
+	model.insertString(model.getLength(), "test", null);
+        assertEquals("testtest", elem.getName());
     }
     
     public void testInsertStringHalfway()
 	throws BadLocationException
     {
-        ModelFacade.setName(elem, "test");
-    	model.insertString(1, "test", null);
-        assertEquals("ttestest", ModelFacade.getName(elem));
+        elem.setName("test");
+	model.insertString(1, "test", null);
+        assertEquals("ttestest", elem.getName());
     }
     
     public void testRemoveStringHalfway()
 	throws BadLocationException
     {
-        ModelFacade.setName(elem, "test");
-    	model.remove(1, model.getLength() - 2);
-        assertEquals("tt", ModelFacade.getName(elem));
+        elem.setName("test");
+	model.remove(1, model.getLength() - 2);
+        assertEquals("tt", elem.getName());
     }
 }

@@ -38,20 +38,12 @@ import org.argouml.model.ModelFacade;
  */
 public class CrIllegalName extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrIllegalName() {
 	setHeadline("Choose a Legal Name");
 	addSupportedDecision(CrUML.decNAMING);
 	addTrigger("name");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
 	Object me = /*(MModelElement)*/ dm;
@@ -64,18 +56,15 @@ public class CrIllegalName extends CrUML {
 	// but for States we make an exception
 	for (int i = 0; i < len; i++) {
 	    char c = nameStr.charAt(i);
-	    if (!(Character.isLetterOrDigit(c) || c == '_' 
-	        || (c == ' ' && ModelFacade.isAStateVertex(me))))
+	    if (!(Character.isLetterOrDigit(c) || c == '_' ||
+		  (c == ' ' && ModelFacade.isAStateVertex(me))))
 		return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClClassName.getTheInstance();
+	return ClClassName.TheInstance;
     }
 
 } /* end class CrIllegalName */

@@ -45,22 +45,12 @@ public abstract class AbstractButtonAction
     private boolean modal;
     private int lockMethod = NONE;
     
-    /**
-     * Possible ways in which a user can lock a button: <code>NONE</code>
-     */
+    // Possible ways in which a user can lock a button
     public static final int NONE = 0;
-    
-    /**
-     * Possible ways in which a user can lock a button:
-     *  <code>DOUBLE_CLICK</code>
-     */
     public static final int DOUBLE_CLICK = 1;
     
     /**
      * Creates a new instance of AbstractButtonAction
-     *
-     * @param name the name of the action
-     * @param icon the icon for the action
      */
     public AbstractButtonAction(String name, Icon icon) {
         super(name, icon);
@@ -68,58 +58,34 @@ public abstract class AbstractButtonAction
 
     /**
      * Creates a new instance of AbstractButtonAction
-     *
-     * @param name the name of the action
-     * @param icon the icon of the action
-     * @param isModal modal = the user is obliged to answer this action 
-     *              before doing anything else
      */
-    public AbstractButtonAction(String name, Icon icon, boolean isModal) {
+    public AbstractButtonAction(String name, Icon icon, boolean modal) {
         super(name, icon);
-        this.modal = isModal;
+        this.modal = modal;
     }
 
     /**
      * Creates a new instance of AbstractButtonAction
-     *
-     * @param name the name of the action
-     * @param icon the icon of the action
-     * @param isModal modal = the user is obliged to answer this action 
-     *              before doing anything else
-     * @param theLockMethod purpose: action buttons can remain depressed 
-     *                      so that they can be used multiple times
      */
     public AbstractButtonAction(String name, Icon icon,
-				boolean isModal, int theLockMethod) {
+				boolean modal, int lockMethod) {
         super(name, icon);
-        this.modal = isModal;
-        this.lockMethod = theLockMethod;
+        this.modal = modal;
+        this.lockMethod = lockMethod;
     }
     
-    /**
-     * @see org.argouml.swingext.ButtonAction#setModal(boolean)
-     */
-    public void setModal(boolean isModal) {
-        this.modal = isModal;
+    public void setModal(boolean modal) {
+        this.modal = modal;
     }
     
-    /**
-     * @see org.argouml.swingext.ButtonAction#isModal()
-     */
     public boolean isModal() {
         return modal;
     }
     
-    /**
-     * @see org.argouml.swingext.ButtonAction#setLockMethod(int)
-     */
-    public void setLockMethod(int theLockMethod) {
-        this.lockMethod = theLockMethod;
+    public void setLockMethod(int lockMethod) {
+        this.lockMethod = lockMethod;
     }
     
-    /**
-     * @see org.argouml.swingext.ButtonAction#getLockMethod()
-     */
     public int getLockMethod() {
         return lockMethod;
     }

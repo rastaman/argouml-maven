@@ -35,9 +35,6 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
-import org.argouml.uml.diagram.static_structure.ui.FigComment;
-import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
@@ -73,7 +70,7 @@ import org.tigris.gef.presentation.FigNode;
 public class UseCaseDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    private static final Logger LOG =
+    protected static Logger cat =
 	Logger.getLogger(UseCaseDiagramRenderer.class);
 
 
@@ -100,16 +97,13 @@ public class UseCaseDiagramRenderer
         else if (org.argouml.model.ModelFacade.isAUseCase(node)) {
             return new FigUseCase(gm, node);
         }
-        else if (ModelFacade.isAComment(node)) {
-            return new FigComment(gm, node);
-        }
 
         // If we get here we were asked for a fig we can't handle.
 
-        LOG.debug(this.getClass().toString() 
-		  + ": getFigNodeFor(" + gm.toString() + ", " 
-		  + lay.toString() + ", " + node.toString() 
-		  + ") - cannot create this sort of node.");
+        cat.debug(this.getClass().toString() +
+		  ": getFigNodeFor(" + gm.toString() + ", " +
+		  lay.toString() + ", " + node.toString() +
+		  ") - cannot create this sort of node.");
         return null;
     }
 
@@ -128,14 +122,11 @@ public class UseCaseDiagramRenderer
      *
      * @return      The fig to be used, or <code>null</code> if we can't create
      *              one.
-     *
-     * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
-     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, 
-     * java.lang.Object)
      */
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {       
 
-        LOG.debug("making figedge for " + edge);
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
+
+        cat.debug("making figedge for " + edge);
 
         // If the edge is an association, we'll need a FigAssociation
 
@@ -187,10 +178,13 @@ public class UseCaseDiagramRenderer
 
         else if (org.argouml.model.ModelFacade.isAInclude(edge)) {
             Object   inc    = /*(MInclude)*/ edge;
-            FigInclude incFig = new FigInclude(inc);          
+            FigInclude incFig = new FigInclude(inc);
 
-            Object base     = ModelFacade.getBase(inc);
-            Object addition = ModelFacade.getAddition(inc);
+            // The nodes at the two ends. NSUML has a bug which gets base and
+            // additon reversed, so we must reverse their accessors here.
+
+            Object base     = ModelFacade.getAddition(inc);
+            Object addition = ModelFacade.getBase(inc);
 
             // The figs for the two end nodes
 
@@ -218,10 +212,10 @@ public class UseCaseDiagramRenderer
             // element in each case. There really ought to be a check that
             // there are some here for safety.
 
-            Object supplier = /*(MModelElement)*/
-                 ((ModelFacade.getSuppliers(dep).toArray())[0]);
-            Object client = /*(MModelElement)*/
-                 ((ModelFacade.getClients(dep).toArray())[0]);
+            Object supplier =
+                /*(MModelElement)*/ ((ModelFacade.getSuppliers(dep).toArray())[0]);
+            Object client =
+                /*(MModelElement)*/ ((ModelFacade.getClients(dep).toArray())[0]);
 
             // The figs for the two end nodes
 
@@ -237,11 +231,7 @@ public class UseCaseDiagramRenderer
             depFig.setDestFigNode(supplierFN);
 
             return depFig;
-        } else 
-            if (edge instanceof CommentEdge) {
-                return new FigEdgeNote(edge, lay);
-            }
-            
+        }
 
         // If we get here, we can't handle this sort of edge.
 
@@ -249,10 +239,10 @@ public class UseCaseDiagramRenderer
         // model maybe they should be, just as an implementation issue, dont
         // remove any of the methods that are there now.
 
-        LOG.debug(this.getClass().toString() 
-		  + ": getFigEdgeFor(" + gm.toString() + ", " 
-		  + lay.toString() + ", " + edge.toString() 
-		  + ") - needs more work to handle this sort of edge");
+        cat.debug(this.getClass().toString() +
+		  ": getFigEdgeFor(" + gm.toString() + ", " +
+		  lay.toString() + ", " + edge.toString() +
+		  ") - needs more work to handle this sort of edge");
         return null;
     }
 

@@ -28,11 +28,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.uml.UmlHelper;
 
 /**
- * Rule for Summary->Association.
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
  * @author alexb, d00mst
@@ -40,16 +38,10 @@ import org.argouml.model.uml.UmlHelper;
  */
 public class GoSummaryToAssociation extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.summary.association");
+	return "Summary->Association";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	if (parent instanceof AssociationsNode) {
 	    return UmlHelper.getHelper().getCore()
@@ -58,9 +50,6 @@ public class GoSummaryToAssociation extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (parent instanceof AssociationsNode) {
 	    Set set = new HashSet();

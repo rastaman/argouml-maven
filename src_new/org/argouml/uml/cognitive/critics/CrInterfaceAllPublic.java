@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -41,10 +41,6 @@ import org.argouml.model.ModelFacade;
  *  Semantics. OMG document ad/97-08-04. */
 public class CrInterfaceAllPublic extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrInterfaceAllPublic() {
 	setHeadline("Operations in Interfaces must be public");
 	addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
@@ -52,21 +48,16 @@ public class CrInterfaceAllPublic extends CrUML {
 	addTrigger("behavioralFeature");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 	Object inf = /*(MInterface)*/ dm;
 	Collection bf = ModelFacade.getFeatures(inf);
 	if (bf == null) return NO_PROBLEM;
-	Iterator features = bf.iterator();
-	while (features.hasNext()) {
-	    Object f = /*(MFeature)*/ features.next();
+	Iterator enum = bf.iterator();
+	while (enum.hasNext()) {
+	    Object f = /*(MFeature)*/ enum.next();
 	    if (ModelFacade.getVisibility(f) == null) return NO_PROBLEM;
-	    if (!ModelFacade.getVisibility(f)
-                .equals(ModelFacade.PUBLIC_VISIBILITYKIND))
+	    if (!ModelFacade.getVisibility(f).equals(ModelFacade.PUBLIC_VISIBILITYKIND))
 		return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;

@@ -41,10 +41,6 @@ import org.argouml.model.ModelFacade;
 
 public class CrIllegalGeneralization extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrIllegalGeneralization() {
 	setHeadline("Illegal MGeneralization ");
 
@@ -53,10 +49,6 @@ public class CrIllegalGeneralization extends CrUML {
 	addTrigger("subtype");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAGeneralization(dm))) return NO_PROBLEM;
 	Object gen = /*(MGeneralization)*/ dm;

@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -39,14 +38,9 @@ import org.argouml.model.ModelFacade;
  * 
  * @author jaap.branderhorst@xs4all.nl
  */
-public class GoMachineToState extends AbstractPerspectiveRule {
+public class GoMachineToState extends AbstractPerspectiveRule{
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() { 
-        return Translator.localize ("Tree", "misc.state-machine.state");
-    }
+    public String getRuleName() { return "Statemachine->State"; }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
@@ -61,9 +55,6 @@ public class GoMachineToState extends AbstractPerspectiveRule {
         return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAStateMachine(parent)) {
 	    Set set = new HashSet();

@@ -28,34 +28,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
-/**
- * The GoRule AssociationRole->Messages.
- *
- */
 public class GoAssocRoleMessages extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() { 
-        return Translator.localize ("Tree", "misc.association-role.messages");
-    }
+    public String getRuleName() { return "AssociationRole->Messages"; }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	if (!ModelFacade.isAAssociationRole(parent))
 	    return null;
 	return ModelFacade.getMessages(parent);
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAAssociationRole(parent)) {
 	    Set set = new HashSet();

@@ -42,14 +42,10 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-import org.argouml.ui.ArgoDiagram;
-import org.argouml.uml.diagram.UMLMutableGraphSupport;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.MFactory;
 import ru.novosoft.uml.behavior.state_machines.MEvent;
-import ru.novosoft.uml.foundation.core.MAbstraction;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationClass;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
@@ -113,12 +109,10 @@ public class CoreFactory extends AbstractUmlModelFactory {
 
     /** Singleton instance.
      */
-    private static final CoreFactory SINGLETON = new CoreFactory();
+    private static CoreFactory SINGLETON = new CoreFactory();
 
     /**
      * Singleton instance access method.
-     *
-     * @return the singleton
      */
     public static CoreFactory getFactory() {
 	return SINGLETON;
@@ -144,23 +138,13 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * Build an empty but initialized instance of a UML Abstraction
      * with a given name.
      *
-     * @param name The name.
+     * @param name
      * @return an initialized UML Abstraction instance.
      */
-    public Object buildAbstraction(String name,
-            Object supplier, 
-            Object client) {
-        if (!(client instanceof MClassifier)
-                || !(supplier instanceof MClassifier)) {
-            throw new IllegalArgumentException(
-                "The supplier and client of an abstration" +
-                "should be classifiers" );
-        }
-        MAbstraction abstraction = (MAbstraction)createAbstraction();
+    public Object buildAbstraction(String name) {
+        Object abstraction = createAbstraction();
         super.initialize(abstraction);
         ModelFacade.setName(abstraction, name);
-        abstraction.addClient((MClassifier)client);
-        abstraction.addSupplier((MClassifier)supplier);
         return abstraction;
     }
 
@@ -443,32 +427,32 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param nav2 The navigability of the second Associaton end
      * @param agg2 The aggregation type of the second Associaton end
      * @return MAssociation
-     * @throws IllegalArgumentException if either Classifier is null
      */
-    private MAssociation buildAssociation(MClassifier c1,
+    public MAssociation buildAssociation(
+					 MClassifier c1,
 					 boolean nav1,
 					 MAggregationKind agg1,
 					 MClassifier c2,
 					 boolean nav2,
 					 MAggregationKind agg2) {
-        if (c1 == null || c2 == null) {
+	if (c1 == null || c2 == null) {
             throw new IllegalArgumentException("one of "
 					       + "the classifiers to be "
 					       + "connected is null");
         }
-        MNamespace ns1 = c1.getNamespace();
-        MNamespace ns2 = c2.getNamespace();
-        if (ns1 == null || ns2 == null) {
+	MNamespace ns1 = c1.getNamespace();
+	MNamespace ns2 = c2.getNamespace();
+	if (ns1 == null || ns2 == null) {
             throw new IllegalArgumentException("one of "
 					       + "the classifiers does not "
 					       + "belong to a namespace");
         }
-        MAssociation assoc =
-            UmlFactory.getFactory().getCore().createAssociation();
-        assoc.setName("");
-        assoc.setNamespace(CoreHelper.getHelper().getFirstSharedNamespace(ns1,
-        								  ns2));
-        buildAssociationEnd(
+	MAssociation assoc =
+	    UmlFactory.getFactory().getCore().createAssociation();
+	assoc.setName("");
+	assoc.setNamespace(CoreHelper.getHelper().getFirstSharedNamespace(ns1,
+									  ns2));
+	buildAssociationEnd(
 			    assoc,
 			    null,
 			    c1,
@@ -480,7 +464,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 			    null,
 			    null,
 			    null);
-        buildAssociationEnd(
+	buildAssociationEnd(
 			    assoc,
 			    null,
 			    c2,
@@ -492,48 +476,36 @@ public class CoreFactory extends AbstractUmlModelFactory {
 			    null,
 			    null,
 			    null);
-        return assoc;
+	return assoc;
     }
 
     /**
      * Builds a binary associationrole on basis of two classifierroles,
      * navigation and aggregation.
-     *
-     * @param fromClassifier   the first given classifier
-     * @param aggregationKind1 the first aggregationkind
-     * @param toClassifier     the second given classifier
-     * @param aggregationKind2 the second aggregationkind
-     * @param unidirectional true if unidirectional
-     * @return the newly build binary associationrole
      */
-    public Object buildAssociation(
-					 Object fromClassifier,
-					 Object aggregationKind1,
-					 Object toClassifier,
-					 Object aggregationKind2,
+    public MAssociation buildAssociation(
+					 MClassifier from,
+					 MAggregationKind agg1,
+					 MClassifier to,
+					 MAggregationKind agg2,
 					 Boolean unidirectional) {
-        if (fromClassifier == null || toClassifier == null)
-                throw new IllegalArgumentException("one of "
-        				       + "the classifiers to be "
-        				       + "connected is null");
-        MClassifier from = (MClassifier)fromClassifier;
-        MClassifier to = (MClassifier)toClassifier;
-        MAggregationKind agg1 = (MAggregationKind)aggregationKind1;
-        MAggregationKind agg2 = (MAggregationKind)aggregationKind2;
-        
-        MNamespace ns1 = from.getNamespace();
-        MNamespace ns2 = to.getNamespace();
-        if (ns1 == null || ns2 == null)
-                throw new IllegalArgumentException("one of "
-        				       + "the classifiers does not "
-        				       + "belong to a namespace");
-        MAssociation assoc =
-                UmlFactory.getFactory().getCore().createAssociation();
-        assoc.setName("");
-        assoc.setNamespace(
-        		   CoreHelper.getHelper().getFirstSharedNamespace(ns1,
-        								  ns2));
-        
+	if (from == null || to == null)
+            throw new IllegalArgumentException("one of "
+					       + "the classifiers to be "
+					       + "connected is null");
+	MNamespace ns1 = from.getNamespace();
+	MNamespace ns2 = to.getNamespace();
+	if (ns1 == null || ns2 == null)
+            throw new IllegalArgumentException("one of "
+					       + "the classifiers does not "
+					       + "belong to a namespace");
+	MAssociation assoc =
+            UmlFactory.getFactory().getCore().createAssociation();
+	assoc.setName("");
+	assoc.setNamespace(
+			   CoreHelper.getHelper().getFirstSharedNamespace(ns1,
+									  ns2));
+
         boolean nav1 = true;
         boolean nav2 = true;
 
@@ -548,7 +520,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
             nav2 = true;
         }
 
-        buildAssociationEnd(
+	buildAssociationEnd(
 			    assoc,
 			    null,
 			    from,
@@ -560,7 +532,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 			    null,
 			    null,
 			    null);
-        buildAssociationEnd(
+	buildAssociationEnd(
 			    assoc,
 			    null,
 			    to,
@@ -586,9 +558,8 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param classifier2 The second classifier to connect
      * @return MAssociation
      */
-    public MAssociation buildAssociation(
-            Object classifier1,
-			Object classifier2) {
+    public MAssociation buildAssociation(Object classifier1,
+					 Object classifier2) {
         MClassifier c1 = (MClassifier) classifier1;
         MClassifier c2 = (MClassifier) classifier2;
         return buildAssociation(c1, true, MAggregationKind.NONE,
@@ -603,7 +574,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param nav2 The navigability of the second Associaton end
      * @return MAssociation
      */
-    private MAssociation buildAssociation(
+    public MAssociation buildAssociation(
 					 MClassifier c1,
 					 boolean nav1,
 					 MClassifier c2,
@@ -620,7 +591,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param nav1 The navigability of the Associaton end
      * @param c2 The second classifier to connect to
      * @param nav2 The navigability of the second Associaton end
-     * @param name the given name
+     * @param name
      * @return association
      */
     public Object buildAssociation(Object c1, boolean nav1,
@@ -642,7 +613,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param agg2 The aggregation type of the second Associaton end
      * @return MAssociation
      */
-    private MAssociation buildAssociation(
+    public MAssociation buildAssociation(
 					 MClassifier c1,
 					 MAggregationKind agg1,
 					 MClassifier c2,
@@ -655,23 +626,23 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * Builds an associationClass between classifier end1 and end2 with a
      * default class.<p>
      *
-     * @param end1 the first given classifier
-     * @param end2 the second given classifier
+     * @param end1
+     * @param end2
      * @return MAssociationClass
      */
-    private MAssociationClass buildAssociationClass(
+    public MAssociationClass buildAssociationClass(
 						   MClassifier end1,
 						   MClassifier end2) {
-        if (end1 == null
-                || end2 == null
-                || end1 instanceof MAssociationClass
-                || end2 instanceof MAssociationClass)
-            throw new IllegalArgumentException(""
-        				       + "either one of the arguments "
-        				       + "was null or "
-        				       + "was instanceof "
-        				       + "MAssociationClass");
-        return buildAssociationClass((MClass)buildClass(), end1, end2);
+	if (end1 == null
+	    || end2 == null
+	    || end1 instanceof MAssociationClass
+	    || end2 instanceof MAssociationClass)
+	    throw new IllegalArgumentException(""
+					       + "either one of the arguments "
+					       + "was null or "
+					       + "was instanceof "
+					       + "MAssociationClass");
+	return buildAssociatonClass(buildClass(), end1, end2);
     }
 
     /**
@@ -686,13 +657,13 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param navigable The navigability. True if this association end
      *                  can be 'passed' from the other classifier.
      * @param order Ordering of the association
-     * @param aggregation the aggregationkind
-     * @param scope the scope kind
-     * @param changeable the changeablekind
-     * @param visibility the visibilitykind
+     * @param aggregation
+     * @param scope
+     * @param changeable
+     * @param visibility
      * @return MAssociationEnd
      */
-    private MAssociationEnd buildAssociationEnd(
+    public MAssociationEnd buildAssociationEnd(
 					       MAssociation assoc,
 					       String name,
 					       MClassifier type,
@@ -729,15 +700,16 @@ public class CoreFactory extends AbstractUmlModelFactory {
             }
         }
         if (aggregation != null
-                && aggregation.equals(MAggregationKind.COMPOSITE)
-                && multi != null
-                && multi.getUpper() > 1) {
-            throw new IllegalArgumentException("aggregation is composite "
-					   + "and multiplicity > 1");
+	    && aggregation.equals(MAggregationKind.COMPOSITE))
+	{
+            if (multi != null && multi.getUpper() > 1) {
+                throw new IllegalArgumentException("aggregation is composite "
+						   + "and multiplicity > 1");
+            }
         }
 
         MAssociationEnd end =
-            UmlFactory.getFactory().getCore().createAssociationEnd();
+	    UmlFactory.getFactory().getCore().createAssociationEnd();
         end.setAssociation(assoc);
         end.setType(type);
         end.setName(name);
@@ -778,12 +750,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
         return end;
     }
 
-    /**
-     * @param type the given classifier
-     * @param assoc the given association
-     * @return the newly build associationend
-     */
-    private MAssociationEnd buildAssociationEnd(
+    public MAssociationEnd buildAssociationEnd(
 					       MClassifier type,
 					       MAssociation assoc) {
 	if (type == null || assoc == null)
@@ -807,124 +774,125 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * that should be associated. Both ends of the associationclass
      * are navigable.<p>
      *
-     * @param cl the class
-     * @param end1 the first classifier
-     * @param end2 the second classifier
+     * @param cl
+     * @param end1
+     * @param end2
      * @return MAssociationClass
      */
-    private MAssociationClass buildAssociationClass(MClass cl,
+    public MAssociationClass buildAssociatonClass(MClass cl,
 						  MClassifier end1,
 						  MClassifier end2) {
-        if (end1 == null
-                || end2 == null
-                || cl == null
-                || end1 instanceof MAssociationClass
-                || end2 instanceof MAssociationClass)
-            throw new IllegalArgumentException("either one of the arguments "
-        				       + "was null or was instanceof "
-        				       + "MAssociationClass");
-        MAssociationClass assoc = createAssociationClass();
-        assoc.setName(cl.getName());
-        assoc.setAbstract(cl.isAbstract());
-        assoc.setActive(cl.isActive());
-        assoc.setAssociationEnds(cl.getAssociationEnds());
-        assoc.setClassifierRoles(cl.getClassifierRoles());
-        assoc.setClassifierRoles1(cl.getClassifierRoles1());
-        assoc.setClassifiersInState(cl.getClassifiersInState());
-        assoc.setClientDependencies(cl.getClientDependencies());
-        assoc.setCollaborations(cl.getCollaborations());
-        assoc.setCollaborations1(cl.getCollaborations1());
-        assoc.setComments(cl.getComments());
-        assoc.setConstraints(cl.getConstraints());
-        assoc.setCreateActions(cl.getCreateActions());
-        assoc.setFeatures(cl.getFeatures());
-        assoc.setExtensions(cl.getExtensions());
-        assoc.setGeneralizations(cl.getGeneralizations());
-        assoc.setInstances(cl.getInstances());
-        assoc.setLeaf(cl.isLeaf());
-        assoc.setNamespace(cl.getNamespace());
-        assoc.setObjectFlowStates(cl.getObjectFlowStates());
-        assoc.setParameters(cl.getParameters());
-        assoc.setParticipants(cl.getParticipants());
-        assoc.setPartitions1(cl.getPartitions1());
-        assoc.setPowertypeRanges(cl.getPowertypeRanges());
-        assoc.setPresentations(cl.getPresentations());
-        assoc.setRoot(cl.isRoot());
-        assoc.setSourceFlows(cl.getSourceFlows());
-        assoc.setSpecification(cl.isSpecification());
-        assoc.setStereotype(cl.getStereotype());
-        assoc.setStructuralFeatures(cl.getStructuralFeatures());
-        assoc.setTaggedValues(cl.getTaggedValues());
-        assoc.setVisibility(cl.getVisibility());
-        buildAssociationEnd(
-        		    assoc,
-        		    null,
-        		    end1,
-        		    null,
-        		    null,
-        		    true,
-        		    null,
-        		    null,
-        		    null,
-        		    null,
-        		    null);
-        buildAssociationEnd(
-        		    assoc,
-        		    null,
-        		    end2,
-        		    null,
-        		    null,
-        		    true,
-        		    null,
-        		    null,
-        		    null,
-        		    null,
-        		    null);
-        return assoc;
+	if (end1 == null
+	    || end2 == null
+	    || cl == null
+	    || end1 instanceof MAssociationClass
+	    || end2 instanceof MAssociationClass)
+	    throw new IllegalArgumentException("either one of the arguments "
+					       + "was null or was instanceof "
+					       + "MAssociationClass");
+	MAssociationClass assoc = createAssociationClass();
+	assoc.setName(cl.getName());
+	assoc.setAbstract(cl.isAbstract());
+	assoc.setActive(cl.isActive());
+	assoc.setAssociationEnds(cl.getAssociationEnds());
+	assoc.setClassifierRoles(cl.getClassifierRoles());
+	assoc.setClassifierRoles1(cl.getClassifierRoles1());
+	assoc.setClassifiersInState(cl.getClassifiersInState());
+	assoc.setClientDependencies(cl.getClientDependencies());
+	assoc.setCollaborations(cl.getCollaborations());
+	assoc.setCollaborations1(cl.getCollaborations1());
+	assoc.setComments(cl.getComments());
+	assoc.setConstraints(cl.getConstraints());
+	assoc.setCreateActions(cl.getCreateActions());
+	assoc.setFeatures(cl.getFeatures());
+	assoc.setExtensions(cl.getExtensions());
+	assoc.setGeneralizations(cl.getGeneralizations());
+	assoc.setInstances(cl.getInstances());
+	assoc.setLeaf(cl.isLeaf());
+	assoc.setNamespace(cl.getNamespace());
+	assoc.setObjectFlowStates(cl.getObjectFlowStates());
+	assoc.setParameters(cl.getParameters());
+	assoc.setParticipants(cl.getParticipants());
+	assoc.setPartitions1(cl.getPartitions1());
+	assoc.setPowertypeRanges(cl.getPowertypeRanges());
+	assoc.setPresentations(cl.getPresentations());
+	assoc.setRoot(cl.isRoot());
+	assoc.setSourceFlows(cl.getSourceFlows());
+	assoc.setSpecification(cl.isSpecification());
+	assoc.setStereotype(cl.getStereotype());
+	assoc.setStructuralFeatures(cl.getStructuralFeatures());
+	assoc.setTaggedValues(cl.getTaggedValues());
+	assoc.setVisibility(cl.getVisibility());
+	buildAssociationEnd(
+			    assoc,
+			    null,
+			    end1,
+			    null,
+			    null,
+			    true,
+			    null,
+			    null,
+			    null,
+			    null,
+			    null);
+	buildAssociationEnd(
+			    assoc,
+			    null,
+			    end2,
+			    null,
+			    null,
+			    true,
+			    null,
+			    null,
+			    null,
+			    null,
+			    null);
+	return assoc;
     }
 
     /**
      * Builds a default attribute.
      * @return MAttribute
      */
-    public Object buildAttribute() {
-        //build the default attribute
-        // this should not be here via the ProjectBrowser but the CoreHelper
-        // should provide this functionality
-        Project p = ProjectManager.getManager().getCurrentProject();
-        MClassifier intType = (MClassifier) p.findType("int");
-        if (p.getModel() != intType.getNamespace()
-                && !(ModelManagementHelper.getHelper()
-                 .getAllNamespaces(p.getModel())
-        	     .contains(intType.getNamespace()))) {
-            intType.setNamespace((MModel) p.getModel());
-        }
-        MAttribute attr = createAttribute();
-        attr.setName("newAttr");
-        attr.setMultiplicity(
-            UmlFactory.getFactory().getDataTypes().createMultiplicity(1, 1));
-        attr.setStereotype(null);
-        attr.setOwner(null);
-        attr.setType(intType);
-        attr.setInitialValue(null);
-        attr.setVisibility(MVisibilityKind.PUBLIC);
-        attr.setOwnerScope(MScopeKind.INSTANCE);
-        attr.setChangeability(MChangeableKind.CHANGEABLE);
-        attr.setTaggedValue("transient", "false");
-        attr.setTaggedValue("volatile", "false");
-        attr.setTargetScope(MScopeKind.INSTANCE);
-        
-        return attr;
+    public MAttribute buildAttribute() {
+	//build the default attribute
+	// this should not be here via the ProjectBrowser but the CoreHelper
+	// should provide this functionality
+	Project p = ProjectManager.getManager().getCurrentProject();
+	MClassifier intType = (MClassifier) p.findType("int");
+	if (p.getModel() != intType.getNamespace()
+	    && !(ModelManagementHelper.getHelper()
+		 .getAllNamespaces(p.getModel())
+		     .contains(intType.getNamespace())))
+	{
+	    intType.setNamespace((MModel) p.getModel());
+	}
+	MAttribute attr = createAttribute();
+	attr.setName("newAttr");
+	attr.setMultiplicity(UmlFactory.getFactory()
+			     .getDataTypes().createMultiplicity(1, 1));
+	attr.setStereotype(null);
+	attr.setOwner(null);
+	attr.setType(intType);
+	attr.setInitialValue(null);
+	attr.setVisibility(MVisibilityKind.PUBLIC);
+	attr.setOwnerScope(MScopeKind.INSTANCE);
+	attr.setChangeability(MChangeableKind.CHANGEABLE);
+	attr.setTaggedValue("transient", "false");
+	attr.setTaggedValue("volatile", "false");
+	attr.setTargetScope(MScopeKind.INSTANCE);
+
+	return attr;
     }
 
     /**
      * Builds a default attribute with a given name.
      *
-     * @param name the given name
-     * @return attribute the newly build attribute
+     * @param name
+     * @return attribute
      */
-    private MAttribute buildAttribute(String name) {
-        MAttribute attr = (MAttribute)buildAttribute();
+    public Object buildAttribute(String name) {
+        MAttribute attr = buildAttribute();
         if (attr != null)
             attr.setName(name);
         return attr;
@@ -935,58 +903,60 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * if this is legal for an interface (purely UML speaking). In
      * this method it is.<p>
      *
-     * @param handle the given classifier
-     * @return the newly build attribute
+     * @param handle
+     * @return MAttribute
      */
-    public Object buildAttribute(Object handle) {
-        if (!ModelFacade.isAClassifier(handle)) {
-            return null;
-        }
-        MClassifier cls = (MClassifier) handle;
-        MAttribute attr = (MAttribute)buildAttribute();
-        cls.addFeature(attr);
-        // we set the listeners to the figs here too
-        // it would be better to do that in the figs themselves
-        Project p = ProjectManager.getManager().getCurrentProject();
-        Iterator it = p.findFigsForMember(cls).iterator();
-        while (it.hasNext()) {
-            MElementListener listener = (MElementListener) it.next();
-            // UmlModelEventPump.getPump().removeModelEventListener(listener,
-            // attr);
-            UmlModelEventPump.getPump().addModelEventListener(listener, attr);
-        }
-        return attr;
+    public MAttribute buildAttribute(Object handle) {
+	if (!ModelFacade.isAClassifier(handle))
+	    return null;
+	MClassifier cls = (MClassifier) handle;
+	MAttribute attr = buildAttribute();
+	cls.addFeature(attr);
+	// we set the listeners to the figs here too
+	// it would be better to do that in the figs themselves
+	Project p = ProjectManager.getManager().getCurrentProject();
+	Iterator it = p.findFigsForMember(cls).iterator();
+	while (it.hasNext()) {
+	    MElementListener listener = (MElementListener) it.next();
+	    // UmlModelEventPump.getPump().removeModelEventListener(listener,
+	    // attr);
+	    UmlModelEventPump.getPump().addModelEventListener(listener, attr);
+	}
+	return attr;
     }
 
     /**
      * Builds a binding between a client modelelement and a supplier
      * modelelement.<p>
      *
-     * @param client 
+     * @param client
      * @param supplier
      * @return MBinding
      */
-    private MBinding buildBinding(MModelElement client,
+    public MBinding buildBinding(MModelElement client,
 				 MModelElement supplier) {
-        Collection clientDependencies = supplier.getClientDependencies();
-        if (!clientDependencies.isEmpty()
-                && clientDependencies.contains(client)) {
-            throw new IllegalArgumentException(
-            				   "Supplier has already "
-            				   + "client "
-            				   + client.getName()
-            				   + " as Client");
-        }
-        // end new code
-        MBinding binding = createBinding();
-        binding.addSupplier(supplier);
-        binding.addClient(client);
-        if (supplier.getNamespace() != null) {
-            binding.setNamespace(supplier.getNamespace());
-        } else if (client.getNamespace() != null) {
-            binding.setNamespace(client.getNamespace());
-        }
-        return binding;
+	// 2002-07-08
+	// Jaap Branderhorst
+	// checked for existence of client
+	Collection clientDependencies = supplier.getClientDependencies();
+	if (!clientDependencies.isEmpty()) {
+	    if (clientDependencies.contains(client)) {
+		throw new IllegalArgumentException(
+						   "Supplier has allready "
+						   + "client "
+						   + client.getName()
+						   + " as Client");
+	    }
+	}
+	// end new code
+	MBinding binding = createBinding();
+	binding.addSupplier(supplier);
+	binding.addClient(client);
+	if (supplier.getNamespace() != null)
+	    binding.setNamespace(supplier.getNamespace());
+	else if (client.getNamespace() != null)
+	    binding.setNamespace(client.getNamespace());
+	return binding;
     }
 
     /**
@@ -994,19 +964,19 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * any model element by default. Users should not forget to add ownership
      * @return MClass
      */
-    public Object buildClass() {
-        MClass cl = createClass();
-        // cl.setNamespace(ProjectBrowser.getInstance().getProject()
-        // .getModel());
-        cl.setName("");
-        cl.setStereotype(null);
-        cl.setAbstract(false);
-        cl.setActive(false);
-        cl.setRoot(false);
-        cl.setLeaf(false);
-        cl.setSpecification(false);
-        cl.setVisibility(MVisibilityKind.PUBLIC);
-        return cl;
+    public MClass buildClass() {
+	MClass cl = createClass();
+	// cl.setNamespace(ProjectBrowser.getInstance().getProject()
+	// .getModel());
+	cl.setName("");
+	cl.setStereotype(null);
+	cl.setAbstract(false);
+	cl.setActive(false);
+	cl.setRoot(false);
+	cl.setLeaf(false);
+	cl.setSpecification(false);
+	cl.setVisibility(MVisibilityKind.PUBLIC);
+	return cl;
     }
 
     /**
@@ -1016,11 +986,11 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @return MClass
      * @see #buildClass()
      */
-    public Object buildClass(Object owner) {
-        Object clazz = buildClass();
-        if (owner instanceof MNamespace)
-            ModelFacade.setNamespace(clazz, (MNamespace) owner);
-        return clazz;
+    public MClass buildClass(Object owner) {
+	MClass cl = buildClass();
+	if (owner instanceof MNamespace)
+	    cl.setNamespace((MNamespace) owner);
+	return cl;
     }
 
     /**
@@ -1030,10 +1000,10 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @return MClass
      * @see #buildClass()
      */
-    public Object buildClass(String name) {
-        Object clazz = buildClass();
-        ModelFacade.setName(clazz, name);
-        return clazz;
+    public MClass buildClass(String name) {
+	MClass cl = buildClass();
+	cl.setName(name);
+	return cl;
     }
 
     /**
@@ -1044,13 +1014,12 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @return MClass
      * @see #buildClass()
      */
-    public Object buildClass(String name, Object owner) {
-        Object clazz = buildClass();
-        ModelFacade.setName(clazz, name);
-        if (owner instanceof MNamespace) {
-            ModelFacade.setNamespace(clazz, (MNamespace) owner);
-        }
-        return clazz;
+    public MClass buildClass(String name, Object owner) {
+	MClass cl = buildClass();
+	cl.setName(name);
+	if (owner instanceof MNamespace)
+	    cl.setNamespace((MNamespace) owner);
+	return cl;
     }
 
     /**
@@ -1139,26 +1108,24 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param supplierObj is the supplier
      * @return MDependency
      */
-    public Object buildDependency(Object clientObj,
+    public MDependency buildDependency(Object clientObj,
 				       Object supplierObj) {
 
 	MModelElement client = (MModelElement) clientObj;
 	MModelElement supplier = (MModelElement) supplierObj;
 	if (client == null
-                || supplier == null
-                || client.getNamespace() == null
-                || supplier.getNamespace() == null) {
+	    || supplier == null
+	    || client.getNamespace() == null
+	    || supplier.getNamespace() == null)
 	    throw new IllegalArgumentException("client or supplier is null "
 					       + "or their namespaces.");
-	}
 	MDependency dep = createDependency();
 	dep.addSupplier(supplier);
 	dep.addClient(client);
-	if (supplier.getNamespace() != null) {
+	if (supplier.getNamespace() != null)
 	    dep.setNamespace(supplier.getNamespace());
-	} else if (client.getNamespace() != null) {
+	else if (client.getNamespace() != null)
 	    dep.setNamespace(client.getNamespace());
-	}
 	return dep;
     }
 
@@ -1469,7 +1436,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	if (o instanceof MEvent) {
 	    MEvent event = (MEvent) o;
 	    MParameter res = buildParameter();
-	    res.setKind(MParameterDirectionKind.IN);
+	    res.setKind(MParameterDirectionKind.INOUT);
 	    //    removing this next line solves issue 2209
 	    //res.setNamespace(event.getNamespace()); 
             event.addParameter(res);
@@ -1555,7 +1522,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param element is the model element
      * @return MComment
      */
-    public Object buildComment(Object element) {
+    public MComment buildComment(Object/*MModelElement*/ element) {
         MModelElement elementToComment = (MModelElement) element;
 	MComment comment = createComment();
 	if (elementToComment != null) {
@@ -1567,54 +1534,6 @@ public class CoreFactory extends AbstractUmlModelFactory {
 
 	return comment;
     }
-    
-    /**
-     * Builds a comment owned by the namespace of the active diagram or by the model if the active diagram
-     * does not have a namespace.
-     * @return The comment build
-     */
-    private MComment buildComment() {
-        MComment comment = createComment();
-        Object ns = null;
-        ArgoDiagram diagram = 
-            ProjectManager.getManager().getCurrentProject().getActiveDiagram();
-        ns = ((UMLMutableGraphSupport) diagram.getGraphModel()).getNamespace();
-        if (ns == null || !ModelFacade.isANamespace(ns)) {
-            ns = ProjectManager.getManager().getCurrentProject().getModel();
-        }
-        ModelFacade.setNamespace(comment, ns);
-        return comment;
-    }
-    
-    /**
-     * Builds the model behind a connection between a comment and 
-     * the annotated modelelement.
-     *
-     * @param from The comment or annotated element.
-     * @param to The comment or annotated element.
-     * @return A commentEdge representing the model behind the connection 
-     *         between a comment and an annotated modelelement.
-     */
-    public CommentEdge buildCommentConnection(Object from, Object to) {
-        if (from == null || to == null) {
-            throw new IllegalArgumentException("Either fromNode == null "
-                    			       + "or toNode == null");
-        }
-        Object comment = null;
-        Object annotatedElement = null;
-        if (ModelFacade.isAComment(from)) {
-            comment = from;
-            annotatedElement = to;
-        } else {
-            comment = to;
-            annotatedElement = from;
-        }
-        
-        CommentEdge connection = new CommentEdge(from, to);
-        ModelFacade.addAnnotatedElement(comment, annotatedElement);
-        return connection;
-        
-    }
 
     /**
      * Builds a constraint that constraints the given modelelement.
@@ -1624,7 +1543,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param constrElement The constrained element.
      * @return MConstraint
      */
-    public Object buildConstraint(Object constrElement) {
+    public MConstraint buildConstraint(Object/*MModelElement*/ constrElement) {
         MModelElement constrainedElement = (MModelElement) constrElement;
 	if (constrainedElement == null)
 	    throw new IllegalArgumentException("the constrained element is "
@@ -1905,8 +1824,11 @@ public class CoreFactory extends AbstractUmlModelFactory {
 
     /**
      * Used by the copy functions. Do not call this function directly.
+     * TODO: Shouldn't this be private then? Linus thinks so.
+     * @deprecated by Linus Tolke as of 0.15.4. Will be made private.
      */
-    private void doCopyElement(MElement source, MElement target) {
+    public void doCopyElement(MElement source, MElement target) {
+	UmlFactory.getFactory().doCopyBase(source, target);
 	// Nothing more to do.
     }
 

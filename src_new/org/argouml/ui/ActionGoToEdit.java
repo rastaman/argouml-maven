@@ -30,44 +30,31 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.ui.UMLAction;
 
-/**
- * Action to select the editor pane and shows it.
- *
- */
 public class ActionGoToEdit extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private String tabName;
+    protected String _tabName;
 
-    /**
-     * Constructor.
-     *
-     * @param name The name of the tab.
-     */
-    public ActionGoToEdit(String name) {
-	super(name, NO_ICON);
-	tabName = name;
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public ActionGoToEdit(String tabName) {
+	super(tabName, NO_ICON);
+	_tabName = tabName;
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
     public boolean shouldBeEnabled() {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project p = ProjectManager.getManager().getCurrentProject();
 	if (!super.shouldBeEnabled() || p == null) return false;
 	MultiEditorPane mep = pb.getEditorPane();
-	return mep.getIndexOfNamedTab(tabName) != -1;
+	return mep.getIndexOfNamedTab(_tabName) != -1;
     }
 
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent ae) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	MultiEditorPane mep = pb.getEditorPane();
-	mep.selectTabNamed(tabName);
+	mep.selectTabNamed(_tabName);
     }
 
 } /* end class ActionGoToEdit */

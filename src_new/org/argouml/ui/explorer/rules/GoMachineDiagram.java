@@ -28,29 +28,18 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 
-/**
- * Rule for Statemachine->Diagram.
- *
- */
-public class GoMachineDiagram extends AbstractPerspectiveRule {
+public class GoMachineDiagram extends AbstractPerspectiveRule{
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state-machine.diagram");
+        return "Machine->Diagram";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         if (!ModelFacade.isAStateMachine(parent))
             return null;
@@ -64,9 +53,9 @@ public class GoMachineDiagram extends AbstractPerspectiveRule {
         if (diagrams == null)
             return null;
 
-        java.util.Enumeration elems = diagrams.elements();
-        while (elems.hasMoreElements()) {
-            Object d = elems.nextElement();
+        java.util.Enumeration enum = diagrams.elements();
+        while (enum.hasMoreElements()) {
+            Object d = enum.nextElement();
             if (d instanceof UMLStateDiagram
 		&& ((UMLStateDiagram) d).getStateMachine() == parent)
                 res.addElement(d);
@@ -78,9 +67,6 @@ public class GoMachineDiagram extends AbstractPerspectiveRule {
         return res;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

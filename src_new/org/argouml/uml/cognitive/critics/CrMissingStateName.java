@@ -44,10 +44,6 @@ import org.argouml.model.ModelFacade;
  **/
 public class CrMissingStateName extends CrUML {
     
-    /**
-     * The constructor.
-     * 
-     */
     public CrMissingStateName() {
 	setHeadline("Choose a Name");
 	addSupportedDecision(CrUML.decNAMING);
@@ -55,10 +51,6 @@ public class CrMissingStateName extends CrUML {
 	addTrigger("name");
     }
 						   
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!ModelFacade.isAStateVertex(dm))
 	    return NO_PROBLEM;   
@@ -70,21 +62,15 @@ public class CrMissingStateName extends CrUML {
             return NO_PROBLEM;
         
 	String myName = ModelFacade.getName(dm);
-	if (myName == null || myName.equals("") || myName.length() == 0)
+	if (myName == null || myName.equals("") || myName.length()==0)
 	    return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }
 						       
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClClassName.getTheInstance();
+	return ClClassName.TheInstance;
     }
 							   
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
-     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
@@ -95,8 +81,7 @@ public class CrMissingStateName extends CrUML {
 		Object sv = /*(MStateVertex)*/ me;
 		int count = 1;
 		if (ModelFacade.getContainer(sv) != null)
-		    count = ModelFacade
-		        .getSubvertices(ModelFacade.getContainer(sv)).size();
+		    count = ModelFacade.getSubvertices(ModelFacade.getContainer(sv)).size();
 		sug = "S" + (count + 1);
 	    }
 	    ((WizMEName) w).setInstructions(ins);
@@ -104,9 +89,6 @@ public class CrMissingStateName extends CrUML {
 	}
     }
     
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 								   
 } /* end class CrMissingStateName.java */

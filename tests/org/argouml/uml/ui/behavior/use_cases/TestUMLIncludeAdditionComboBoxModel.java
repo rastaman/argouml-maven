@@ -65,8 +65,7 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLIncludeAdditionComboBoxModel();
-        model.targetSet(new TargetEvent(this, "set", new Object[0], 
-                new Object[] {elem}));
+        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));
         additions = new MUseCase[10];
         MModel m = ModelManagementFactory.getFactory().createModel();
         ProjectManager.getManager().getCurrentProject().setRoot(m);
@@ -99,8 +98,7 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
     }
     
     public void testSetBase() {
-        // NSUML has base and addition for includes mixed up. We mix it back.
-        elem.setBase(additions[0]);
+        elem.setAddition(additions[0]);
         assertTrue(model.getSelectedItem() == additions[0]);
     }
     
