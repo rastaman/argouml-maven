@@ -21,12 +21,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
+
+
+// File: PropPanelInstance.java
+// Classes: PropPanelInstance
+// Original Author: jrobbins@ics.uci.edu
 // $Id$
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,6 +43,7 @@ import javax.swing.border.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.argouml.uml.ui.*;
 
@@ -48,7 +51,7 @@ import org.argouml.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelNote extends PropPanel
+public class PropPanelInstance extends PropPanel
 implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
@@ -57,14 +60,14 @@ implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
+  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelInstance");
 
   // declare and initialize all widgets
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
+  public PropPanelInstance() {
+    super("Instance Properties");
     GridBagLayout gb = (GridBagLayout) getLayout();
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.BOTH;
@@ -82,6 +85,17 @@ implements DocumentListener, ItemListener {
 
     // register interest in change events from all widgets
   }
+
+  ////////////////////////////////////////////////////////////////
+  // accessors
+
+  /** Set the values to be shown in all widgets based on model */
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
+    MInstance tt = (MInstance) t;
+    // set the values to be shown in all widgets based on model
+  }
+
 
   ////////////////////////////////////////////////////////////////
   // event handlers
@@ -108,4 +122,4 @@ implements DocumentListener, ItemListener {
   }
 
 
-} /* end class PropPanelNote */
+} /* end class PropPanelState */

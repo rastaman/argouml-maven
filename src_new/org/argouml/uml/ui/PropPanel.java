@@ -46,7 +46,7 @@ import org.argouml.ui.*;
  * @see TabProps */
 
 public class PropPanel extends TabSpawnable
-implements TabModelTarget, DocumentListener, KeyListener, FocusListener, MElementListener{
+implements TabModelTarget, DocumentListener, ItemListener, MElementListener{
   ////////////////////////////////////////////////////////////////
   // instance vars
   protected Object _target;
@@ -106,13 +106,14 @@ implements TabModelTarget, DocumentListener, KeyListener, FocusListener, MElemen
     _nameField.getDocument().addDocumentListener(this);
     _nameField.setFont(_stereoField.getFont());
 
-    _stereoField.addKeyListener(this);
-    _stereoField.addFocusListener(this);
+//     Component ed = _stereoField.getEditor().getEditorComponent();
+//     Document stereoDoc = ((JTextField)ed).getDocument();
+//     stereoDoc.addDocumentListener(this);
+	_stereoField.addItemListener(this);
 //     ed = _namespaceField.getEditor().getEditorComponent();
 //     Document nsDoc = ((JTextField)ed).getDocument();
 //     nsDoc.addDocumentListener(this);
-    _namespaceField.addKeyListener(this);
-    _namespaceField.addFocusListener(this);
+	_namespaceField.addItemListener(this);
   }
 
   protected SetTargetRunner setTargetRunner = new SetTargetRunner();
@@ -242,20 +243,20 @@ implements TabModelTarget, DocumentListener, KeyListener, FocusListener, MElemen
     // Apparently, this method is never called.
   }
 	// ItemListener implementation
- //  public void itemStateChanged(ItemEvent e) {
-// 	  if (e.getStateChange() == ItemEvent.SELECTED) {
-// 		  Object src = e.getSource();
-// 		  if (src == _namespaceField) {
-// 		      //System.out.println("namespacefield event");
-// 			  // what to do here?
-// 			  //setTargetInternal();
-// 		  }
-// 		  else if (src == _stereoField) {
-// 		      //System.out.println("stereofield event");
-// 			  setTargetStereotype();
-// 		  }
-// 	  }
-//   }
+  public void itemStateChanged(ItemEvent e) {
+	  if (e.getStateChange() == ItemEvent.SELECTED) {
+		  Object src = e.getSource();
+		  if (src == _namespaceField) {
+		      //System.out.println("namespacefield event");
+			  // what to do here?
+			  //setTargetInternal();
+		  }
+		  else if (src == _stereoField) {
+		      //System.out.println("stereofield event");
+			  setTargetStereotype();
+		  }
+	  }
+  }
 
 	// MElementListener implementation
 
@@ -277,37 +278,6 @@ implements TabModelTarget, DocumentListener, KeyListener, FocusListener, MElemen
 	}
 	public void roleRemoved(MElementEvent mee) {
 	}
-
-    /** KeyListener Implementation */
-    public void keyPressed(KeyEvent e) { }
-
-    public void keyReleased(KeyEvent e) { 
-
-	if(e.getKeyCode() == KeyEvent.VK_ENTER) {	    
-	    JComponent jc = (JComponent)e.getComponent();
-	    jc.transferFocus();
-	}
-    }
-
-
-    public void keyTyped(KeyEvent e) { }
-
-    /** focus listener implementation */
-
-    public void focusLost(FocusEvent e){
-	Component src = e.getComponent();
-	if (src == _namespaceField) {
-	    //System.out.println("namespacefield event");
-	    // what to do here?
-	    //setTargetInternal();
-	}
-	else if (src == _stereoField) {
-	    System.out.println("stereofield event");
-	    setTargetStereotype();
-	}
-    }
-    
-    public void focusGained(FocusEvent e){}
 
 
 } /* end class PropPanel */

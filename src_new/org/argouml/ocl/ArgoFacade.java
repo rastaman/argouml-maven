@@ -13,26 +13,14 @@ import org.argouml.uml.MMUtil;
 
 public class ArgoFacade implements ModelFacade {
 
-    public MClassifier target;
-    
-    public ArgoFacade(Object target) {
-	if (target instanceof MClassifier)
-	    this.target = (MClassifier)target;
-    }
-
     public Any getClassifier(String name) {
       Project p = ProjectBrowser.TheInstance.getProject();
-      if (target != null && target.getName() == name ) {
-	  return new ArgoAny(target);
+      MClassifier classifier = p.findTypeInModel(name, p.getCurrentNamespace());
+      if (classifier == null) {
+          throw new OclTypeException("cannot find classifier: "+name);
       }
-      // else we have a problem: this is not clean!
-      else {
-	  MClassifier classifier = p.findTypeInModel(name, p.getCurrentNamespace());
-	  if (classifier == null) {
-	      throw new OclTypeException("cannot find classifier: "+name);
-	  }
-	  return new ArgoAny(classifier);
-      }
+      ArgoAny result = new ArgoAny(classifier);
+      return result;
     }
 }
 

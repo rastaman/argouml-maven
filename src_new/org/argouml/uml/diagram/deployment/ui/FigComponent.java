@@ -207,17 +207,15 @@ public class FigComponent extends FigNodeModelElement {
     super.setEnclosingFig(encloser);
 
     Vector figures = getEnclosedFigs();
+    elementOrdering(figures);
 
-    if (getLayer() != null) {
-      elementOrdering(figures);
-      Vector contents = getLayer().getContents();
-      int contentsSize = contents.size();
-      for (int j=0; j<contentsSize; j++) {
-        Object o = contents.elementAt(j);
-        if (o instanceof FigEdgeModelElement) {
-          FigEdgeModelElement figedge = (FigEdgeModelElement) o;
-          figedge.getLayer().bringToFront(figedge);
-        }
+    Vector contents = getLayer().getContents();
+    int contentsSize = contents.size();
+    for (int j=0; j<contentsSize; j++) {
+      Object o = contents.elementAt(j);
+      if (o instanceof FigEdgeModelElement) {
+        FigEdgeModelElement figedge = (FigEdgeModelElement) o;
+        figedge.getLayer().bringToFront(figedge);
       }
     }
 

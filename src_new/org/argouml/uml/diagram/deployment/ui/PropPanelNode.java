@@ -21,12 +21,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
+
+// File: PropPanelNode.java
+// Classes: PropPanelNode
+// Original Author: 5eichler@informatik.uni-hamburg.de
 // $Id$
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.deployment.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -37,6 +38,7 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
@@ -48,49 +50,41 @@ import org.argouml.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelNode extends PropPanel
+implements ItemListener, DocumentListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  // needs-more-work 
 
+  
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
-
-  // declare and initialize all widgets
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
-    GridBagLayout gb = (GridBagLayout) getLayout();
+  public PropPanelNode() {
+    super("Node Properties");
+    GridBagLayout gb = (GridBagLayout) getLayout();    
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.0;
     c.ipadx = 0; c.ipady = 0;
 
 
-    c.gridx = 0;
-    c.gridwidth = 1;
-    c.gridy = 1;
-    gb.setConstraints(_nmwLabel, c);
-    add(_nmwLabel);
-
-    // add all widgets and labels
-
-    // register interest in change events from all widgets
   }
 
   ////////////////////////////////////////////////////////////////
-  // event handlers
+  // accessors
+
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
+  }
 
 
-  /** The user typed some text */
+
+  ////////////////////////////////////////////////////////////////
+  // event handling
+
   public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
     super.insertUpdate(e);
   }
 
@@ -101,11 +95,10 @@ implements DocumentListener, ItemListener {
     // Apparently, this method is never called.
   }
 
-  /** The user modified one of the widgets */
+
   public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
   }
 
-
-} /* end class PropPanelNote */
+  static final long serialVersionUID = 5574833923466612432L;
+  
+} /* end class PropPanelNode */

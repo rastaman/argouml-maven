@@ -21,12 +21,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
+
+
+// File: PropPanelPseudostate.java
+// Classes: PropPanelPseudostate
 // Original Author: your email address here
 // $Id$
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.state.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,6 +43,7 @@ import javax.swing.border.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.state_machines.*;
 
 import org.argouml.uml.ui.*;
 
@@ -48,7 +51,7 @@ import org.argouml.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelNote extends PropPanel
+public class PropPanelPseudostate extends PropPanel
 implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
@@ -57,21 +60,22 @@ implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
+  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelPseudostate");
 
   // declare and initialize all widgets
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
+  public PropPanelPseudostate() {
+    super("Pseudostate Properties");
     GridBagLayout gb = (GridBagLayout) getLayout();
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.0;
     c.ipadx = 0; c.ipady = 0;
 
-
+    remove(_nameLabel);
+    remove(_nameField);
     c.gridx = 0;
     c.gridwidth = 1;
     c.gridy = 1;
@@ -108,4 +112,4 @@ implements DocumentListener, ItemListener {
   }
 
 
-} /* end class PropPanelNote */
+} /* end class PropPanelPseudostate */

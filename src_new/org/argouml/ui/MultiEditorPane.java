@@ -115,7 +115,7 @@ implements ChangeListener, MouseListener {
     }
     if (jumpToFirstEnabledTab && firstEnabled != -1 )
       _tabs.setSelectedIndex(firstEnabled);
-    _tabs.setVisible(firstEnabled != -1);
+    setVisible(firstEnabled != -1);
   }
 
 

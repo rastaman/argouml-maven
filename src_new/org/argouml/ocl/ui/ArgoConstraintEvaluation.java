@@ -18,11 +18,9 @@ public class ArgoConstraintEvaluation extends ConstraintEvaluation {
   JButton cOk, cCancel;
   JButton aOk, aCancel;
 
-  Object target;
 
-  public ArgoConstraintEvaluation(JDialog dialog, Object target) {
+  public ArgoConstraintEvaluation(JDialog dialog) {
     this.dialog=dialog;
-    this.target=target;
   }
 
   protected void addTabs(JTabbedPane tabs) {
@@ -126,7 +124,7 @@ public class ArgoConstraintEvaluation extends ConstraintEvaluation {
   }
 
   protected ModelFacade getModelFacade() {
-    return new ArgoFacade(target);
+    return new ArgoFacade();
   }
 
   public void setConstraint(String text) {

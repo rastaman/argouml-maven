@@ -21,12 +21,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
+// File: PropPanelActor.java
+// Classes: PropPanelActor
+// Original Author: jrobbins@ics.uci.edu
 // $Id$
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,71 +41,23 @@ import javax.swing.border.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.use_cases.*;
 
 import org.argouml.uml.ui.*;
 
 /** User interface panel shown at the bottom of the screen that allows
  *  the user to edit the properties of the selected UML model
- *  element. */
+ *  element. Actors have no properties other than name, so this is a
+ *  trivial class.  Needs-More-Work: cut and paste base class code
+ *  from PropPanelClass.*/
 
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
-
-  ////////////////////////////////////////////////////////////////
-  // constants
-  // needs-more-work 
-
-  ////////////////////////////////////////////////////////////////
-  // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
-
-  // declare and initialize all widgets
+public class PropPanelActor extends PropPanel {
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
-    GridBagLayout gb = (GridBagLayout) getLayout();
-    GridBagConstraints c = new GridBagConstraints();
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.0;
-    c.ipadx = 0; c.ipady = 0;
-
-
-    c.gridx = 0;
-    c.gridwidth = 1;
-    c.gridy = 1;
-    gb.setConstraints(_nmwLabel, c);
-    add(_nmwLabel);
-
-    // add all widgets and labels
-
-    // register interest in change events from all widgets
-  }
-
-  ////////////////////////////////////////////////////////////////
-  // event handlers
-
-
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
+  public PropPanelActor() {
+    super("Actor Properties");
   }
 
 
-} /* end class PropPanelNote */
+} /* end class PropPanelActor */

@@ -21,12 +21,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
+
+
+// File: PropPanelLink.java
+// Classes: PropPanelLink
+// Original Author: jrobbins@ics.uci.edu
 // $Id$
 
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,15 +43,15 @@ import javax.swing.border.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
 
-import org.argouml.uml.ui.*;
+import org.argouml.uml.diagram.ui.*;
 
 /** User interface panel shown at the bottom of the screen that allows
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelLink extends PropPanelTwoEnds {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -57,14 +59,14 @@ implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
+  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelLink");
 
   // declare and initialize all widgets
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
+  public PropPanelLink() {
+    super("Link");
     GridBagLayout gb = (GridBagLayout) getLayout();
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.BOTH;
@@ -82,6 +84,44 @@ implements DocumentListener, ItemListener {
 
     // register interest in change events from all widgets
   }
+
+  ////////////////////////////////////////////////////////////////
+  // accessors
+
+  /** Set the values to be shown in all widgets based on model */
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
+    MLink tt = (MLink) t;
+    // set the values to be shown in all widgets based on model
+  }
+
+  public String getSourceLabel() {
+    if (!(_target instanceof MLink)) return "non Link";
+    return "Instance:";
+  }
+  public String getSourceValue() {
+    if (!(_target instanceof MLink)) return "non Link";
+    MLink a = (MLink) _target;
+    MLinkEnd ae = (MLinkEnd) ((Object[])(a.getConnections()).toArray())[0];
+    if (ae == null) return "null Link End";
+    MInstance inst = ae.getInstance();
+    if (inst == null) return "null Instance";
+    return inst.getName();
+  }
+  public String getDestLabel() {
+    if (!(_target instanceof MLink)) return "non Link";
+    return "Instance:";
+  }
+  public String getDestValue() {
+    if (!(_target instanceof MLink)) return "non Link";
+    MLink a = (MLink) _target;
+    MLinkEnd ae = (MLinkEnd)((Object[])(a.getConnections()).toArray())[1];
+    if (ae == null) return "null Link End";
+    MInstance inst = ae.getInstance();
+    if (inst == null) return "null Instance";
+    return inst.getName();
+  }
+  
 
   ////////////////////////////////////////////////////////////////
   // event handlers
@@ -108,4 +148,4 @@ implements DocumentListener, ItemListener {
   }
 
 
-} /* end class PropPanelNote */
+} /* end class PropPanelState */

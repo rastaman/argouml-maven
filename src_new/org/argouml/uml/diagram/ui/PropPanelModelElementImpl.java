@@ -21,91 +21,28 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
-// $Id$
-
 package org.argouml.uml.diagram.ui;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import javax.swing.text.*;
-import javax.swing.border.*;
 
 import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
 
 import org.argouml.uml.ui.*;
 
-/** User interface panel shown at the bottom of the screen that allows
- *  the user to edit the properties of the selected UML model
- *  element. */
-
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
-
-  ////////////////////////////////////////////////////////////////
-  // constants
-  // needs-more-work 
-
+public class PropPanelModelElementImpl extends PropPanel {
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
-
-  // declare and initialize all widgets
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
-    GridBagLayout gb = (GridBagLayout) getLayout();
-    GridBagConstraints c = new GridBagConstraints();
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 0.0;
-    c.ipadx = 0; c.ipady = 0;
-
-
-    c.gridx = 0;
-    c.gridwidth = 1;
-    c.gridy = 1;
-    gb.setConstraints(_nmwLabel, c);
-    add(_nmwLabel);
-
-    // add all widgets and labels
-
-    // register interest in change events from all widgets
+  public PropPanelModelElementImpl() {
+    super("ModelElement Properties");
   }
 
-  ////////////////////////////////////////////////////////////////
-  // event handlers
-
-
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
-  }
-
-
-} /* end class PropPanelNote */
+} /* end class PropPanelModelElementImpl */

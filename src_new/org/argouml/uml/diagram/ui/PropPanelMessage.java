@@ -21,9 +21,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelNote.java
-// Classes: PropPanelNote
-// Original Author: your email address here
+
+
+// File: PropPanelMessage.java
+// Classes: PropPanelMessage
+// Original Author: agauthie@ics.uci.edu
 // $Id$
 
 package org.argouml.uml.diagram.ui;
@@ -37,67 +39,117 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
+import javax.swing.table.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.collaborations.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
 
+import org.argouml.ui.*;
 import org.argouml.uml.ui.*;
 
 /** User interface panel shown at the bottom of the screen that allows
- *  the user to edit the properties of the selected UML model
- *  element. */
+ *  the user to edit the properties of the selected UML model element.
+ *  Needs-More-Work: cut and paste base class code from
+ *  PropPanelClass. */
 
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelMessage extends PropPanel
+implements ItemListener, DocumentListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  // needs-more-work 
 
   ////////////////////////////////////////////////////////////////
   // instance vars
-  JLabel _nmwLabel = new JLabel("Needs-more-work PropPanelNote");
+  JLabel _actionLabel = new JLabel("Action: ");
+  SpacerPanel _spacer = new SpacerPanel();
+  SpacerPanel _placeHolder = new SpacerPanel();
 
-  // declare and initialize all widgets
+  JTextField _actionField = new JTextField();
 
   ////////////////////////////////////////////////////////////////
   // contructors
-  public PropPanelNote() {
-    super("Note Properties");
+  public PropPanelMessage() {
+    super("Message Properties");
     GridBagLayout gb = (GridBagLayout) getLayout();
     GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 0.0;
     c.ipadx = 0; c.ipady = 0;
 
-
+    // add all widgets and labels
     c.gridx = 0;
     c.gridwidth = 1;
     c.gridy = 1;
-    gb.setConstraints(_nmwLabel, c);
-    add(_nmwLabel);
+    c.weightx = 0.0;
+    gb.setConstraints(_actionLabel, c);
+    add(_actionLabel);
 
-    // add all widgets and labels
+    c.weightx = 1.0;
+    c.gridx = 1;
+    c.gridy = 1;
+    _actionField.setMinimumSize(new Dimension(120, 20));
+    gb.setConstraints(_actionField, c);
+    add(_actionField);
+    _actionField.getDocument().addDocumentListener(this);
+    _actionField.setFont(_stereoField.getFont());
+
+    c.gridx = 2;
+    c.gridwidth = 1;
+    c.weightx = 0;
+    c.gridy = 0;
+    gb.setConstraints(_spacer, c);
+    add(_spacer);
+
+    c.gridx = 3;
+    c.gridwidth = 3;
+    c.gridheight = 5;
+    c.weightx = 1;
+    c.gridy = 1;
+    gb.setConstraints(_placeHolder, c);
+    add(_placeHolder);
 
     // register interest in change events from all widgets
   }
 
   ////////////////////////////////////////////////////////////////
-  // event handlers
+  // accessors
 
+  /** Set the values to be shown in all widgets based on model */
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
+    MMessage mes = (MMessage) t;
+	String ua = null;
+	if (mes.getAction() != null && mes.getAction().getScript() != null 
+		&&  mes.getAction().getScript().getBody() != null) {
+		ua = (((MAction)mes.getAction()).getScript()).getBody();
+	}
+    //MUninterpretedAction uaNew = new MUninterpretedAction(ua);
+    if (ua != null)
+		_actionField.setText(ua.trim());
+	else
+		_actionField.setText("(none)");
+
+    validate();
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // event handlers
 
   /** The user typed some text */
   public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
     super.insertUpdate(e);
+    if (e.getDocument() == _actionField.getDocument()) {
+      setTargetActionString(_actionField.getText().trim());
+    }
   }
 
   public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
 
   public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
     // Apparently, this method is never called.
   }
 
@@ -107,5 +159,22 @@ implements DocumentListener, ItemListener {
     // check for each widget, and update the model with new value
   }
 
+  protected void setTargetActionString(String s) {
+    if (_target == null) return;
+	if (_inChange) return;
+	
+	MAction action = new MActionImpl();
+	action.setScript(new MActionExpression("Java",s));
+	((MMessage)_target).setAction(action); 
+    /*try {
+      ((MUninterpretedAction)((MMessage)_target).getAction()).setBody(s);
+    }
+    catch (PropertyVetoException pve) { }*/
+  }
 
-} /* end class PropPanelNote */
+
+
+} /* end class PropPanelMessage */
+
+
+    
