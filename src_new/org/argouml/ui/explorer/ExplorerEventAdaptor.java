@@ -49,9 +49,6 @@ public class ExplorerEventAdaptor
      */
     private TreeModelUMLEventListener treeModel;
     
-    /**
-     * @return the instance (singleton)
-     */
     public static ExplorerEventAdaptor getInstance() {
         if (instance == null) {
             return instance = new ExplorerEventAdaptor();
@@ -77,8 +74,6 @@ public class ExplorerEventAdaptor
     
     /**
      * forwards this event to the tree model.
-     *
-     * @param source the modelelement to be removed
      */
     public void modelElementRemoved(Object source) {
         treeModel.modelElementRemoved(source);
@@ -86,8 +81,6 @@ public class ExplorerEventAdaptor
     
     /**
      * forwards this event to the tree model.
-     *
-     * @param source the modelelement to be added
      */
     public void modelElementAdded(Object source) {
         treeModel.modelElementAdded(source);
@@ -95,8 +88,6 @@ public class ExplorerEventAdaptor
     
     /**
      * forwards this event to the tree model.
-     *
-     * @param source the modelelement to be changed
      */
     public void modelElementChanged(Object source) {
         treeModel.modelElementChanged(source);
@@ -104,8 +95,6 @@ public class ExplorerEventAdaptor
     
     /**
      * sets the tree model that will receive events.
-     *
-     * @param newTreeModel the tree model to be used
      */
     public void setTreeModelUMLEventListener(
 	    TreeModelUMLEventListener newTreeModel) {
@@ -117,8 +106,6 @@ public class ExplorerEventAdaptor
      * uml model, passes those events on to the explorer model.
      *
      *  @since ARGO0.11.2
-     *
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(java.beans.PropertyChangeEvent pce) {
         

@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,22 +31,19 @@ import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
 /** Utility class to generate the children of a class.  In this case
- *  the "children" of a class are it's base classes. 
- */
+ *  the "children" of a class are it's base classes. */
+
+
 public class SuperclassGen implements ChildGenerator {
-    
-    /**
-     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
-     */
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
 
 	Object/*MGeneralizableElement*/ ge = o;
-	Collection generalizations = ModelFacade.getGeneralizations(ge);
-	if (generalizations == null) return res.elements();
-	Iterator gens = generalizations.iterator();
-	while (gens.hasNext()) {
-	    Object/*MGeneralization*/ g = gens.next();
+	Collection gens = ModelFacade.getGeneralizations(ge);
+	if (gens == null) return res.elements();
+	Iterator enum = gens.iterator();
+	while (enum.hasNext()) {
+	    Object/*MGeneralization*/ g = enum.next();
 	    res.add(ModelFacade.getParent(g));
 	}
 	return res.elements();

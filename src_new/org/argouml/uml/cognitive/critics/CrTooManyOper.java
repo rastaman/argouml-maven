@@ -39,12 +39,12 @@ import org.argouml.model.ModelFacade;
 
 public class CrTooManyOper extends CrUML {
 
-    private static final String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public CrTooManyOper() {
 	setHeadline("Reduce Operations on <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decMETHODS);
@@ -52,10 +52,8 @@ public class CrTooManyOper extends CrUML {
 	addTrigger("behavioralFeature");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;

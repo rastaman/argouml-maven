@@ -23,10 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
+import javax.swing.event.*;
+import javax.swing.*;
 import ru.novosoft.uml.MElementEvent;
 
 /**
@@ -40,8 +38,9 @@ public class UMLExpressionLanguageField
     extends JTextField
     implements DocumentListener, UMLUserInterfaceComponent {
 
-    private UMLExpressionModel2 _model;
+    private UMLExpressionModel _model;
     private boolean _notifyModel;
+    private boolean _isUpdating;
 
     /**
      * Creates a new field that selects the language for an expression.
@@ -51,7 +50,7 @@ public class UMLExpressionLanguageField
      * @param notifyModel Only one of Language and Body fields should
      * forward events to model
      */
-    public UMLExpressionLanguageField(UMLExpressionModel2 model,
+    public UMLExpressionLanguageField(UMLExpressionModel model,
 				      boolean notifyModel) {
         _model = model;
         _notifyModel = notifyModel;
@@ -85,19 +84,32 @@ public class UMLExpressionLanguageField
     private void update() {
         String oldText = getText();
         String newText = _model.getLanguage();
-        if (oldText == null || newText == null || !oldText.equals(newText)) {
-            if (oldText != newText) {
+        if ((oldText == null || newText == null || !oldText.equals(newText))
+	    && oldText != newText) {
+	    try {
+		_isUpdating = true;
                 setText(newText);
-            }
+            } finally {
+		_isUpdating = false;
+	    }
         }
     }
+
     public void changedUpdate(final DocumentEvent p1) {
-        _model.setLanguage(getText());
+	if (!_isUpdating) {
+	    _model.setLanguage(getText());
+	}
     }
+
     public void removeUpdate(final DocumentEvent p1) {
-        _model.setLanguage(getText());
+	if (!_isUpdating) {
+	    _model.setLanguage(getText());
+	}
     }
+
     public void insertUpdate(final DocumentEvent p1) {
-        _model.setLanguage(getText());
+	if (!_isUpdating) {
+	    _model.setLanguage(getText());
+	}
     }
 }

@@ -55,50 +55,48 @@ import org.tigris.gef.ui.ColorRenderer;
 public class StylePanelFig extends StylePanel implements ItemListener,
         FocusListener, KeyListener {
 
-    private static final Logger LOG = Logger
+    private static Logger _cat = Logger
             .getLogger(StylePanelFigNodeModelElement.class);
 
-    private static final String CUSTOM_ITEM = Translator
+    protected static Logger cat = Logger
+            .getLogger(StylePanelFigNodeModelElement.class);
+
+    protected static final String CUSTOM_ITEM = Translator
             .localize("label.stylepane.custom")
             + "...";
 
-    private JLabel bboxLabel = new JLabel(Translator
+    protected JLabel _bboxLabel = new JLabel(Translator
             .localize("label.stylepane.bounds")
             + ": ");
 
-    private JTextField bboxField = new JTextField();
+    protected JTextField _bboxField = new JTextField();
 
-    private JLabel fillLabel = new JLabel(Translator
+    protected JLabel _fillLabel = new JLabel(Translator
             .localize("label.stylepane.fill")
             + ": ");
 
-    private JComboBox fillField = new JComboBox();
+    protected JComboBox _fillField = new JComboBox();
 
-    private JLabel lineLabel = new JLabel(Translator
+    protected JLabel _lineLabel = new JLabel(Translator
             .localize("label.stylepane.line")
             + ": ");
 
-    private JComboBox lineField = new JComboBox();
+    protected JComboBox _lineField = new JComboBox();
 
-    private SpacerPanel spacer = new SpacerPanel();
+    protected SpacerPanel _spacer = new SpacerPanel();
 
-    private SpacerPanel spacer2 = new SpacerPanel();
+    protected SpacerPanel _spacer2 = new SpacerPanel();
 
-    private SpacerPanel spacer3 = new SpacerPanel();
+    protected SpacerPanel _spacer3 = new SpacerPanel();
 
     /**
-     * The constructor of the style panel of a Fig.
-     * 
-     * @param title the title string
+     * @param title
      */
     public StylePanelFig(String title) {
         super(title);
+        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * The constructor.
-     * 
-     */
     public StylePanelFig() {
         super("Fig Appearance");
         initChoices();
@@ -108,107 +106,104 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         c.ipadx = 0;
         c.ipady = 0;
 
-        Document bboxDoc = bboxField.getDocument();
+        Document bboxDoc = _bboxField.getDocument();
         bboxDoc.addDocumentListener(this);
-        bboxField.addKeyListener(this);
-        bboxField.addFocusListener(this);
-        fillField.addItemListener(this);
-        lineField.addItemListener(this);
+        _bboxField.addKeyListener(this);
+        _bboxField.addFocusListener(this);
+        _fillField.addItemListener(this);
+        _lineField.addItemListener(this);
 
-        fillField.setRenderer(new ColorRenderer());
-        lineField.setRenderer(new ColorRenderer());
+        _fillField.setRenderer(new ColorRenderer());
+        _lineField.setRenderer(new ColorRenderer());
         //_dashedField.setRenderer(DashRenderer.SINGLETON);
 
         c.gridx = 0;
         c.gridwidth = 1;
         c.gridy = 1;
         c.weightx = 0.0;
-        gb.setConstraints(bboxLabel, c);
-        add(bboxLabel);
+        gb.setConstraints(_bboxLabel, c);
+        add(_bboxLabel);
         c.gridy = 2;
-        gb.setConstraints(fillLabel, c);
-        add(fillLabel);
+        gb.setConstraints(_fillLabel, c);
+        add(_fillLabel);
         c.gridy = 3;
-        gb.setConstraints(lineLabel, c);
-        add(lineLabel);
+        gb.setConstraints(_lineLabel, c);
+        add(_lineLabel);
         c.gridy = 4;
 
         c.weightx = 1.0;
         c.gridx = 1;
         //c.gridwidth = GridBagConstraints.REMAINDER;
         c.gridy = 1;
-        gb.setConstraints(bboxField, c);
-        add(bboxField);
+        gb.setConstraints(_bboxField, c);
+        add(_bboxField);
         c.gridy = 2;
-        gb.setConstraints(fillField, c);
-        add(fillField);
+        gb.setConstraints(_fillField, c);
+        add(_fillField);
         c.gridy = 3;
-        gb.setConstraints(lineField, c);
-        add(lineField);
+        gb.setConstraints(_lineField, c);
+        add(_lineField);
 
         c.weightx = 0.0;
         c.gridx = 2;
         c.gridy = 1;
-        gb.setConstraints(spacer, c);
-        add(spacer);
+        gb.setConstraints(_spacer, c);
+        add(_spacer);
 
         c.gridx = 3;
         c.gridy = 10;
-        gb.setConstraints(spacer2, c);
-        add(spacer2);
+        gb.setConstraints(_spacer2, c);
+        add(_spacer2);
 
         c.weightx = 1.0;
         c.gridx = 4;
         c.gridy = 10;
-        gb.setConstraints(spacer3, c);
-        add(spacer3);
+        gb.setConstraints(_spacer3, c);
+        add(_spacer3);
     }
 
-    /**
-     * Fill in the user-choices.
-     */
     protected void initChoices() {
-        fillField.addItem(Translator.localize("label.stylepane.no-fill"));
-        fillField.addItem(Color.black);
-        fillField.addItem(Color.white);
-        fillField.addItem(Color.gray);
-        fillField.addItem(Color.lightGray);
-        fillField.addItem(Color.darkGray);
-        fillField.addItem(new Color(255, 255, 200));
-        fillField.addItem(new Color(255, 200, 255));
-        fillField.addItem(new Color(200, 255, 255));
-        fillField.addItem(new Color(200, 200, 255));
-        fillField.addItem(new Color(200, 255, 200));
-        fillField.addItem(new Color(255, 200, 200));
-        fillField.addItem(new Color(200, 200, 200));
-        fillField.addItem(Color.red);
-        fillField.addItem(Color.blue);
-        fillField.addItem(Color.cyan);
-        fillField.addItem(Color.yellow);
-        fillField.addItem(Color.magenta);
-        fillField.addItem(Color.green);
-        fillField.addItem(Color.orange);
-        fillField.addItem(Color.pink);
-        fillField.addItem(CUSTOM_ITEM);
+        _fillField.addItem(Translator.localize("label.stylepane.no-fill"));
+        _fillField.addItem(Color.black);
+        _fillField.addItem(Color.white);
+        _fillField.addItem(Color.gray);
+        _fillField.addItem(Color.lightGray);
+        _fillField.addItem(Color.darkGray);
+        _fillField.addItem(new Color(255, 255, 200));
+        _fillField.addItem(new Color(255, 200, 255));
+        _fillField.addItem(new Color(200, 255, 255));
+        _fillField.addItem(new Color(200, 200, 255));
+        _fillField.addItem(new Color(200, 255, 200));
+        _fillField.addItem(new Color(255, 200, 200));
+        _fillField.addItem(new Color(200, 200, 200));
+        _fillField.addItem(Color.red);
+        _fillField.addItem(Color.blue);
+        _fillField.addItem(Color.cyan);
+        _fillField.addItem(Color.yellow);
+        _fillField.addItem(Color.magenta);
+        _fillField.addItem(Color.green);
+        _fillField.addItem(Color.orange);
+        _fillField.addItem(Color.pink);
+        _fillField.addItem(CUSTOM_ITEM);
 
-        lineField.addItem(Translator.localize("label.stylepane.no-line"));
-        lineField.addItem(Color.black);
-        lineField.addItem(Color.white);
-        lineField.addItem(Color.gray);
-        lineField.addItem(Color.lightGray);
-        lineField.addItem(Color.darkGray);
-        lineField.addItem(new Color(60, 60, 200));
-        lineField.addItem(new Color(60, 200, 60));
-        lineField.addItem(new Color(200, 60, 60));
-        lineField.addItem(Color.red);
-        lineField.addItem(Color.blue);
-        lineField.addItem(Color.cyan);
-        lineField.addItem(Color.yellow);
-        lineField.addItem(Color.magenta);
-        lineField.addItem(Color.green);
-        lineField.addItem(Color.orange);
-        lineField.addItem(Color.pink);
-        lineField.addItem(CUSTOM_ITEM);
+        _lineField.addItem(Translator.localize("label.stylepane.no-line"));
+        _lineField.addItem(Color.black);
+        _lineField.addItem(Color.white);
+        _lineField.addItem(Color.gray);
+        _lineField.addItem(Color.lightGray);
+        _lineField.addItem(Color.darkGray);
+        _lineField.addItem(new Color(60, 60, 200));
+        _lineField.addItem(new Color(60, 200, 60));
+        _lineField.addItem(new Color(200, 60, 60));
+        _lineField.addItem(Color.red);
+        _lineField.addItem(Color.blue);
+        _lineField.addItem(Color.cyan);
+        _lineField.addItem(Color.yellow);
+        _lineField.addItem(Color.magenta);
+        _lineField.addItem(Color.green);
+        _lineField.addItem(Color.orange);
+        _lineField.addItem(Color.pink);
+        _lineField.addItem(CUSTOM_ITEM);
     }
 
     /**
@@ -221,8 +216,8 @@ public class StylePanelFig extends StylePanel implements ItemListener,
      */
 
     protected void hasEditableBoundingBox(boolean value) {
-        bboxField.setEnabled(value);
-        bboxLabel.setEnabled(value);
+        _bboxField.setEnabled(value);
+        _bboxLabel.setEnabled(value);
     }
 
     /**
@@ -265,7 +260,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         // so we do the test this way round.
 
         if (!(figBounds.equals(styleBounds))) {
-            bboxField.setText(figBounds.x + "," + figBounds.y + ","
+            _bboxField.setText(figBounds.x + "," + figBounds.y + ","
                     + figBounds.width + "," + figBounds.height);
         }
 
@@ -273,26 +268,26 @@ public class StylePanelFig extends StylePanel implements ItemListener,
 
         if (_target.getFilled()) {
             Color c = _target.getFillColor();
-            fillField.setSelectedItem(c);
-            if (c != null && !fillField.getSelectedItem().equals(c)) {
-                fillField.insertItemAt(c, fillField.getItemCount() - 1);
-                fillField.setSelectedItem(c);
+            _fillField.setSelectedItem(c);
+            if (c != null && !_fillField.getSelectedItem().equals(c)) {
+                _fillField.insertItemAt(c, _fillField.getItemCount() - 1);
+                _fillField.setSelectedItem(c);
             }
         } else {
-            fillField.setSelectedIndex(0);
+            _fillField.setSelectedIndex(0);
         }
 
         // Change the line colour
 
         if (_target.getLineWidth() > 0) {
             Color c = _target.getLineColor();
-            lineField.setSelectedItem(c);
-            if (c != null && !lineField.getSelectedItem().equals(c)) {
-                lineField.insertItemAt(c, lineField.getItemCount() - 1);
-                lineField.setSelectedItem(c);
+            _lineField.setSelectedItem(c);
+            if (c != null && !_lineField.getSelectedItem().equals(c)) {
+                _lineField.insertItemAt(c, _lineField.getItemCount() - 1);
+                _lineField.setSelectedItem(c);
             }
         } else {
-            lineField.setSelectedIndex(0);
+            _lineField.setSelectedIndex(0);
         }
 
     }
@@ -360,7 +355,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         // Get the text in the field, and don't do anything if the
         // field is
         // empty.
-        String bboxStr = bboxField.getText().trim();
+        String bboxStr = _bboxField.getText().trim();
         if (bboxStr.length() == 0) { return null; } // Parse the string as if
         // possible
         Rectangle res = new Rectangle();
@@ -405,7 +400,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
                 sb.append(Integer.toString(res.width));
                 sb.append(",");
                 sb.append(Integer.toString(res.height));
-                bboxField.setText(sb.toString());
+                _bboxField.setText(sb.toString());
             }
         } catch (NumberFormatException ex) {
             return null;
@@ -417,10 +412,6 @@ public class StylePanelFig extends StylePanel implements ItemListener,
     /**
      * Prompts the user for a new custom color and adds that color to the combo
      * box.
-     *
-     * @param field the combobox to enter a new color for
-     * @param title the title for the dialog box
-     * @param targetColor the initial Color set when the color-chooser is shown
      */
     protected void handleCustomColor(JComboBox field, String title,
             Color targetColor) {
@@ -434,11 +425,8 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         }
     }
 
-    /**
-     * Change the fill.
-     */
     public void setTargetFill() {
-        Object c = fillField.getSelectedItem();
+        Object c = _fillField.getSelectedItem();
         if (_target == null || c == null) return;
         Color oldColor = _target.getFillColor();
         if (c instanceof Color) _target.setFillColor((Color) c);
@@ -449,11 +437,8 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         }
     }
 
-    /**
-     * Change the line.
-     */
     public void setTargetLine() {
-        Object c = lineField.getSelectedItem();
+        Object c = _lineField.getSelectedItem();
         if (_target == null || c == null) return;
         Color oldColor = _target.getLineColor();
         if (c instanceof Color) _target.setLineColor((Color) c);
@@ -475,21 +460,18 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         }
     }
 
-    /**
-     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-     */
     public void itemStateChanged(ItemEvent e) {
         Object src = e.getSource();
         if (e.getStateChange() == ItemEvent.SELECTED && _target != null) {
-            if (src == fillField) {
+            if (src == _fillField) {
                 if (e.getItem() == CUSTOM_ITEM) {
-                    handleCustomColor(fillField, "Custom Fill Color", _target
+                    handleCustomColor(_fillField, "Custom Fill Color", _target
                             .getFillColor());
                 }
                 setTargetFill();
-            } else if (src == lineField) {
+            } else if (src == _lineField) {
                 if (e.getItem() == CUSTOM_ITEM) {
-                    handleCustomColor(lineField, "Custom Line Color", _target
+                    handleCustomColor(_lineField, "Custom Line Color", _target
                             .getLineColor());
                 }
                 setTargetLine();
@@ -509,7 +491,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
      * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
      */
     public void focusLost(FocusEvent e) {
-        if (e.getSource() == bboxField) {
+        if (e.getSource() == _bboxField) {
             setTargetBBox();
         }
     }
@@ -533,72 +515,9 @@ public class StylePanelFig extends StylePanel implements ItemListener,
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
      */
     public void keyTyped(KeyEvent e) {
-        if (e.getSource().equals(bboxField) && e.getKeyChar() == '\n') {
+        if (e.getSource().equals(_bboxField) && e.getKeyChar() == '\n') {
             setTargetBBox();
         }
-    }
-
-    /**
-     * @return Returns the _bboxLabel.
-     */
-    protected JLabel getBBoxLabel() {
-        return bboxLabel;
-    }
-
-    /**
-     * @return Returns the _bboxField.
-     */
-    protected JTextField getBBoxField() {
-        return bboxField;
-    }
-
-    /**
-     * @return Returns the _fillLabel.
-     */
-    protected JLabel getFillLabel() {
-        return fillLabel;
-    }
-
-    /**
-     * @return Returns the _fillField.
-     */
-    protected JComboBox getFillField() {
-        return fillField;
-    }
-
-    /**
-     * @return Returns the _lineLabel.
-     */
-    protected JLabel getLineLabel() {
-        return lineLabel;
-    }
-
-    /**
-     * @return Returns the _lineField.
-     */
-    protected JComboBox getLineField() {
-        return lineField;
-    }
-
-    /**
-     * @return Returns the _spacer.
-     */
-    protected SpacerPanel getSpacer() {
-        return spacer;
-    }
-
-    /**
-     * @return Returns the _spacer2.
-     */
-    protected SpacerPanel getSpacer2() {
-        return spacer2;
-    }
-
-    /**
-     * @return Returns the _spacer3.
-     */
-    protected SpacerPanel getSpacer3() {
-        return spacer3;
     }
 
 }

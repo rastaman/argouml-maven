@@ -30,25 +30,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
-/**
- * Rule for Namespace->Owned Element.
- *
- */
 public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.namespace.owned-element");
+        return "Namespace->Owned Elements";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         
         if (!ModelFacade.isANamespace(parent))
@@ -62,7 +51,7 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
 		continue;
 	    }
 	    if (ModelFacade.isAStateMachine(o)
-		 && ModelFacade.getContext(o) != parent) {
+		    && ModelFacade.getContext(o) != parent) {
 		continue;
 	    }
 	    ret.add(o);
@@ -70,9 +59,6 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
         return ret;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isANamespace(parent)) {
 	    Set set = new HashSet();

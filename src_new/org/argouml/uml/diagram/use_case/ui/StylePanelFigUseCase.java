@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -60,17 +60,19 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
      * The check box for extension points.
      * </p>
      */
-    private JCheckBox epCheckBox = new JCheckBox("Extension Points");
+    protected JCheckBox _epCheckBox = new JCheckBox("Extension Points");
 
     /**
+     * <p>
      * The label alongside the check box for extension points.
+     * </p>
      */
-    private JLabel displayLabel = new JLabel("Display: ");
+    protected JLabel _displayLabel = new JLabel("Display: ");
 
     /**
      * Flag to indicate that a refresh is going on.
      */
-    private boolean refreshTransaction = false;
+    private boolean _refreshTransaction = false;
 
     /**
      * <p>
@@ -100,15 +102,15 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
         c.gridy = 0;
         c.weightx = 0.0;
 
-        gb.setConstraints(displayLabel, c);
-        add(displayLabel);
+        gb.setConstraints(_displayLabel, c);
+        add(_displayLabel);
 
         // Create the check box, set constraints for it, and then add it.
 
         JPanel pane = new JPanel();
 
         pane.setLayout(new FlowLayout(FlowLayout.LEFT));
-        pane.add(epCheckBox);
+        pane.add(_epCheckBox);
 
         c.gridx = 1;
         c.gridwidth = 1;
@@ -121,8 +123,8 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
         // By default we don't show the attribute check box. Mark this object
         // as a listener for the check box.
 
-        epCheckBox.setSelected(false);
-        epCheckBox.addItemListener(this);
+        _epCheckBox.setSelected(false);
+        _epCheckBox.addItemListener(this);
     }
 
     /**
@@ -133,17 +135,17 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
      */
     public void refresh() {
 
-        refreshTransaction = true;
+        _refreshTransaction = true;
 
         // Invoke the parent refresh first
-
         super.refresh();
 
-        FigUseCase target = (FigUseCase) getTarget();
+	if (getTarget() instanceof FigUseCase) {
+	    FigUseCase target = (FigUseCase) getTarget();
+	    _epCheckBox.setSelected(target.isExtensionPointVisible());
+	}
 
-        epCheckBox.setSelected(target.isExtensionPointVisible());
-
-        refreshTransaction = false;
+        _refreshTransaction = false;
     }
 
     /**
@@ -155,15 +157,15 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
      *            The event that triggeed us.
      */
     public void itemStateChanged(ItemEvent e) {
-        if (!refreshTransaction) {
+        if (!_refreshTransaction) {
             Object src = e.getSource();
 
             // If it was the check box, reset it, otherwise invoke the parent.
 
-            if (src == epCheckBox) {
+            if (src == _epCheckBox) {
                 FigUseCase target = (FigUseCase) getTarget();
 
-                target.setExtensionPointVisible(epCheckBox.isSelected());
+                target.setExtensionPointVisible(_epCheckBox.isSelected());
 
                 markNeedsSave();
             } else {

@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
  */
 public class PerspectiveManager {
     
-    private static final Logger LOG =
+    private static Logger cat =
 	Logger.getLogger(PerspectiveManager.class);
     
     private static PerspectiveManager instance;
@@ -56,12 +56,8 @@ public class PerspectiveManager {
     
     private List rules;
     
-    private static final String RULES_PACKAGE = 
-        "org.argouml.ui.explorer.rules.";
+    public final String RULES_PACKAGE = "org.argouml.ui.explorer.rules.";
     
-    /**
-     * @return the instance (singleton)
-     */
     public static PerspectiveManager getInstance() {
         if (instance == null) {
             instance = new PerspectiveManager();
@@ -78,23 +74,14 @@ public class PerspectiveManager {
         loadRules();
     }
     
-    /**
-     * @param listener the listener to be added
-     */
     public void addListener(PerspectiveManagerListener listener) {
         perspectiveListeners.add(listener);
     }
     
-    /**
-     * @param listener the listener to be removed
-     */
     public void removeListener(PerspectiveManagerListener listener) {
         perspectiveListeners.remove(listener);
     }
     
-    /**
-     * @param perspective the perspective to be added
-     */
     public void addPerspective(Object perspective) {
         perspectives.add(perspective);
         Iterator listenerIt = perspectiveListeners.iterator();
@@ -107,9 +94,6 @@ public class PerspectiveManager {
         }
     }
     
-    /**
-     * @param newPerspectives the collection of perspectives to be added
-     */
     public void addAllPerspectives(Collection newPerspectives) {
         
         Iterator newPerspectivesIt = newPerspectives.iterator();
@@ -120,9 +104,6 @@ public class PerspectiveManager {
         }
     }
     
-    /**
-     * @param perspective the perspective to be removed
-     */
     public void removePerspective(Object perspective) {
         
         perspectives.remove(perspective);
@@ -136,9 +117,6 @@ public class PerspectiveManager {
         }
     }
     
-    /**
-     * Remove all perspectives.
-     */
     public void removeAllPerspectives() {
         
         List pers = new ArrayList();
@@ -148,9 +126,6 @@ public class PerspectiveManager {
         }
     }
     
-    /**
-     * @return the list of all persppectives
-     */
     public List getPerspectives() {
         return perspectives;
     }
@@ -167,14 +142,14 @@ public class PerspectiveManager {
 		Configuration.getString(Argo.KEY_USER_EXPLORER_PERSPECTIVES,
 					"");
         
-	    StringTokenizer pst =
+	    StringTokenizer perspectives =
 		new StringTokenizer(userPerspectives, ";");
         
-	    if (pst.hasMoreTokens()) {
+	    if (perspectives.hasMoreTokens()) {
             
 		// load user perspectives
-		while (pst.hasMoreTokens()) {
-		    String perspective = pst.nextToken();
+		while (perspectives.hasMoreTokens()) {
+		    String perspective = perspectives.nextToken();
 		    StringTokenizer perspectiveDetails =
 			new StringTokenizer(perspective, ",");
                 
@@ -204,7 +179,7 @@ public class PerspectiveManager {
 				userDefinedPerspective.addRule(rule);
                             
 			    } catch (Exception ex) {
-				LOG.error("could not create rule ", ex);
+				cat.error("could not create rule ", ex);
 			    }
 			}
 		    }
@@ -267,10 +242,8 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoOperationToCollaborationDiagram());
         packagePerspective.addRule(new GoBehavioralFeatureToStateMachine());
         packagePerspective.addRule(new GoBehavioralFeatureToStateDiagram());
-        // works for both statediagram as activitygraph
-        packagePerspective.addRule(new GoStatemachineToDiagram()); 
         packagePerspective.addRule(new GoMachineToState());
-        packagePerspective.addRule(new GoCompositeStateToSubvertex());        
+        packagePerspective.addRule(new GoCompositeStateToSubvertex());
         packagePerspective.addRule(new GoStateToInternalTrans());
         packagePerspective.addRule(new GoStateToDoActivity());
         packagePerspective.addRule(new GoStateToEntry());
@@ -405,16 +378,10 @@ public class PerspectiveManager {
 	rules = Arrays.asList(ruleNamesArray);
     }
     
-    /**
-     * @return the collection of rules
-     */
     public Collection getRules() {
         return rules;
     }
     
-    /**
-     * save the user perspectives in the ArgoUML configuration
-     */
     public void saveUserPerspectives() {
         Configuration.setString(Argo.KEY_USER_EXPLORER_PERSPECTIVES, 
             this.toString());
@@ -423,12 +390,10 @@ public class PerspectiveManager {
     /**
      * string representation of the perspectives in the same format as
      * saved in the user properties.
-     *
-     * @see java.lang.Object#toString()
      */
     public String toString() {
         
-        String p = "";
+        String perspectives = "";
         
         Iterator perspectivesIt = getPerspectives().iterator();
         while (perspectivesIt.hasNext()) {
@@ -438,24 +403,24 @@ public class PerspectiveManager {
             
             String name = perspective.toString();
             
-            p += name + ",";
+            perspectives += name + ",";
             
-            Object[] rulesArray = perspective.getRulesArray();
+            Object[] rules = perspective.getRulesArray();
             
-            for (int x = 0; x < rulesArray.length; x++) {
+            for (int x = 0; x < rules.length; x++) {
                 
-                PerspectiveRule rule = (PerspectiveRule) rulesArray[x];
-                p += rule.getClass().getName();
+                PerspectiveRule rule = (PerspectiveRule) rules[x];
+                perspectives += rule.getClass().getName();
                 
-                if (x < rulesArray.length - 1)
-                    p += ",";
+                if (x < rules.length - 1)
+                    perspectives += ",";
             }
             
             if (perspectivesIt.hasNext()) {
-                p += ";";
+                perspectives += ";";
             }
         }
         
-        return p;
+        return perspectives;
     }
 }

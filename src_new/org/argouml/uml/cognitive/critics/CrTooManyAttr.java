@@ -40,12 +40,10 @@ public class CrTooManyAttr extends CrUML {
 
     ////////////////////////////////////////////////////////////////
     // constants
-    private static final String THRESHOLD = "Threshold";
+    public static String THRESHOLD = "Threshold";
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public CrTooManyAttr() {
 	setHeadline("Reduce Attributes on <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTORAGE);
@@ -53,10 +51,8 @@ public class CrTooManyAttr extends CrUML {
 	addTrigger("structuralFeature");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;

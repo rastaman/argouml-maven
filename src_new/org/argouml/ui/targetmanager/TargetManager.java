@@ -76,18 +76,18 @@ public final class TargetManager {
         /**
          * The history with targets
          */
-        private List history = new ArrayList();
+        private List _history = new ArrayList();
 
         /**
          * Flag to indicate if the current settarget was instantiated by a
          * navigateBack action.
          */
-        private boolean navigateBackward;
+        private boolean _navigateBackward;
 
         /**
          * The pointer to the current target in the history
          */
-        private int currentTarget = -1;
+        private int _currentTarget = -1;
 
         /**
          * Default constructor that registrates the history manager as target 
@@ -104,36 +104,36 @@ public final class TargetManager {
          * @param target The target to put into the history
          */
         private void putInHistory(Object target) {
-            if (currentTarget > -1) {
+            if (_currentTarget > -1) {
                 // only targets we didn't have allready count
-                Object theModelTarget =
+                Object modelTarget =
                     target instanceof Fig ? ((Fig) target).getOwner() : target;
                 Object oldTarget =
-                    ((WeakReference) history.get(currentTarget)).get();
+                    ((WeakReference) _history.get(_currentTarget)).get();
                 oldTarget =
                     oldTarget instanceof Fig
 		    ? ((Fig) oldTarget).getOwner()
 		    : oldTarget;
-                if (oldTarget == theModelTarget)
+                if (oldTarget == modelTarget)
                     return;
             }
-            if (target != null && !navigateBackward) {
-                if (currentTarget + 1 == history.size()) {
-                    history.add(new WeakReference(target));
-                    currentTarget++;
+            if (target != null && !_navigateBackward) {
+                if (_currentTarget + 1 == _history.size()) {
+                    _history.add(new WeakReference(target));
+                    _currentTarget++;
                     resize();
                 } else {
                     WeakReference ref =
-                        currentTarget > -1
-			? (WeakReference) history.get(currentTarget)
+                        _currentTarget > -1
+			? (WeakReference) _history.get(_currentTarget)
 			: null;
-                    if (currentTarget == -1 || !ref.get().equals(target)) {
-                        int size = history.size();
-                        for (int i = currentTarget + 1; i < size; i++) {
-                            history.remove(currentTarget + 1);
+                    if (_currentTarget == -1 || !ref.get().equals(target)) {
+                        int size = _history.size();
+                        for (int i = _currentTarget + 1; i < size; i++) {
+                            _history.remove(_currentTarget + 1);
                         }
-                        history.add(new WeakReference(target));
-                        currentTarget++;
+                        _history.add(new WeakReference(target));
+                        _currentTarget++;
                     }
                 }
 
@@ -145,15 +145,15 @@ public final class TargetManager {
          *
          */
         private void resize() {
-            int size = history.size();
+            int size = _history.size();
             if (size > MAX_SIZE) {
                 int oversize = size - MAX_SIZE;
                 int halfsize = size / 2;
-                if (currentTarget > halfsize && oversize < halfsize) {
+                if (_currentTarget > halfsize && oversize < halfsize) {
                     for (int i = 0; i < oversize; i++) {
-                        history.remove(0);
+                        _history.remove(0);
                     }
-                    currentTarget -= oversize;
+                    _currentTarget -= oversize;
                 }
             }
         }
@@ -164,13 +164,13 @@ public final class TargetManager {
          *
          */
         private void navigateForward() {
-            if (currentTarget >= history.size() - 1)
+            if (_currentTarget >= _history.size() - 1)
                 throw new IllegalStateException(
 			"NavigateForward is not allowed "
 			+ "since the targetpointer is pointing at "
 			+ "the upper boundary "
 			+ "of the history");
-            setTarget(((WeakReference) history.get(++currentTarget)).get());
+            setTarget(((WeakReference) _history.get(++_currentTarget)).get());
         }
 
         /**
@@ -179,16 +179,16 @@ public final class TargetManager {
          *
          */
         private void navigateBackward() {
-            if (currentTarget == 0) {
+            if (_currentTarget == 0) {
                 throw new IllegalStateException(
 		        "NavigateBackward is not allowed "
 			+ "since the targetpointer is pointing at "
 			+ "the lower boundary "
 			+ "of the history");
             }
-            navigateBackward = true;
-            setTarget(((WeakReference) history.get(--currentTarget)).get());
-            navigateBackward = false;
+            _navigateBackward = true;
+            setTarget(((WeakReference) _history.get(--_currentTarget)).get());
+            _navigateBackward = false;
         }
 
         /**
@@ -196,7 +196,7 @@ public final class TargetManager {
          * @return true if it's possible to navigate back.
          */
         private boolean navigateBackPossible() {
-            return currentTarget > 0;
+            return _currentTarget > 0;
         }
 
         /**
@@ -204,45 +204,31 @@ public final class TargetManager {
          * @return true if it's possible to navigate forward
          */
         private boolean navigateForwardPossible() {
-            return currentTarget < history.size() - 1;
+            return _currentTarget < _history.size() - 1;
         }
 
         /**
-         * Listener for additions of targets to the selected targets. 
-         * On addition of targets we put them in the history.
-         * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(
-         * org.argouml.ui.targetmanager.TargetEvent)
+         * @see
+         * org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
          */
         public void targetAdded(TargetEvent e) {
-            Object[] addedTargets = e.getAddedTargets();
-            // we put the targets 'backwards' in the history 
-            // since the first target in the addedTargets array is 
-            // the first one selected.
-            for (int i = addedTargets.length - 1; i >= 0; i--) {
-                putInHistory(addedTargets[i]);
-            }
+	    targetSet(e);
         }
 
         /**
-         * Listener for the removal of targets from the selection. 
-         * On removal of a target from the selection we do nothing
-         * with respect to the history of targets.
-         * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
+         * @see
+         * org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
          */
-        public void targetRemoved(TargetEvent e) {            
+        public void targetRemoved(TargetEvent e) {
+	    targetSet(e);
         }
 
         /**
-         * Listener for the selection of a whole bunch of targets 
-         * in one go (or just one). Puts all the new 
-         * targets in the history starting with the 'newest' target.
-         * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
+         * @see
+         * org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
          */
         public void targetSet(TargetEvent e) {
-            Object[] newTargets = e.getNewTargets();
-            for (int i = newTargets.length - 1; i >= 0; i--) {
-                putInHistory(newTargets[i]);
-            }
+	    putInHistory(e.getNewTarget());
         }
 
         /**
@@ -250,8 +236,8 @@ public final class TargetManager {
          *
          */
         private void clean() {
-            history = new ArrayList();
-            currentTarget = -1;
+            _history = new ArrayList();
+            _currentTarget = -1;
         }
 
         private void removeHistoryTarget(Object o) {
@@ -265,8 +251,8 @@ public final class TargetManager {
                     removeHistoryTarget(it.next());
                 }
             }
-            ListIterator it = history.listIterator();
-            int oldCurrentTarget = currentTarget;
+            ListIterator it = _history.listIterator();
+            int oldCurrentTarget = _currentTarget;
             while (it.hasNext()) {
                 WeakReference ref = (WeakReference) it.next();
                 Object historyObject = ref.get();
@@ -278,8 +264,8 @@ public final class TargetManager {
 
                 }
                 if (o == historyObject) {
-                    if (history.indexOf(ref) <= currentTarget) {
-                        currentTarget--;
+                    if (_history.indexOf(ref) <= _currentTarget) {
+                        _currentTarget--;
                     }
                     it.remove();
                 }
@@ -287,7 +273,7 @@ public final class TargetManager {
                 // cannot break here since an object can be multiple
                 // times in history
             }
-            if (oldCurrentTarget != currentTarget) {
+            if (oldCurrentTarget != _currentTarget) {
             	/* TODO: updateAllEnabled() has been deprecated, and
             	 * the replacement is to use
             	 * updateAllEnabled(TargetEvent e), but what
@@ -301,7 +287,7 @@ public final class TargetManager {
     /**
      * The log4j logger to log messages to
      */
-    private static final Logger LOG = Logger.getLogger(TargetManager.class);
+    private Logger _log = Logger.getLogger(this.getClass());
 
     /**
      * The singleton instance
@@ -311,33 +297,33 @@ public final class TargetManager {
     /**
      * The targets
      */
-    private List targets = new ArrayList();
+    private List _targets = new ArrayList();
 
     /** 
      * Cache for the modeltarget. See getModelTarget
      */
-    private Object modelTarget = null;
+    private Object _modelTarget = null;
 
     /**
      * Cache for the figTarget. See getFigTarget
      */
-    private Fig figTarget = null;
+    private Fig _figTarget = null;
 
     /**
      * The list with targetlisteners
      */
-    private EventListenerList listenerList = new EventListenerList();
+    private EventListenerList _listenerList = new EventListenerList();
 
     /**
      * The history manager of argouml. Via the historymanager browser behaviour
      * is emulated
      */
-    private HistoryManager historyManager = new HistoryManager();
+    private HistoryManager _historyManager = new HistoryManager();
 
     /**
      * Flag to indicate that there is a setTarget method running
      */
-    private boolean inTransaction = false;
+    private boolean _inTransaction = false;
 
     /**
      * Singleton retrieval method
@@ -359,17 +345,16 @@ public final class TargetManager {
 	if (isInTargetTransaction())
 	    return;
 
-	if ((targets.size() == 0 && o == null) 
-            || (targets.size() == 1 && targets.get(0).equals(o)))
+	if ((_targets.size() == 0 && o == null) ||
+	    (_targets.size() == 1 && _targets.get(0).equals(o)))
 	    return;
 
 	startTargetTransaction();
 
-	Object oldTargets[] = targets.toArray();
-	targets.clear();
-	// internalOnSetTarget(TargetEvent.TARGET_REMOVED, oldTargets);
+	Object oldTargets[] = _targets.toArray();
+	_targets.clear();
 	if (o != null)
-	    targets.add(o);
+	    _targets.add(o);
 	internalOnSetTarget(TargetEvent.TARGET_SET, oldTargets);
 
         endTargetTransaction();
@@ -377,14 +362,14 @@ public final class TargetManager {
 
     private void internalOnSetTarget(String eventName, Object oldTargets[]) {
 	TargetEvent event =
-	    new TargetEvent(this, eventName, oldTargets, targets.toArray());
+	    new TargetEvent(this, eventName, oldTargets, _targets.toArray());
 
-	if (targets.size() > 0) {
-	    figTarget = determineFigTarget(targets.get(0));
-	    modelTarget = determineModelTarget(targets.get(0));
+	if (_targets.size() > 0) {
+	    _figTarget = determineFigTarget(_targets.get(0));
+	    _modelTarget = determineModelTarget(_targets.get(0));
 	} else {
-	    figTarget = null;
-	    modelTarget = null;
+	    _figTarget = null;
+	    _modelTarget = null;
 	}
 
 	if (TargetEvent.TARGET_SET.equals(eventName)) {
@@ -400,7 +385,7 @@ public final class TargetManager {
 	    return;
 	}
 
-	LOG.error("Unknown eventName: " + eventName);
+	_log.error("Unknown eventName: " + eventName);
     }
 
     /**
@@ -413,7 +398,7 @@ public final class TargetManager {
      * @return The current target, or null if no target is selected
      */
     public synchronized Object getTarget() {
-	return targets.size() > 0 ? targets.get(0) : null;
+	return _targets.size() > 0 ? _targets.get(0) : null;
     }
 
     /**
@@ -424,7 +409,7 @@ public final class TargetManager {
      * will be taken to be the primary target (see getTarget()), and that
      * an event will be fired also in case that that element would not equal
      * the element returned by getTarget().
-     * Note also that any nulls within the Collection will be ignored.    
+     * Note also that any nulls within the Collection will be ignored.
      * @param targetsList The new targets list.
      */
     public synchronized void setTargets(Collection targetsList) {
@@ -436,22 +421,9 @@ public final class TargetManager {
 	if (targetsList == null)
 	    targetsList = Collections.EMPTY_LIST;
 
-	// remove any nulls so we really ignore them
-	if (targetsList.contains(null)) {
-	    List withoutNullList = new ArrayList(targetsList);
-	    while (withoutNullList.contains(null)) {
-	        int nullIndex = withoutNullList.indexOf(null);
-	        withoutNullList.remove(nullIndex);
-	    }
-	    targetsList = withoutNullList;
-	}
-	
 	Object oldTargets[] = null;
 
-	// check if there are new elements in the list 
-	// if the old and new list are of the same size
-	// set the oldTargets to the correct selection
-	if (targetsList.size() == targets.size()) {
+	if (targetsList.size() == _targets.size()) {
 	    boolean first = true;
 	    ntarg = targetsList.iterator();
 
@@ -459,32 +431,29 @@ public final class TargetManager {
 		Object targ = ntarg.next();
 		if (targ == null)
 		    continue;
-		if (!targets.contains(targ)
+		if (!_targets.contains(targ)
 		    || (first && targ != getTarget())) {
-		    oldTargets = targets.toArray();
+		    oldTargets = _targets.toArray();
 		    break;
 		} else
 		    first = false;
 	    }
 	} else
-	    oldTargets = targets.toArray();
+	    oldTargets = _targets.toArray();
 
 	if (oldTargets == null)
-	    return;	
+	    return;
 
 	startTargetTransaction();
-	
-	targets.clear();
-	
-	// implement set-like behaviour. The same element 
-	// may not be added more then once.
+
+	_targets.clear();
 	ntarg = targetsList.iterator();
 	while (ntarg.hasNext()) {
 	    Object targ = ntarg.next();
-	    if (targets.contains(targ))
+	    if (targ == null || _targets.contains(targ))
 		continue;
-	    targets.add(targ);
-	}		
+	    _targets.add(targ);
+	}
 
 	internalOnSetTarget(TargetEvent.TARGET_SET, oldTargets);
 
@@ -503,13 +472,13 @@ public final class TargetManager {
 	if (isInTargetTransaction())
 	    return;
 
-	if (target == null || targets.contains(target))
+	if (target == null || _targets.contains(target))
 	    return;
 
 	startTargetTransaction();
 
-	Object[] oldTargets = targets.toArray();
-	targets.add(0, target);
+	Object[] oldTargets = _targets.toArray();
+	_targets.add(target);
 	internalOnSetTarget(TargetEvent.TARGET_ADDED, oldTargets);
 
 	endTargetTransaction();
@@ -526,13 +495,13 @@ public final class TargetManager {
         if (isInTargetTransaction())
 	    return;
 
-	if (target == null || !targets.contains(target))
+	if (target == null || !_targets.contains(target))
 	    return;
 
 	startTargetTransaction();
 
-	Object[] oldTargets = targets.toArray();
-	targets.remove(target);
+	Object[] oldTargets = _targets.toArray();
+	_targets.remove(target);
 	internalOnSetTarget(TargetEvent.TARGET_REMOVED, oldTargets);
 
 	endTargetTransaction();
@@ -552,19 +521,16 @@ public final class TargetManager {
      * @return A collection with all targets.
      */
     public synchronized Collection getTargets() {
-        return new ArrayList(targets);
+        return new ArrayList(_targets);
     }
     
-    /**
-     * @return the target from the model
-     */
     public synchronized Collection getModelTargets() {
-        ArrayList t = new ArrayList();
+        ArrayList targets = new ArrayList();
         Iterator iter = getTargets().iterator();
         while (iter.hasNext()) {
-            t.add(determineModelTarget(iter.next()));
+            targets.add(determineModelTarget(iter.next()));
         }
-        return t;
+        return targets;
     }
 
     /**
@@ -572,7 +538,7 @@ public final class TargetManager {
      * @param listener the listener to add
      */
     public void addTargetListener(TargetListener listener) {
-        listenerList.add(TargetListener.class, listener);
+        _listenerList.add(TargetListener.class, listener);
     }
 
     /**
@@ -580,12 +546,12 @@ public final class TargetManager {
      * @param listener the listener to remove
      */
     public void removeTargetListener(TargetListener listener) {
-        listenerList.remove(TargetListener.class, listener);
+        _listenerList.remove(TargetListener.class, listener);
     }
 
     private void fireTargetSet(TargetEvent targetEvent) {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
 	    try {
 		if (listeners[i] == TargetListener.class) {
@@ -593,7 +559,7 @@ public final class TargetManager {
 		    ((TargetListener) listeners[i + 1]).targetSet(targetEvent);
 		}
 	    } catch (RuntimeException e) {
-		LOG.warn("While calling targetSet for "
+		_log.warn("While calling targetSet for "
 			  + targetEvent
 			  + " in "
 			  + listeners[i + 1]
@@ -605,16 +571,15 @@ public final class TargetManager {
 
     private void fireTargetAdded(TargetEvent targetEvent) {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
 	    try {
 		if (listeners[i] == TargetListener.class) {
 		    // Lazily create the event:                     
-		    ((TargetListener) listeners[i + 1])
-		        .targetAdded(targetEvent);
+		    ((TargetListener) listeners[i + 1]).targetAdded(targetEvent);
 		}
 	    } catch (RuntimeException e) {
-		LOG.warn("While calling targetAdded for "
+		_log.warn("While calling targetAdded for "
 			  + targetEvent
 			  + " in "
 			  + listeners[i + 1]
@@ -626,16 +591,15 @@ public final class TargetManager {
 
     private void fireTargetRemoved(TargetEvent targetEvent) {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
 	    try {
 		if (listeners[i] == TargetListener.class) {
 		    // Lazily create the event:                     
-		    ((TargetListener) listeners[i + 1])
-		        .targetRemoved(targetEvent);
+		    ((TargetListener) listeners[i + 1]).targetRemoved(targetEvent);
 		}
 	    } catch (RuntimeException e) {
-		LOG.warn("While calling targetRemoved for "
+		_log.warn("While calling targetRemoved for "
 			  + targetEvent
 			  + " in "
 			  + listeners[i + 1]
@@ -646,15 +610,15 @@ public final class TargetManager {
     }
 
     private void startTargetTransaction() {
-        inTransaction = true;
+        _inTransaction = true;
     }
 
     private boolean isInTargetTransaction() {
-        return inTransaction;
+        return _inTransaction;
     }
 
     private void endTargetTransaction() {
-        inTransaction = false;
+        _inTransaction = false;
     }
 
     /**
@@ -665,7 +629,7 @@ public final class TargetManager {
      * @return the target in it's 'fig-form'
      */
     public Fig getFigTarget() {
-        return figTarget;
+        return _figTarget;
     }
 
     /**
@@ -697,7 +661,7 @@ public final class TargetManager {
      * @return the target in it's 'modelform'.
      */
     public Object getModelTarget() {
-        return modelTarget;
+        return _modelTarget;
 
     }
 
@@ -725,7 +689,7 @@ public final class TargetManager {
      * history.
      */
     public void navigateForward() throws IllegalStateException {
-        historyManager.navigateForward();
+        _historyManager.navigateForward();
     }
 
     /**
@@ -736,7 +700,7 @@ public final class TargetManager {
      * beginning of the history.
      */
     public void navigateBackward() throws IllegalStateException {
-        historyManager.navigateBackward();
+        _historyManager.navigateBackward();
     }
 
     /**
@@ -744,7 +708,7 @@ public final class TargetManager {
      * @return true if it is possible to navigate forward.
      */
     public boolean navigateForwardPossible() {
-        return historyManager.navigateForwardPossible();
+        return _historyManager.navigateForwardPossible();
     }
 
     /**
@@ -752,7 +716,7 @@ public final class TargetManager {
      * @return true if it's possible to navigate backward
      */
     public boolean navigateBackPossible() {
-        return historyManager.navigateBackPossible();
+        return _historyManager.navigateBackPossible();
     }
 
     /**
@@ -761,14 +725,11 @@ public final class TargetManager {
      *
      */
     public void cleanHistory() {
-        historyManager.clean();
+        _historyManager.clean();
     }
 
-    /**
-     * @param o the object to be removed
-     */
     public void removeHistoryElement(Object o) {
-        historyManager.removeHistoryTarget(o);
+        _historyManager.removeHistoryTarget(o);
     }
 
 }

@@ -120,8 +120,7 @@ public abstract class UMLComboBoxModel2
     /**
      * @see ru.novosoft.uml.MElementListener#listRoleItemSet(MElementEvent)
      */
-    public void listRoleItemSet(MElementEvent e) { 
-        }
+    public void listRoleItemSet(MElementEvent e) { }
 
     /**
      * If the property that this comboboxmodel depicts is changed by the NSUML
@@ -144,8 +143,7 @@ public abstract class UMLComboBoxModel2
     /**
      * @see ru.novosoft.uml.MElementListener#recovered(MElementEvent)
      */
-    public void recovered(MElementEvent e) { 
-        }
+    public void recovered(MElementEvent e) { }
 
     /**
      * @see ru.novosoft.uml.MElementListener#removed(MElementEvent)
@@ -205,9 +203,13 @@ public abstract class UMLComboBoxModel2
     protected abstract boolean isValidElement(Object element);
 
     /**
-     * Builds the list of elements and sets the selectedIndex to the currently 
-     * selected item if there is one. Called from targetChanged every time the 
-     * target of the proppanel is changed.
+     * Implement this method to make the list of elements that this
+     * ComboBoxModel should contain. It will be called whenever the target
+     * has changed. There is no need to clear the list of elements since it
+     * will always be empty upon entry to this method. Should the current
+     * target not be suitable for your model then you should simply return.
+     *
+     * @see #getSelectedModelElement()
      */
     protected abstract void buildModelList();
 
@@ -318,14 +320,22 @@ public abstract class UMLComboBoxModel2
      * @param target
      */
     protected void setTarget(Object target) {
-        target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (ModelFacade.isABase(target) || ModelFacade.isADiagram(target)) {
-            UmlModelEventPump eventPump = UmlModelEventPump.getPump();
-            if (ModelFacade.isABase(_target)) {
-                eventPump.removeModelEventListener(this, _target,
-						   _propertySetName);
-            }
+	UmlModelEventPump eventPump = UmlModelEventPump.getPump();
 
+	if (ModelFacade.isABase(_target)) {
+	    eventPump.removeModelEventListener(this, _target,
+					       _propertySetName);
+	}
+
+	_target = null;
+
+	if (!_objects.isEmpty()) {
+	    // It is imperative that _target is null here!
+	    removeAllElements();
+	}
+
+	target = target instanceof Fig ? ((Fig) target).getOwner() : target;
+        if (ModelFacade.isABase(target) || ModelFacade.isADiagram(target)) {
             if (ModelFacade.isABase(target)) {
                 _target = target;
                 // UmlModelEventPump.getPump()
@@ -336,18 +346,15 @@ public abstract class UMLComboBoxModel2
             } else {
                 _target = null;
             }
-            _fireListEvents = false;
-            removeAllElements();
-            _fireListEvents = true;
+
             if (_target != null) {
                 _buildingModel = true;
                 buildModelList();
                 _buildingModel = false;
-                setSelectedItem(getSelectedModelElement());
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
-               
+                setSelectedItem(getSelectedModelElement());
             }
             if (getSelectedItem() != null && _clearable) {
                 addElement(""); // makes sure we can select 'none'
@@ -356,12 +363,18 @@ public abstract class UMLComboBoxModel2
     }
 
     /**
-     * Gets the modelelement that is selected in the NSUML model. For
-     * example, say that this ComboBoxmodel contains all namespaces
-     * (as in UMLNamespaceComboBoxmodel) , this method should return
-     * the namespace that owns the target then.
+     * Implement this method to return the object that should be selected by
+     * combo boxes showing this ComboBoxModel. That would usually be an
+     * element added by buildModelList. If no object should be selected
+     * (eg because the target property is null or because the current target
+     * is not really suitable for your model) then you should return null.
+     *
+     * <p>For example, say that this ComboBoxmodel contains all namespaces in
+     * the current model (as in UMLNamespaceComboBoxmodel) then this method
+     * should return the namespace that owns the current target.
      *
      * @return Object
+     * @see #buildModelList()
      */
     protected abstract Object getSelectedModelElement();
 
@@ -520,34 +533,21 @@ public abstract class UMLComboBoxModel2
      * @see TargetListener#targetAdded(TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        setTarget(e.getNewTarget());
+	setTarget(e.getNewTarget());
     }
 
     /**
      * @see TargetListener#targetRemoved(TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        Object currentTarget = _target;
-        Object oldTarget = e.getOldTargets().length > 0 ? e.getOldTargets()[0] : null;
-        if (oldTarget instanceof Fig) {
-            oldTarget = ((Fig)oldTarget).getOwner();
-        }
-        if (oldTarget == currentTarget) {
-            if (ModelFacade.isABase(currentTarget)) {
-                UmlModelEventPump.getPump().removeModelEventListener(this,
-                        currentTarget, _propertySetName);
-            }
-            _target = e.getNewTarget();
-        }                
-        // setTarget(e.getNewTarget());
+	setTarget(e.getNewTarget());
     }
 
     /**
      * @see TargetListener#targetSet(TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTarget());
-
+	setTarget(e.getNewTarget());
     }
 
 }

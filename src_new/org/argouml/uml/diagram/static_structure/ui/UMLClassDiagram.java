@@ -26,7 +26,6 @@ package org.argouml.uml.diagram.static_structure.ui;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -35,6 +34,7 @@ import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.RadioAction;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.tigris.gef.base.LayerPerspective;
@@ -46,126 +46,110 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
  */
 public class UMLClassDiagram extends UMLDiagram {
 
-    private static final Logger LOG = Logger.getLogger(UMLClassDiagram.class);
-
     ////////////////
     // actions for toolbar
+    // TODO: These should not be static.
 
-    protected Action _actionClass = new RadioAction(
-        new CmdCreateNode(ModelFacade.CLASS, "Class"));
+    protected static Action _actionClass = new RadioAction(
+	new CmdCreateNode(ModelFacade.CLASS, "Class"));
 
-    protected Action _actionObject = new RadioAction(
-        new CmdCreateNode(ModelFacade.INSTANCE, "Instance"));
+    protected static Action _actionObject = new RadioAction(
+	new CmdCreateNode(ModelFacade.INSTANCE, "Instance"));
 
-    protected Action _actionInterface = new RadioAction(
-        new CmdCreateNode(ModelFacade.INTERFACE, "Interface"));
+    protected static Action _actionInterface = new RadioAction(
+	new CmdCreateNode(ModelFacade.INTERFACE, "Interface"));
 
-    protected Action _actionDepend = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    protected static Action _actionDepend = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
                     ModelFacade.DEPENDENCY, "Dependency"));
 
-    protected Action _actionPermission = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", 
+    protected static Action _actionPermission = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", 
                     ModelFacade.PERMISSION, "Permission"));
 
-    protected Action _actionUsage = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    protected static Action _actionUsage = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
                     ModelFacade.USAGE, "Usage"));
 
-    protected Action _actionLink = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    protected static Action _actionLink = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
                     ModelFacade.LINK, "Link"));
 
-    protected Action _actionGeneralize = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    protected static Action _actionGeneralize = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
                     ModelFacade.GENERALIZATION, "Generalization"));
 
-    protected Action _actionRealize = new RadioAction(
-        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    protected static Action _actionRealize = new RadioAction(
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
                     ModelFacade.ABSTRACTION, "Realization"));
 
-    protected Action _actionPackage = new RadioAction(
-        new CmdCreateNode(ModelFacade.PACKAGE, "Package"));
+    protected static Action _actionPackage = new RadioAction(
+	new CmdCreateNode(ModelFacade.PACKAGE, "Package"));
 
-    protected Action _actionModel = new RadioAction(
-        new CmdCreateNode(ModelFacade.MODEL, "Model"));
+    protected static Action _actionModel = new RadioAction(
+	new CmdCreateNode(ModelFacade.MODEL, "Model"));
 
-    protected Action _actionSubsystem = new RadioAction(
-        new CmdCreateNode(ModelFacade.SUBSYSTEM, "Subsystem"));
+    protected static Action _actionSubsystem = new RadioAction(
+	new CmdCreateNode(ModelFacade.SUBSYSTEM, "Subsystem"));
 
-    protected Action _actionAssociation = new RadioAction(
-        new ActionAddAssociation(ModelFacade.NONE_AGGREGATIONKIND,
+    protected static Action _actionAssociation = new RadioAction(
+	new ActionAddAssociation(ModelFacade.NONE_AGGREGATIONKIND,
                     false, "Association"));
-    protected Action _actionAggregation = new RadioAction(
-        new ActionAddAssociation(ModelFacade.AGGREGATE_AGGREGATIONKIND,
+    protected static Action _actionAggregation = new RadioAction(
+	new ActionAddAssociation(ModelFacade.AGGREGATE_AGGREGATIONKIND,
                     false, "Aggregation"));
-    protected Action _actionComposition = new RadioAction(
-        new ActionAddAssociation(ModelFacade.COMPOSITE_AGGREGATIONKIND, 
+    protected static Action _actionComposition = new RadioAction(
+	new ActionAddAssociation(ModelFacade.COMPOSITE_AGGREGATIONKIND, 
                     false, "Composition"));
-    protected Action _actionUniAssociation = new RadioAction(
-        new ActionAddAssociation(ModelFacade.NONE_AGGREGATIONKIND, 
+    protected static Action _actionUniAssociation = new RadioAction(
+	new ActionAddAssociation(ModelFacade.NONE_AGGREGATIONKIND, 
                     true, "UniAssociation"));
-    protected Action _actionUniAggregation = new RadioAction(
-        new ActionAddAssociation(ModelFacade.AGGREGATE_AGGREGATIONKIND, 
+    protected static Action _actionUniAggregation = new RadioAction(
+	new ActionAddAssociation(ModelFacade.AGGREGATE_AGGREGATIONKIND, 
                     true, "UniAggregation"));
-    protected Action _actionUniComposition = new RadioAction(
-        new ActionAddAssociation(ModelFacade.COMPOSITE_AGGREGATIONKIND, 
+    protected static Action _actionUniComposition = new RadioAction(
+	new ActionAddAssociation(ModelFacade.COMPOSITE_AGGREGATIONKIND, 
                     true, "UniComposition"));
 
-    private static int classDiagramSerial = 1;
+    ////////////////////////////////////////////////////////////////
+    // contructors
+    protected static int _ClassDiagramSerial = 1;
 
-    /**
-     * constructor
-     */
     public UMLClassDiagram() {
         super();
     }
 
-    /**
-     * constructor
-     * @param name the name for the new diagram 
-     * @param m the namespace for the new diagram
-     */
     public UMLClassDiagram(String name, Object m) {
         super(name, /*(MNamespace)*/ m);
     }
 
-    /**
-     * constructor
-     * @param m the namespace
-     */
     public UMLClassDiagram(Object m) {
         this(getNewDiagramName(), m);
     }
 
-    /**
-     * @see org.argouml.uml.diagram.ui.UMLDiagram#setNamespace(java.lang.Object)
-     */
     public void setNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
-            LOG.error("Illegal argument. "
-                  + "Object " + handle + " is not a namespace");
-            throw new IllegalArgumentException("Illegal argument. "
-            			       + "Object " + handle
-            			       + " is not a namespace");
+	    cat.error("Illegal argument. "
+		      + "Object " + handle + " is not a namespace");
+	    throw new IllegalArgumentException("Illegal argument. "
+					       + "Object " + handle
+					       + " is not a namespace");
         }
         Object m = /*(MNamespace)*/ handle;
         super.setNamespace(m);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
         gm.setNamespace(m);
-        LayerPerspective lay =
-            new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
-        ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
-        lay.setGraphNodeRenderer(rend);
-        lay.setGraphEdgeRenderer(rend);
-        setLayer(lay);
+	LayerPerspective lay =
+	    new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
+	ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
+	lay.setGraphNodeRenderer(rend);
+	lay.setGraphEdgeRenderer(rend);
+	setLayer(lay);
     }
 
     /**
      * Get the actions from which to create a toolbar or equivilent
      * graphic trigger.
-     *
-     * @see org.argouml.uml.diagram.ui.UMLDiagram#getUmlActions()
      */
     protected Object[] getUmlActions() {
         Object actions[] = {
@@ -178,10 +162,9 @@ public class UMLClassDiagram extends UMLDiagram {
             _actionGeneralize, null,
             _actionInterface,
             _actionRealize, null,
-            ActionAddAttribute.getSingleton(),
-            ActionAddOperation.getSingleton(), null,
-            _actionComment,
-            _actionCommentLink
+            ActionAddAttribute.SINGLETON,
+            ActionAddOperation.SINGLETON, null,
+            ActionAddNote.SINGLETON
         };
 
         return actions;
@@ -197,9 +180,9 @@ public class UMLClassDiagram extends UMLDiagram {
 	   _actionSubsystem };
         */
         /* subsystem. model disabled */
-        Object actions[] = {
-            _actionPackage 
-        };
+	Object actions[] = {
+	    _actionPackage 
+	};
        
         return actions;
     }
@@ -225,8 +208,8 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     protected static String getNewDiagramName() {
         String name = null;
-        name = "Class Diagram " + classDiagramSerial;
-        classDiagramSerial++;
+        name = "Class Diagram " + _ClassDiagramSerial;
+        _ClassDiagramSerial++;
         if (!ProjectManager.getManager().getCurrentProject()
 	        .isValidDiagramName(name)) {
             name = getNewDiagramName();

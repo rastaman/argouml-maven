@@ -45,43 +45,31 @@ public class NotationNameImpl
     /** logger */
     private static final Logger LOG = Logger.getLogger(NotationNameImpl.class);
 
-    private String name = null;
-    private String version = null;
-    private Icon icon = null;
+    String name = null;
+    String version = null;
+    Icon icon = null;
 
     private static ArrayList notations = new ArrayList();
 
     /** A notation without a version or icon.
-     *
-     * @param theName the name of the notation
      */
-    protected NotationNameImpl(String theName) {
-        this(theName, null, null);
+    protected NotationNameImpl(String name) {
+        this(name, null, null);
     }
 
     /** A notation without a version and with an icon.
-     *
-     * @param theName the name of the notation
-     * @param theIcon the icon for of the notation
      */
-    protected NotationNameImpl(String theName, Icon theIcon) {
-        this(theName, null, theIcon);
+    protected NotationNameImpl(String name, Icon icon) {
+        this(name, null, icon);
     }
 
     /** A notation with a version and no icon.
-     *
-     * @param theName the name of the notation
-     * @param theVersion the version of the notation
      */
-    protected NotationNameImpl(String theName, String theVersion) {
-        this(theName, theVersion, null);
+    protected NotationNameImpl(String name, String version) {
+        this(name, version, null);
     }
 
     /** A notation with a version and an icon.
-     *
-     * @param myName    the name of the notation
-     * @param myVersion the version of the notation
-     * @param myIcon    the icon of the notation
      */
     protected NotationNameImpl(String myName, String myVersion, Icon myIcon) {
         name = myName;
@@ -90,16 +78,12 @@ public class NotationNameImpl
     }
 
     /** Accessor for the language name
-     *
-     * @see org.argouml.application.api.NotationName#getName()
      */
     public String getName() {
         return name;
     }
 
     /** Accessor for the language version
-     *
-     * @see org.argouml.application.api.NotationName#getVersion()
      */
     public String getVersion() {
         return version;
@@ -107,8 +91,6 @@ public class NotationNameImpl
 
     /** Gets a textual title for the notation suitable for use
      *  in a combo box or other such visual location.
-     *
-     * @see org.argouml.application.api.NotationName#getTitle()
      */
     public String getTitle() {
         String myName = name;
@@ -125,23 +107,15 @@ public class NotationNameImpl
     }
 
     /** Returns an icon for the notation, or null if no icon is available.
-     *
-     * @see org.argouml.application.api.NotationName#getIcon()
      */
     public Icon getIcon() {
         return icon;
     }
 
-    /**
-     * @see org.argouml.application.api.NotationName#getConfigurationValue()
-     */
     public String getConfigurationValue() {
         return getNotationNameString(name, version);
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
         return getTitle();
     }
@@ -177,8 +151,6 @@ public class NotationNameImpl
     }
 
     /** Get all of the registered notations.
-     *
-     * @return an ArrayList with all notations
      */
     public static ArrayList getAvailableNotations() {
         return notations;
@@ -186,9 +158,6 @@ public class NotationNameImpl
 
     /** Finds a NotationName matching the configuration string.
      *  Returns null if no match.
-     *
-     * @param s the configuration string
-     * @return the name of the notation or null
      */
     public static NotationName findNotation(String s) {
         ListIterator iterator = notations.listIterator();
@@ -206,9 +175,6 @@ public class NotationNameImpl
 	return null;
     }
 
-    /**
-     * @see org.argouml.application.api.NotationName#equals(org.argouml.application.api.NotationName)
-     */
     public boolean equals(NotationName nn) {
         return this.getConfigurationValue().equals(nn.getConfigurationValue());
     }
@@ -227,28 +193,16 @@ public class NotationNameImpl
         return findNotation(getNotationNameString(k1, k2));
     }
 
-    /**
-     * @see org.argouml.application.events.ArgoModuleEventListener#moduleLoaded(org.argouml.application.events.ArgoModuleEvent)
-     */
     public void moduleLoaded(ArgoModuleEvent event) {
         LOG.info ("notation.moduleLoaded(" + event + ")");
     }
 
-    /**
-     * @see org.argouml.application.events.ArgoModuleEventListener#moduleUnloaded(org.argouml.application.events.ArgoModuleEvent)
-     */
     public void moduleUnloaded(ArgoModuleEvent event) {
     }
 
-    /**
-     * @see org.argouml.application.events.ArgoModuleEventListener#moduleEnabled(org.argouml.application.events.ArgoModuleEvent)
-     */
     public void moduleEnabled(ArgoModuleEvent event) {
     }
 
-    /**
-     * @see org.argouml.application.events.ArgoModuleEventListener#moduleDisabled(org.argouml.application.events.ArgoModuleEvent)
-     */
     public void moduleDisabled(ArgoModuleEvent event) {
     }
 }

@@ -55,15 +55,39 @@ import org.tigris.gef.base.*;
 import org.tigris.gef.persistence.*;
 
 
-/**
- * Wraps a CmdSaveGIF or CmdSave(E)PS to allow selection of an output file. 
+/** Wraps a CmdSaveGIF or CmdSave(E)PS to allow selection of an output file. 
+ *  @stereotype singleton
  */
+
 public class ActionSaveGraphics
     extends UMLAction
     implements CommandLineInterface {
 
-    private static final Logger LOG =
+    /**
+     * @deprecated as of 0.15.4. Will be made private. Use your own logger.
+     */
+    protected static Logger cat =
 	Logger.getLogger(ActionSaveGraphics.class);
+
+    ////////////////////////////////////////////////////////////////
+    // static variables
+
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4 this should not be
+     * used. We are changing this action so that it will no longer be
+     * a singleton. Use the constructor to create yourself a new
+     * instance of this object instead.
+     */
+    public static ActionSaveGraphics SINGLETON = new ActionSaveGraphics(); 
+
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Get this information from
+     * some java.io class.
+     *
+     * @see java.io
+     */
+    public static final String separator = "/";
+
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -138,7 +162,7 @@ public class ActionSaveGraphics
 	    // concerning the following lines: is .GIF preferred?
 	    chooser.setFileFilter(FileFilters.GIFFilter);
 	    File def = new File(defaultName + "."
-				+ FileFilters.GIFFilter.getSuffix());
+				+ FileFilters.GIFFilter._suffix);
 	    chooser.setSelectedFile(def);
 
 	    int retval = chooser.showSaveDialog(pb);
@@ -153,11 +177,10 @@ public class ActionSaveGraphics
 		    // filter.  start new code
 			
 		    if (suffix == null
-			|| !(suffix.equals(FileFilters.PSFilter.getSuffix())
-			     || suffix.equals(FileFilters.EPSFilter.getSuffix())
-			     || suffix.equals(FileFilters.GIFFilter.getSuffix())
-			     || suffix.equals(FileFilters.SVGFilter
-			                                     .getSuffix()))) {
+			|| !(suffix.equals(FileFilters.PSFilter._suffix)
+			     || suffix.equals(FileFilters.EPSFilter._suffix)
+			     || suffix.equals(FileFilters.GIFFilter._suffix)
+			     || suffix.equals(FileFilters.SVGFilter._suffix))) {
 			// add the selected filter suffix
 			FileFilter filter = chooser.getFileFilter();
 			suffix = FileFilters.getSuffix(filter);  
@@ -172,10 +195,10 @@ public class ActionSaveGraphics
 	    }
 	}
 	catch (FileNotFoundException ignore) {
-	    LOG.error("got a FileNotFoundException", ignore);
+	    cat.error("got a FileNotFoundException", ignore);
 	}
 	catch (IOException ignore) {
-	    LOG.error("got an IOException", ignore);
+	    cat.error("got an IOException", ignore);
 	}
 
 	return false;
@@ -198,13 +221,13 @@ public class ActionSaveGraphics
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 
 	CmdSaveGraphics cmd = null;
-	if (FileFilters.PSFilter.getSuffix().equals(suffix)) {
+	if (FileFilters.PSFilter._suffix.equals(suffix)) {
 	    cmd = new CmdSavePS();
-	} else if (FileFilters.EPSFilter.getSuffix().equals(suffix)) {
+	} else if (FileFilters.EPSFilter._suffix.equals(suffix)) {
 	    cmd = new ActionSaveGraphicsCmdSaveEPS();
-	} else if (FileFilters.GIFFilter.getSuffix().equals(suffix)) {
+	} else if (FileFilters.GIFFilter._suffix.equals(suffix)) {
 	    cmd = new CmdSaveGIF();
-	} else if (FileFilters.SVGFilter.getSuffix().equals(suffix)) {
+	} else if (FileFilters.SVGFilter._suffix.equals(suffix)) {
 	    cmd = new CmdSaveSVG();
 	} else {
 	    pb.showStatus("Unknown graphics file type with suffix "
@@ -248,9 +271,9 @@ public class ActionSaveGraphics
 	try {
 	    return doSave(file, suffix, true);
 	} catch (FileNotFoundException e) {
-	    LOG.error("File not found error when writing.", e);
+	    cat.error("File not found error when writing.", e);
 	} catch (IOException e) {
-	    LOG.error("IO error when writing.", e);
+	    cat.error("IO error when writing.", e);
 	}
 	return false;
     }

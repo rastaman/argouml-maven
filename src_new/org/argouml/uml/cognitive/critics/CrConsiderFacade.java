@@ -32,12 +32,9 @@ import org.argouml.cognitive.Designer;
  * TODO: at the moment only a dummy implementation
 */
 public class CrConsiderFacade extends CrUML {
-    private static final Logger LOG =
+    protected static Logger cat =
 	Logger.getLogger(CrConsiderFacade.class);
 
-    /**
-     * The constructor.
-     */
     public CrConsiderFacade() {
 	setHeadline("Consider using facade stereotype for <ocl>self</ocl>");
        
@@ -45,10 +42,6 @@ public class CrConsiderFacade extends CrUML {
 	addTrigger("ownedElement");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	/* TODO: Add implementation. */
 	return NO_PROBLEM;

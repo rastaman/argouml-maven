@@ -44,82 +44,61 @@ import org.argouml.model.ModelFacade;
  *  MModelElement to a better name. */
 
 public class WizManyNames extends Wizard {
-    private static final Logger LOG = Logger.getLogger(WizManyNames.class);
+    protected static Logger cat = Logger.getLogger(WizManyNames.class);
 					      
-    private String instructions =
+    protected String _instructions =
 	"Please change the name of the offending model element.";
-    private String label = Translator.localize("UMLMenu", "label.name");
-    private Vector mes = null;
+    protected String _label = Translator.localize("UMLMenu", "label.name");
+    public Vector _mes = null;
 							  
-    private WizStepManyTextFields step1 = null;
+    protected WizStepManyTextFields _step1 = null;
 							      
-    /**
-     * The constructor.
-     * 
-     */
     public WizManyNames() { }
 								  
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
     public int getNumSteps() { return 1; }
 								      
-    /**
-     * @param m
-     */
-    public void setMEs(Vector m) { mes = m; }
+    public void setMEs(Vector mes) { _mes = mes; }
 									  
-    /**
-     * @param s set the new instructions
-     */
-    public void setInstructions(String s) { instructions = s; }
+    public void setInstructions(String s) { _instructions = s; }
 									      
-    /** 
-     * Create a new panel for the given step.
-     * 
-     * @see org.argouml.kernel.Wizard#makePanel(int)
-     */
+    /** Create a new panel for the given step.  */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
 	case 1:
-	    if (step1 == null) {
+	    if (_step1 == null) {
 		Vector names = new Vector();
-		int size = mes.size();
+		int size = _mes.size();
 		for (int i = 0; i < size; i++) {
-		    Object me = /*(MModelElement)*/ mes.elementAt(i);
+		    Object me = /*(MModelElement)*/ _mes.elementAt(i);
 		    names.addElement(ModelFacade.getName(me));
 		}
-		step1 = new WizStepManyTextFields(this, instructions, names);
+		_step1 = new WizStepManyTextFields(this, _instructions, names);
 	    }
-	    return step1;
+	    return _step1;
 	}
 	return null;
     }
 
-    /** 
-     * Take action at the completion of a step. For example, when the
-     * given step is 0, do nothing; and when the given step is 1, do
-     * the first action.  Argo non-modal wizards should take action as
-     * they do along, as soon as possible, they should not wait until
-     * the final step.
-     * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
-     */
+    /** Take action at the completion of a step. For example, when the
+     *  given step is 0, do nothing; and when the given step is 1, do
+     *  the first action.  Argo non-modal wizards should take action as
+     *  they do along, as soon as possible, they should not wait until
+     *  the final step. */
     public void doAction(int oldStep) {
-	LOG.debug("doAction " + oldStep);
+	cat.debug("doAction " + oldStep);
 	switch (oldStep) {
 	case 1:
 	    Vector newNames = null;
-	    if (step1 != null) newNames = step1.getStrings();
+	    if (_step1 != null) newNames = _step1.getStrings();
 	    try {
-		int size = mes.size();
+		int size = _mes.size();
 		for (int i = 0; i < size; i++) {
-		    Object me = /*(MModelElement)*/ mes.elementAt(i);
+		    Object me = /*(MModelElement)*/ _mes.elementAt(i);
 		    ModelFacade.setName(me, (String) newNames.elementAt(i));
 		}
 	    }
 	    catch (Exception pve) {
-		LOG.error("could not set name", pve);
+		cat.error("could not set name", pve);
 	    }
 	}
     }

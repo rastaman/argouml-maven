@@ -51,12 +51,12 @@ import javax.swing.UIManager;
  */
 public class PopupToolBoxButton extends JButton {
 
-    private JButton button;
-    private PopupToolBox popupToolBox;
-    private DecoratedIcon standardIcon;
+    private JButton _button;
+    private PopupToolBox _popupToolBox;
+    private DecoratedIcon _standardIcon;
     private String tooltip;
-    private PopupToolBoxButton _this; // TODO: Never used. Remove?
-    private boolean showSplitter;
+    private PopupToolBoxButton _this;
+    private boolean _showSplitter;
     
     /** Creates a new instance of PopupToolboxButton
      * @param a The default action when pressing this button
@@ -70,7 +70,7 @@ public class PopupToolBoxButton extends JButton {
         _this = this;
         setAction(a);
         
-        popupToolBox = new PopupToolBox(rows, cols);
+        _popupToolBox = new PopupToolBox(rows, cols);
         
         MyMouseListener myMouseListener = new MyMouseListener();
         addMouseMotionListener(myMouseListener);
@@ -85,19 +85,19 @@ public class PopupToolBoxButton extends JButton {
         // We can use this button to find out various info for the
         // current plaf (eg preferred button size) so we can emulate
         // whatever plaf the user is set to.
-        button = new JButton(a);
-        tooltip = button.getToolTipText();
+        _button = new JButton(a);
+        tooltip = _button.getToolTipText();
         if (tooltip == null || tooltip.trim().length() == 0) {
-            tooltip = button.getText();
+            tooltip = _button.getText();
         }
-        button.setText(null);
+        _button.setText(null);
         
-        standardIcon = new DropDownIcon((ImageIcon) button.getIcon());
+        _standardIcon = new DropDownIcon((ImageIcon) _button.getIcon());
         
         // Remove any knowledge of the action to perform from the ancestor
         // we take control of performing the action and displaying the icon.
         super.setAction(null);
-        setIcon(standardIcon);
+        setIcon(_standardIcon);
         setToolTipText(tooltip);
     }
     
@@ -115,10 +115,10 @@ public class PopupToolBoxButton extends JButton {
 		    }
 		}
 	    });
-        popupToolBox.setButtonMouseListener(m);
+        _popupToolBox.setButtonMouseListener(m);
         
-        popupToolBox.rebuild();
-        popup.add(popupToolBox);
+        _popupToolBox.rebuild();
+        popup.add(_popupToolBox);
         popup.show(this, 0, getHeight());
     }
 
@@ -128,11 +128,11 @@ public class PopupToolBoxButton extends JButton {
      * @return The button generated to trigger the action
      */    
     public JButton add(Action a) {
-        return popupToolBox.add(a);
+        return _popupToolBox.add(a);
     }
     
     private int getSplitterPosn() {
-        return getIconPosn() + button.getIcon().getIconWidth() + 3;
+        return getIconPosn() + _button.getIcon().getIconWidth() + 3;
     }
     
     /**
@@ -141,14 +141,11 @@ public class PopupToolBoxButton extends JButton {
      * For the moment this assumes that the button has the icon centered.
      */
     private int getIconPosn() {
-        int x = (this.getWidth() - standardIcon.getIconWidth()) / 2;
+        int x = (this.getWidth() - _standardIcon.getIconWidth()) / 2;
         return x;
     }
     
 
-    /**
-     * @see java.awt.Component#paint(java.awt.Graphics)
-     */
     public void paint(Graphics g) {
         super.paint(g);
         Color[] colors = {
@@ -157,7 +154,7 @@ public class PopupToolBoxButton extends JButton {
 	    UIManager.getColor("infoText"),
 	    UIManager.getColor("controlHighlight")};
 
-        if (showSplitter) {
+        if (_showSplitter) {
             showSplitter(colors[1], g, getSplitterPosn(),     1,
 			 getHeight() - 4);
             showSplitter(colors[3], g, getSplitterPosn() + 1, 1,
@@ -165,29 +162,18 @@ public class PopupToolBoxButton extends JButton {
         }
     }
     
-    /**
-     * @param c the color
-     * @param g the graphics
-     * @param x the x-coordinate of the vertical line that 
-     *          represents the splitter
-     * @param y the y-coordinate of the bottom of the splitter line
-     * @param height the height of the splitter line
-     */
     public void showSplitter(Color c, Graphics g, int x, int y, int height) {
         g.setColor(c);
         g.drawLine(x, y + 0, x, y + height);
     }
     
-    /**
-     * @param show to show or not to show
-     */
     public void showSplitter(boolean show) {
-        if (show && !showSplitter) {
-            showSplitter = true;
+        if (show && !_showSplitter) {
+            _showSplitter = true;
             repaint();
             setToolTipText("Select Tool");
-        } else if (!show && showSplitter) {
-            showSplitter = false;
+        } else if (!show && _showSplitter) {
+            _showSplitter = false;
             repaint();
             setToolTipText(tooltip);
         }
@@ -240,7 +226,7 @@ public class PopupToolBoxButton extends JButton {
                 popup();
             } else {
                 // If clicked elsewhere do the current button action
-                button.doClick();
+                _button.doClick();
             }
         }
         

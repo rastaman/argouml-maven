@@ -29,7 +29,6 @@ import junit.framework.TestCase;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
@@ -72,13 +71,11 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         elem.setNamespace(m);       
         stereotypes = new MStereotype[10];
         for (int i = 0; i < 10; i++) {
-            stereotypes[i] = ExtensionMechanismsFactory.getFactory()
-                .buildStereotype(elem, "test" + i);
+            stereotypes[i] = ExtensionMechanismsFactory.getFactory().buildStereotype(elem, "test" + i);
         }
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);   
-        model.targetSet(new TargetEvent(this, "set", new Object[0], 
-                                        new Object[] {elem}));  
+        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));  
     }
     
     /**
@@ -88,7 +85,6 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         super.tearDown();
         UmlFactory.getFactory().delete(elem);
         MFactoryImpl.setEventPolicy(oldEventPolicy);
-        UmlModelEventPump.getPump().cleanUp();
         model = null;
     }
     

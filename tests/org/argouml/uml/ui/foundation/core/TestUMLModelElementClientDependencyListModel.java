@@ -26,7 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
@@ -61,7 +60,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ns = ModelManagementFactory.getFactory().createModel();
-        elem = (MModelElement)CoreFactory.getFactory().buildClass(ns);
+        elem = CoreFactory.getFactory().buildClass(ns);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLModelElementClientDependencyListModel();
@@ -85,11 +84,10 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
      */
     public void testAddMultiple() {      
         MModelElement[] suppliers = new MModelElement[10];
-        Object[] dependencies = new MDependency[10];
+        MDependency[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
-            suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
-            dependencies[i] = 
-                CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
+            suppliers[i] = CoreFactory.getFactory().buildClass(ns);
+            dependencies[i] = CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
         assertEquals(10, model.getSize());
         assertEquals(model.getElementAt(5), dependencies[5]);
@@ -102,14 +100,13 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
      */
     public void testRemoveMultiple() {
         MModelElement[] suppliers = new MModelElement[10];
-        Object[] dependencies = new MDependency[10];
+        MDependency[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
-            suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
-            dependencies[i] = 
-                CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
+            suppliers[i] = CoreFactory.getFactory().buildClass(ns);
+            dependencies[i] = CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeClientDependency(elem, dependencies[i]);
+            elem.removeClientDependency(dependencies[i]);
         }
         assertEquals(5, model.getSize());
         assertEquals(dependencies[5], model.getElementAt(0));

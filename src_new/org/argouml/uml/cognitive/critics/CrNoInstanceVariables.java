@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -48,10 +48,6 @@ import org.argouml.model.ModelFacade;
  */
 public class CrNoInstanceVariables extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrNoInstanceVariables() {
 	setHeadline("Add Instance Variables to <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTORAGE);
@@ -59,10 +55,6 @@ public class CrNoInstanceVariables extends CrUML {
 	addTrigger("structuralFeature");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
 
@@ -70,10 +62,9 @@ public class CrNoInstanceVariables extends CrUML {
 
         // if the object does not have a name,
         // than no problem
-        if ((ModelFacade.getName(dm) == null)
-	    || ("".equals(ModelFacade.getName(dm)))) {
+        if ((ModelFacade.getName(dm) == null) ||
+            ("".equals(ModelFacade.getName(dm))))
             return NO_PROBLEM;
-	}
 
 	// types can probably have variables, but we should not nag at them
 	// not having any.
@@ -89,28 +80,25 @@ public class CrNoInstanceVariables extends CrUML {
 	return PROBLEM_FOUND;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClAttributeCompartment.getTheInstance();
+	return ClAttributeCompartment.TheInstance;
     }
 
     /**
      * Searches for attributes that are changeable instance attributes.
      *
-     * @param dm The classifier to examine.
-     * @param depth Number of levels searched.
+     * @param handle the classifier to examine
+     * @param number of levels searched
      * @return true if an attribute can be found in this class
      *		or in any of its generalizations.
      */
     private boolean findChangeableInstanceAttributeInInherited(Object dm,
 							       int depth) {
 
-	Iterator attribs = ModelFacade.getAttributes(dm).iterator();
+	Iterator enum = ModelFacade.getAttributes(dm).iterator();
 
-	while (attribs.hasNext()) {
-	    Object attr = attribs.next();
+	while (enum.hasNext()) {
+	    Object attr = enum.next();
 
 	    // If we find an instance variable that is not a constant
 	    // we have succeeded
@@ -140,9 +128,6 @@ public class CrNoInstanceVariables extends CrUML {
 	return false;
     }
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
-     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddInstanceVariable) {
 	    ToDoItem item = w.getToDoItem();
@@ -154,11 +139,6 @@ public class CrNoInstanceVariables extends CrUML {
 	}
     }
     
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
-    public Class getWizardClass(ToDoItem item) {
-	return WizAddInstanceVariable.class;
-    }
+    public Class getWizardClass(ToDoItem item) { return WizAddInstanceVariable.class; }
 } /* end class CrNoInstanceVariables */
 

@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -53,8 +53,8 @@ import org.argouml.model.ModelFacade;
  * 2-way assocations.</p>
  *
  * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_multiple_agg">
- * ArgoUML User Manual: Two Aggregate ends (roles) in binary
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_multiple_agg">ArgoUML
+ * User Manual: Two Aggregate ends (roles) in binary
  * Association</a> */
 
 public class CrNWayAgg extends CrUML {
@@ -139,9 +139,10 @@ public class CrNWayAgg extends CrUML {
 
         // Loop through the associations, looking for one with aggregation
 
-        Iterator assocEnds = conns.iterator();
-        while (assocEnds.hasNext()) {
-            Object ae = /*(MAssociationEnd)*/ assocEnds.next();
+        Iterator enum = conns.iterator();
+
+        while (enum.hasNext()) {
+            Object  ae = /*(MAssociationEnd)*/ enum.next();
             if (ModelFacade.isAggregate(ae) || ModelFacade.isComposite(ae)) {
                 return PROBLEM_FOUND;
             }

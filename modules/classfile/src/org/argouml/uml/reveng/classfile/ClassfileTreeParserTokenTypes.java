@@ -2,6 +2,8 @@
 
 package org.argouml.uml.reveng.classfile;
 
+import org.argouml.uml.reveng.java.*;
+import java.util.*;
 
 public interface ClassfileTreeParserTokenTypes {
 	int EOF = 1;

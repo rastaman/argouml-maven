@@ -38,22 +38,31 @@ import org.argouml.model.ModelFacade;
  * @stereotype singleton
  */
 public class UUIDManager {
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Create your own logger in
+     * your class instead. You should probably not inherit this class anyway.
+     */
+    protected static Logger cat = Logger.getLogger(UUIDManager.class);
 
     /**
      * The logger.
      */
-    private static final Logger LOG = Logger.getLogger(UUIDManager.class);
+    private static Logger LOG = Logger.getLogger(UUIDManager.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables
     
-    private static final UUIDManager SINGLETON = new UUIDManager();
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Use {@link #getInstance()} 
+     * instead.
+     */
+    public static UUIDManager SINGLETON = new UUIDManager();
 
-    private static InetAddress address = null; 
+    protected static InetAddress _address = null; 
 
     static {
         try {
-            address = InetAddress.getLocalHost(); 
+            _address = InetAddress.getLocalHost(); 
         }
 	catch (UnknownHostException e) {
             LOG.fatal("ERROR: unable to get localhost information.", e);
@@ -89,14 +98,11 @@ public class UUIDManager {
     ////////////////////////////////////////////////////////////////
     // public methods
     
-    /**
-     * @return the new uuid
-     */
     public synchronized String getNewUUID() {
 	UID uid = new UID();
 	String s = "";
-	if (address != null) {
-	    byte[] b = address.getAddress();
+	if (_address != null) {
+	    byte[] b = _address.getAddress();
 	    for (int i = 0; i < b.length; i++)
 		s += (new Byte(b[i])).longValue() + "-";
 	}

@@ -31,11 +31,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Namespace->Classifer or Package.
  * Generates only package and classifier children from a namespace parent.
  *
  * @since 0.15.2
@@ -43,17 +41,10 @@ import org.argouml.model.ModelFacade;
 public class GoNamespaceToClassifierAndPackage
     extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", 
-                "misc.namespace.classifer-or-package");
+        return "Namespace->Classifer or Package";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         if (!ModelFacade.isANamespace(parent))
             return null;
@@ -72,9 +63,6 @@ public class GoNamespaceToClassifierAndPackage
         return result;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isANamespace(parent)) {
 	    Set set = new HashSet();

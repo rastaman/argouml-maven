@@ -50,13 +50,9 @@ import org.tigris.gef.util.ChildGenerator;
  */
 
 public class ChildGenFind implements ChildGenerator {
-    private static final ChildGenFind SINGLETON = new ChildGenFind();
+    public static ChildGenFind SINGLETON = new ChildGenFind();
 
-    /** 
-     * Reply a Collection of the children of the given Object
-     * 
-     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
-     */
+    /** Reply a Collection of the children of the given Object */
     public Enumeration gen(Object o) {
 	if (o instanceof Project) {
 	    Project p = (Project) o;
@@ -157,12 +153,5 @@ public class ChildGenFind implements ChildGenerator {
 	}
 
 	return new Vector().elements();
-    }
-
-    /**
-     * @return Returns the sINGLETON.
-     */
-    public static ChildGenFind getSingleton() {
-        return SINGLETON;
     }
 } /* end class ChildGenFind */

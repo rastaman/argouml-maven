@@ -39,44 +39,33 @@ import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @author Piotr Kaminski
- * This file updated by Jim Holt 1/17/00 for nsuml support 
  */
+
+/** This file updated by Jim Holt 1/17/00 for nsuml support **/
+
 public class ProjectMemberModel extends ProjectMember {
 
-    private static final Logger LOG =
+    private static Logger cat =
         Logger.getLogger(org.argouml.uml.ProjectMemberModel.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
 
-    private static final String MEMBER_TYPE = "xmi";
-    private static final String FILE_EXT = "." + MEMBER_TYPE;
+    public static final String MEMBER_TYPE = "xmi";
+    public static final String FILE_EXT = "." + MEMBER_TYPE;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private Object model;
+    private Object _model;
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /**
-     * The constructor.
-     * TODO: This constructor is never user. Remove?
-     * 
-     * @param name the name of the model
-     * @param p the project
-     */
     public ProjectMemberModel(String name, Project p) {
         super(name, p);
     }
 
-    /**
-     * The constructor.
-     * 
-     * @param m the model
-     * @param p the project
-     */
     public ProjectMemberModel(Object m, Project p) {
         
         super(p.getBaseName() + FILE_EXT, p);
@@ -90,29 +79,16 @@ public class ProjectMemberModel extends ProjectMember {
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    /**
-     * @return the model
-     */
     public Object getModel() {
-        return model;
+        return _model;
     }
-    
-    /**
-     * @param m the model
-     */
-    protected void setModel(Object m) {
-        model = /*(MModel)*/m;
+    protected void setModel(Object model) {
+        _model = /*(MModel)*/model;
     }
 
-    /**
-     * @see org.argouml.kernel.ProjectMember#getType()
-     */
     public String getType() {
         return MEMBER_TYPE;
     }
-    /**
-     * @see org.argouml.kernel.ProjectMember#getFileExtension()
-     */
     public String getFileExtension() {
         return FILE_EXT;
     }
@@ -120,15 +96,31 @@ public class ProjectMemberModel extends ProjectMember {
     ////////////////////////////////////////////////////////////////
     // actions
 
-    /**
-     * @see org.argouml.kernel.ProjectMember#load()
-     */
     public void load() throws java.io.IOException, org.xml.sax.SAXException {
-        LOG.info("Reading " + getURL());
-        XMIParser.getSingleton().readModels(getProject(), getURL());
-        model = XMIParser.getSingleton().getCurModel();
-        getProject().setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
-        LOG.info("Done reading " + getURL());
+        cat.info("Reading " + getURL());
+        XMIParser.SINGLETON.readModels(_project, getURL());
+        _model = XMIParser.SINGLETON.getCurModel();
+        _project.setUUIDRefs(XMIParser.SINGLETON.getUUIDRefs());
+        cat.info("Done reading " + getURL());
+    }
+
+    /**
+     * @deprecated since 0.l5.3 since the function in the
+     * interface is removed.
+     */
+    public void save(String path, boolean overwrite) throws Exception {
+
+	throw new UnsupportedOperationException("This operation is no longer supported");
+    }
+
+    /**
+     * @deprecated since 0.l5.3 since the function in the
+     * interface is deprecated since 0.13.6.
+     */
+    public void save(String path, boolean overwrite, Writer writer)
+        throws Exception {
+
+	save(writer);
     }
 
     /**
@@ -143,7 +135,7 @@ public class ProjectMemberModel extends ProjectMember {
 
         try {
 
-            xmiwriter = new XMIWriter((MModel) model, writer);
+            xmiwriter = new XMIWriter((MModel) _model, writer);
             xmiwriter.gen();
         } catch (Exception ex) {
             logNotContainedElements(xmiwriter);
@@ -162,7 +154,7 @@ public class ProjectMemberModel extends ProjectMember {
         if (xmiwriter != null) {
             Iterator it = xmiwriter.getNotContainedElements().iterator();
             while (it.hasNext())
-                LOG.error("Not contained in XMI: " + it.next());
+                cat.error("Not contained in XMI: " + it.next());
         }
     }
 

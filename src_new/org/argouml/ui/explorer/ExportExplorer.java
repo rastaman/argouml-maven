@@ -40,8 +40,7 @@ import org.argouml.uml.diagram.ui.ActionSaveDiagramToClipboard;
 public class ExportExplorer
     extends DnDExplorerTree {
     
-    private static final String DIAGRAM_TO_CLIPBOARD_ACTION = 
-        "export Diagram as GIF";
+    public final String DIAGRAM_TO_CLIPBOARD_ACTION = "export Diagram as GIF";
     
     /** Creates a new instance of ExportExplorer */
     public ExportExplorer() {

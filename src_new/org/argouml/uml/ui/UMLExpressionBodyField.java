@@ -23,12 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.*;
+import javax.swing.*;
 
 import org.apache.log4j.Logger;
-
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;
 
 /**
@@ -49,10 +48,11 @@ public class UMLExpressionBodyField
     protected static Logger cat = 
         Logger.getLogger(UMLExpressionBodyField.class);
 
-    private UMLExpressionModel2 _model;
+    private UMLExpressionModel _model;
     private boolean _notifyModel;
+    private boolean _isUpdating;
     
-    public UMLExpressionBodyField(UMLExpressionModel2 model,
+    public UMLExpressionBodyField(UMLExpressionModel model,
 				  boolean notifyModel) {
         _model = model;
         _notifyModel = notifyModel;
@@ -92,20 +92,32 @@ public class UMLExpressionBodyField
         Object newText = _model.getBody();
 	cat.debug("UMLExpressionBodyField: update: " + oldText + " " + newText);
 
-	if (oldText == null || newText == null || !oldText.equals(newText)) {
-            if (oldText != newText) {
-		cat.debug("setNewText!!");
+	if ((oldText == null || newText == null || !oldText.equals(newText))
+	    && oldText != newText) {
+	    try {
+		_isUpdating = true;
                 setText((String) newText);
-            }
+            } finally {
+		_isUpdating = false;
+	    }
         }
     }
+
     public void changedUpdate(final DocumentEvent p1) {
-        _model.setBody(getText());
+	if (!_isUpdating) {
+	    _model.setBody(getText());
+	}
     }
+
     public void removeUpdate(final DocumentEvent p1) {
-        _model.setBody(getText());
+	if (!_isUpdating) {
+	    _model.setBody(getText());
+	}
     }
+
     public void insertUpdate(final DocumentEvent p1) {
-        _model.setBody(getText());
+	if (!_isUpdating) {
+	    _model.setBody(getText());
+	}
     }
 }

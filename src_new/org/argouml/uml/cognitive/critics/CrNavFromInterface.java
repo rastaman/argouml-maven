@@ -44,9 +44,7 @@ import org.argouml.model.ModelFacade;
  * The critic will trigger whenever an association between an
  * interface and a class is navigable <em>from</em> the interface.<p>
  *
- * @see <a 
- * href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.critics_nav_from_interface">
- * ArgoUML User Manual: N</a>
+ * @see <a href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.critics_nav_from_interface">ArgoUML User Manual: N</a>
  * @author jrobbins@ics.uci.edu
  */
 public class CrNavFromInterface extends CrUML {
@@ -118,16 +116,16 @@ public class CrNavFromInterface extends CrUML {
         // there is an end connected to an Interface and 2) an end other than
         // that end is navigable. 
 
-        Iterator assocEnds = ModelFacade.getConnections(dm).iterator();
+        Iterator enum = ModelFacade.getConnections(dm).iterator();
 
         boolean haveInterfaceEnd  = false;  // End at an Interface?
         boolean otherEndNavigable = false;  // Navigable other end?
 
-        while (assocEnds.hasNext()) {
+        while (enum.hasNext()) {
 
             // The next AssociationEnd
 
-            Object ae = assocEnds.next();
+            Object ae = enum.next();
 
             // If its an interface we have an interface end, otherwise its
             // something else and we should see if it is navigable. We don't

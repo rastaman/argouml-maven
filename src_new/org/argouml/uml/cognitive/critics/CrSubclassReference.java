@@ -47,10 +47,6 @@ import org.tigris.gef.util.VectorSet;
 
 public class CrSubclassReference extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrSubclassReference() {
 	setHeadline("Remove Reference to Specific Subclass");
 	addSupportedDecision(CrUML.decRELATIONSHIPS);
@@ -60,10 +56,6 @@ public class CrSubclassReference extends CrUML {
 	addTrigger("associationEnd");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
 	Object cls = /*(MClass)*/ dm;
@@ -72,20 +64,12 @@ public class CrSubclassReference extends CrUML {
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#toDoItem(java.lang.Object, 
-     * org.argouml.cognitive.Designer)
-     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	Object cls = /*(MClassifier)*/ dm;
 	VectorSet offs = computeOffenders(cls);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#stillValid(
-     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
-     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -96,16 +80,12 @@ public class CrSubclassReference extends CrUML {
 	return res;
     }
 
-    /**
-     * @param cls is the UML entity that is being checked.
-     * @return the list of offenders
-     */
     public VectorSet computeOffenders(Object/*MClassifier*/ cls) {
 	Collection asc = ModelFacade.getAssociationEnds(cls);
 	if (asc == null || asc.size() == 0) return null;
 
 	Enumeration descendEnum =
-	    GenDescendantClasses.getSINGLETON().gen(cls);
+	    GenDescendantClasses.SINGLETON.gen(cls);
 	if (!descendEnum.hasMoreElements()) return null;
 	VectorSet descendants = new VectorSet();
 	while (descendEnum.hasMoreElements())

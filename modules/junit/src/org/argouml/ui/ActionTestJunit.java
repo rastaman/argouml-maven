@@ -50,18 +50,18 @@ public class ActionTestJunit extends UMLAction
     // Static variables
 
     /** logger */
-    private static final Logger LOG = Logger.getLogger(ActionTestJunit.class);
+    private static Logger cat = Logger.getLogger(ActionTestJunit.class);
 
     /** 
      * A singleton as the only instance of this action.
      */
-    private static ActionTestJunit singleton = new ActionTestJunit();
+    private static ActionTestJunit SINGLETON = new ActionTestJunit();
 
-    private static final String JUNIT_CLASS = "junit.swingui.TestRunner";
-    private static JMenuItem menuItem = null;
+    private final static String JUNIT_CLASS = "junit.swingui.TestRunner";
+    private static JMenuItem _menuItem = null;
 
     /** Internal flag to avoid multiple reports of failure. */
-    private boolean failed = false;
+    private boolean _failed = false;
 
     ////////////////////////////////////////////////////////////////
     // Constructors.
@@ -72,7 +72,7 @@ public class ActionTestJunit extends UMLAction
      */
     protected ActionTestJunit() {
 	super(Translator.localize("Test Panel..."), false);
-	failed = false;
+	_failed = false;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ public class ActionTestJunit extends UMLAction
      * @return The ActionTestJunit instance
      */
     public static ActionTestJunit getInstance() {
-        return singleton;
+        return SINGLETON;
     }
 
     /**
@@ -96,8 +96,6 @@ public class ActionTestJunit extends UMLAction
      * This executes the equivalent of:
      *
      * <code>junit.swingui.TestRunner.main(args);</code>
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent event) {
 	String[] args = {};
@@ -114,22 +112,15 @@ public class ActionTestJunit extends UMLAction
 	    method.invoke(instance, passedArgs);
 	}
 	catch (Exception e) {
-	    if (!failed) {
-	        LOG.error("Unable to launch Junit", e);
+	    if (!_failed) {
+	        cat.error("Unable to launch Junit", e);
 	    }
-	    failed = true;
+	    _failed = true;
 	    // TODO:  Disable the menu entry on failure.
 	}
     }
 
-    /**
-     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
-     */
     public void setModuleEnabled(boolean v) { }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#initializeModule()
-     */
     public boolean initializeModule() {
         boolean initialized = false;
 	try {
@@ -139,96 +130,51 @@ public class ActionTestJunit extends UMLAction
 	    Object o = c.newInstance();
 
 	    // Advertise a little
-            LOG.info ("+-------------------------------+");
-            LOG.info ("| JUnit plugin testing enabled! |");
-            LOG.info ("+-------------------------------+");
+            cat.info ("+-------------------------------+");
+            cat.info ("| JUnit plugin testing enabled! |");
+            cat.info ("+-------------------------------+");
 	    initialized = true;
 	}
 	catch (Exception e) {
-	    failed = true;
-	    LOG.error("JUnit does not appear to be in the classpath.");
-	    LOG.error("Unable to initialize JUnit testing plugin.");
+	    _failed = true;
+	    cat.error("JUnit does not appear to be in the classpath.");
+	    cat.error("Unable to initialize JUnit testing plugin.");
 	}
         return initialized;
     }
-    
-    /**
-     * @see org.argouml.application.api.PluggableMenu#buildContext(
-     * javax.swing.JMenuItem, java.lang.String)
-     */
     public Object[] buildContext(JMenuItem a, String b) {
         return new Object[] {
 	    a, b
 	};
     }
 
-    /**
-     * @see org.argouml.application.api.Pluggable#inContext(java.lang.Object[])
-     */
     public boolean inContext(Object[] o) {
         if (o.length < 2) return false;
-	if ((o[0] instanceof JMenuItem) 
-            && (PluggableMenu.KEY_TOOLS.equals(o[1]))) {
+	if ((o[0] instanceof JMenuItem) &&
+	    (PluggableMenu.KEY_TOOLS.equals(o[1]))) {
 	    return true;
 	}
         return false;
     }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
-     */
     public boolean isModuleEnabled() { return true; }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
-     * java.util.Vector, java.lang.Object)
-     */
     public Vector getModulePopUpActions(Vector v, Object o) { return null; }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#shutdownModule()
-     */
     public boolean shutdownModule() { return true; }
 
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleName()
-     */
     public String getModuleName() { return "ActionTestJunit"; }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleDescription()
-     */
-    public String getModuleDescription() { 
-        return "Menu Item for JUnit Testing"; 
-    }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleAuthor()
-     */
+    public String getModuleDescription() { return "Menu Item for JUnit Testing"; }
     public String getModuleAuthor() { return "Andreas Rueckert"; }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleVersion()
-     */
     public String getModuleVersion() { return "0.9.4"; }
-    
-    /**
-     * @see org.argouml.application.api.ArgoModule#getModuleKey()
-     */
     public String getModuleKey() { return "module.menu.tools.junit"; }
 
-    /**
-     * @see org.argouml.application.api.PluggableMenu#getMenuItem(java.lang.Object[])
-     */
     public JMenuItem getMenuItem(Object [] context) {
         if (!inContext(context)) {
 	    return null;
 	}
 
-        if (menuItem == null) {
-            menuItem = new JMenuItem(Translator.localize("Test Panel..."));
-	    menuItem.addActionListener(this);
+        if (_menuItem == null) {
+            _menuItem = new JMenuItem(Translator.localize("Test Panel..."));
+	    _menuItem.addActionListener(this);
 	}
-        return menuItem;
+        return _menuItem;
     }
 }

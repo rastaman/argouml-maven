@@ -29,17 +29,12 @@ import org.argouml.uml.ui.TabProps;
 
 public class TabTable extends TabProps {
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public TabTable() {
 	super("Table", "table.TablePanel");
     }
 
-    /**
-     * @see org.argouml.uml.ui.TabProps#initPanels()
-     */
     protected void initPanels() {
 	// dont preload any table panels
     }

@@ -27,17 +27,13 @@ package org.argouml.util;
 import java.io.File;
 import javax.swing.filechooser.*;
 
-/**
- * A class representing a FileFilter for class files (.class, .jar).
- *
- */
 public class ClassFileFilter extends FileFilter {
 
     ////////////////////////////////////////////////////////////////
     // instance varaibles
 
-    private final String [] suffixes     = {"class", "jar"};
-    private final String    description  = "Java classfiles (*.class, *.jar)";
+    private final String [] _suffixes = {"class", "jar"};
+    private final String    _desc     = "Java classfiles (*.class, *.jar)";
 
 
     ////////////////////////////////////////////////////////////////
@@ -54,8 +50,8 @@ public class ClassFileFilter extends FileFilter {
 	if (f == null) return false;
 	if (f.isDirectory()) return true;
 	String extension = getExtension(f.getName());
-	for (int i = 0; i < suffixes.length; i++) {
-	    if (suffixes[i].equalsIgnoreCase(extension)) return true;
+	for (int i = 0; i < _suffixes.length; i++) {
+	    if (_suffixes[i].equalsIgnoreCase(extension)) return true;
 	}
 	return false;
     }
@@ -81,7 +77,7 @@ public class ClassFileFilter extends FileFilter {
      * @return The description of this filefilter.
      */
     public String getDescription() {
-	return description;
+	return _desc;
     }
 } /* end class ClassFileFilter */    
 

@@ -51,10 +51,6 @@ import org.tigris.gef.util.VectorSet;
  */
 public class CrUnconventionalAttrName extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrUnconventionalAttrName() {
 	setHeadline("Choose a Better MAttribute Name");
 	addSupportedDecision(CrUML.decNAMING);
@@ -63,10 +59,6 @@ public class CrUnconventionalAttrName extends CrUML {
     }
 
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAAttribute(dm))) return NO_PROBLEM;
 	Object attr = /*(MAttribute)*/ dm;
@@ -83,8 +75,8 @@ public class CrUnconventionalAttrName extends CrUML {
 	char initalChar = nameStr.charAt(0);
 	boolean allCapitals = true;
 	for (int i = 0; i < nameStr.length() && allCapitals; i++) {
-	    if (!(Character.isUpperCase(nameStr.charAt(i)) 
-                || nameStr.charAt(i) == '_')) {
+	    if (!(Character.isUpperCase(nameStr.charAt(i)) || 
+		  nameStr.charAt(i) == '_')) {
 		allCapitals = false;
 		continue;
 	    }
@@ -101,37 +93,22 @@ public class CrUnconventionalAttrName extends CrUML {
 	return NO_PROBLEM;
     }
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#toDoItem(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	Object f = /*(MFeature)*/ dm;
 	VectorSet offs = computeOffenders(f);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
-    /**
-     * @param dm the feature
-     * @return the set of offenders
-     */
     protected VectorSet computeOffenders(Object /*MFeature*/ dm) {
 	VectorSet offs = new VectorSet(dm);
 	offs.addElement(ModelFacade.getOwner(dm));
 	return offs;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClAttributeCompartment.getTheInstance();
+	return ClAttributeCompartment.TheInstance;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#stillValid(
-     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
-     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -143,9 +120,6 @@ public class CrUnconventionalAttrName extends CrUML {
     }
 
 
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
-     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
@@ -157,16 +131,12 @@ public class CrUnconventionalAttrName extends CrUML {
 		    "_" + sug.substring(1, 2).toLowerCase() + sug.substring(2);
 	    else
 		sug = sug.substring(0, 1).toLowerCase() + sug.substring(1);
-	    String ins = "Change the attribute name to start with a " 
-	        + "lowercase letter.";
+	    String ins = "Change the attribute name to start with a " +
+		"lowercase letter.";
 	    ((WizMEName) w).setInstructions(ins);
 	    ((WizMEName) w).setSuggestion(sug);
 	}
     }
-    
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrUnconventionalAttrName */

@@ -29,6 +29,8 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.JOptionPane;
 
 import org.argouml.i18n.Translator;
@@ -54,21 +56,35 @@ import org.tigris.gef.presentation.Fig;
  * 
  * @author original author not known.
  * @author jaap.branderhorst@xs4all.nl extensions
+ * @stereotype singleton
  */
+
 public class ActionRemoveFromModel extends UMLChangeAction {
 
+    ////////////////////////////////////////////////////////////////
+    // static variables
+
     /**
-     * Constructor.
+     * @deprecated by Linus Tolke as of 0.15.4. Create your own action every
+     * time. This will be removed.
      */
+    public static ActionRemoveFromModel SINGLETON =
+	new ActionRemoveFromModel();
+
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
+     * class. This will be removed.
+     */
+    protected static Logger cat =
+        Logger.getLogger(ActionRemoveFromModel.class);
+    
+    ////////////////////////////////////////////////////////////////
+    // constructors
+
     public ActionRemoveFromModel() {
         super(Translator.localize("action.delete-from-model"));
     }
 
-    /**
-     * Constructor.
-     *
-     * @param global <tt>true</tt> if we have an icon.
-     */
     protected ActionRemoveFromModel(boolean global) {
         super(Translator.localize("action.delete-from-model"), global);
     }
@@ -89,30 +105,25 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         } catch (Exception e) {
 	    // Ignore
         }
-        if (size > 0) {
+        if (size > 0)
             return true;
-        }
         Object target = TargetManager.getInstance().getTarget();
         if (target instanceof Diagram) { // we cannot delete the last diagram
             return (ProjectManager.getManager().getCurrentProject()
 		    .getDiagrams().size()
 		    > 1);
         }
-        if (ModelFacade.isAModel(target)
+        if (org.argouml.model.ModelFacade.isAModel(target)
 	    // we cannot delete the model itself
             && target.equals(ProjectManager.getManager().getCurrentProject()
 			     .getModel())) {
             return false;
         }
-        if (ModelFacade.isAAssociationEnd(target)) {
-            return ModelFacade.getOtherAssociationEnds(target).size() > 1;
-        }
-        if (StateMachinesHelper.getHelper().isTopState(target)) {
+        if (StateMachinesHelper.getHelper().isTopState(target))
             /* we can not delete a "top" state, 
              * it comes and goes with the statemachine. Issue 2655.
              */
             return false;
-        }
         return target != null;
     }
 
@@ -131,81 +142,61 @@ public class ActionRemoveFromModel extends UMLChangeAction {
                 new Object[] {
 		    TargetManager.getInstance().getModelTarget()
 		};
-        } else {
+        } else
             targets = getTargets();
-        }
         Object target = null;
-        Object newTarget = null;
-        for (int i = targets.length - 1; i >= 0; i--) {
+        for (int i = 0; i < targets.length; i++) {
             target = targets[i];
             if (sureRemove(target)) {
                 // remove from the model
                 if (target instanceof Fig) {
                     target = ((Fig) target).getOwner();
                 }
-                newTarget = getNewTarget(target);
                 p.moveToTrash(target);
-                /*
                 if (target instanceof Diagram) {
                     Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
                     if (target != firstDiagram)
                         TargetManager.getInstance().setTarget(firstDiagram);
                 }
-                */
 
             }
         }
-        
-        if (newTarget != null) {
-            TargetManager.getInstance().setTarget(newTarget);
-        }
-        super.actionPerformed(ae);
-    }
-    
-    /**
-     * Gets the object that should be target after the given target is
-     * deleted from the model.
-     *
-     * @param target the target to delete
-     * @return The object.
-     */
-    private Object getNewTarget(Object target) {
-        Project p = ProjectManager.getManager().getCurrentProject();
+        //      move the pointer to the target in the NavPane to some
+        //      other target
         Object newTarget = null;
-        if (target instanceof Fig) {
-            target = ((Fig) target).getOwner();
-        }
+        target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (ModelFacade.isABase(target)) {
             newTarget = ModelFacade.getModelElementContainer(target);
         } else if (ModelFacade.isADiagram(target)) {
             Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
-            if (target != firstDiagram) {
+            if (target != firstDiagram)
                 newTarget = firstDiagram;
-            } else {
+            else {
                 if (p.getDiagrams().size() > 1) {
                     newTarget = p.getDiagrams().get(1);
-                } else {
+                } else
                     newTarget = p.getRoot();
-                }
             }
         } else {
             newTarget = p.getRoot();
-        }      
-        return newTarget;
+        }       
+        if (newTarget != null)
+            TargetManager.getInstance().setTarget(newTarget);
+        super.actionPerformed(ae);
     }
 
     /**
      * A utility method that asks the user if he is sure to remove the selected
      * target.<p>
      *
-     * @param target the object that will be removed
+     * @param target
      * @return boolean
      */
     public static boolean sureRemove(Object target) {
         // usage of other sureRemove method is legacy. They should be
         // integrated.
         boolean sure = false;
-        if (ModelFacade.isAModelElement(target)) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             sure = sureRemoveModelElement(target);
         } else if (target instanceof UMLDiagram) {
             // lets see if this diagram has some figs on it
@@ -239,9 +230,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             // we can delete figs like figrects now too
             if (ModelFacade.isAModelElement(((Fig) target).getOwner())) {
                 sure = sureRemoveModelElement(((Fig) target).getOwner());
-            } else {
+            } else
                 sure = true;
-            }
         }
         return sure;
     }
@@ -251,7 +241,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * modelement.<p>
      *
      * @see ActionRemoveFromModel#sureRemove(Object)
-     * @param me the modelelement that may be removed
+     * @param me
      * @return boolean
      */
     public static boolean sureRemoveModelElement(Object/*MModelElement*/ me) {
@@ -311,9 +301,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         return (response == JOptionPane.YES_OPTION);
     }
 
-    /**
-     * @return the complete array of targets
-     */
     protected Object[] getTargets() {
         /*
 	  Vector figs = null; try { Editor ce = Globals.curEditor();

@@ -26,16 +26,8 @@ package org.argouml.uml.diagram.state.ui;
 
 import junit.framework.*;
 
-/** Tests whether Figs in state.ui are clonable, 
- * apart from FigStateVertex which is abstract. 
- */
+/** Tests whether Figs in state.ui are clonable, apart from FigStateVertex which is abstract. */
 public class TestFigClonable extends TestCase {
-    
-    /**
-     * The constructor.
-     * 
-     * @param name the test name
-     */
     public TestFigClonable(String name) {
         super(name);
     }

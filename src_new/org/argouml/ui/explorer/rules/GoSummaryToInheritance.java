@@ -31,11 +31,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Summary->Inheritance.
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
  * @author  alexb, d00mst
@@ -43,16 +41,10 @@ import org.argouml.model.ModelFacade;
  */
 public class GoSummaryToInheritance extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.summary.inheritance");
+	return "Summary->Inheritance";
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
 	if (parent instanceof InheritanceNode) {
 	    List list = new ArrayList();
@@ -99,9 +91,6 @@ public class GoSummaryToInheritance extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (parent instanceof InheritanceNode) {
 	    Set set = new HashSet();

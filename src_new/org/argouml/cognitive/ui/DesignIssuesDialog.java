@@ -56,42 +56,37 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
 
     ////////////////////////////////////////////////////////////////
     // constants
+    private final int WIDTH = 320;
+    private final int HEIGHT = 400;
+
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private JPanel  mainPanel = new JPanel();
-    private Hashtable slidersToDecisions = new Hashtable();
-    private Hashtable slidersToDigits = new Hashtable();
+    private JPanel  _mainPanel = new JPanel();
+    private Hashtable _slidersToDecisions = new Hashtable();
+    private Hashtable _slidersToDigits = new Hashtable();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /**
-     * The constructor.
-     * 
-     * @param parent the parent frame for this dialog
-     */
     public DesignIssuesDialog(Frame parent) {
         super(parent, Translator.localize("dialog.title.design-issues"), false);
 
-        final int width = 320;
-        final int height = 400;
-
         initMainPanel();
 
-        JScrollPane scroll = new JScrollPane(mainPanel);
-        scroll.setPreferredSize(new Dimension(width, height));
+        JScrollPane scroll = new JScrollPane(_mainPanel);
+        scroll.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         
         setContent(scroll);
     }
 
 
-    private void initMainPanel() {
+    public void initMainPanel() {
         DecisionModel dm = Designer.TheDesigner.getDecisionModel();
         Vector decs = dm.getDecisions();
 
         GridBagLayout gb = new GridBagLayout();
-        mainPanel.setLayout(gb);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        _mainPanel.setLayout(gb);
+        _mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -106,7 +101,7 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
         JLabel decTitleLabel = new JLabel(
             Translator.localize("label.decision"));
         gb.setConstraints(decTitleLabel, c);
-        mainPanel.add(decTitleLabel);
+        _mainPanel.add(decTitleLabel);
 
         c.gridy = 0;
         c.gridx = 2;
@@ -114,41 +109,41 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
         JLabel priLabel = new JLabel(
             Translator.localize("label.decision-priority"));
         gb.setConstraints(priLabel, c);
-        mainPanel.add(priLabel);
+        _mainPanel.add(priLabel);
 
         c.gridy = 1;
         c.gridx = 2;
         c.gridwidth = 2;
         JLabel offLabel = new JLabel(Translator.localize("label.off"));
         gb.setConstraints(offLabel, c);
-        mainPanel.add(offLabel);
+        _mainPanel.add(offLabel);
 
         c.gridy = 1;
         c.gridx = 4;
         c.gridwidth = 2;
         JLabel lowLabel = new JLabel(Translator.localize("label.low"));
         gb.setConstraints(lowLabel, c);
-        mainPanel.add(lowLabel);
+        _mainPanel.add(lowLabel);
 
         c.gridy = 1;
         c.gridx = 6;
         c.gridwidth = 2;
         JLabel mediumLabel = new JLabel(Translator.localize("label.medium"));
         gb.setConstraints(mediumLabel, c);
-        mainPanel.add(mediumLabel);
+        _mainPanel.add(mediumLabel);
 
         c.gridy = 1;
         c.gridx = 8;
         c.gridwidth = 2;
         JLabel highLabel = new JLabel(Translator.localize("label.high"));
         gb.setConstraints(highLabel, c);
-        mainPanel.add(highLabel);
+        _mainPanel.add(highLabel);
 
 
         c.gridy = 2;
-        Enumeration elems = decs.elements();
-        while (elems.hasMoreElements()) {
-            Decision d = (Decision) elems.nextElement();
+        Enumeration enum = decs.elements();
+        while (enum.hasMoreElements()) {
+            Decision d = (Decision) enum.nextElement();
             JLabel decLabel = new JLabel(d.getName());
             JLabel valueLabel = new JLabel(getValueText(d.getPriority()));
             JSlider decSlide = 
@@ -167,28 +162,28 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
             decSlide.setSize(smallSize);
             decSlide.setPreferredSize(smallSize);
 
-            slidersToDecisions.put(decSlide, d);
-            slidersToDigits.put(decSlide, valueLabel);
+            _slidersToDecisions.put(decSlide, d);
+            _slidersToDigits.put(decSlide, valueLabel);
 
             c.gridx = 0;
             c.gridwidth = 1;
             c.weightx = 0.0;
             c.ipadx = 3;
             gb.setConstraints(decLabel, c);
-            mainPanel.add(decLabel);
+            _mainPanel.add(decLabel);
 
             c.gridx = 1;
             c.gridwidth = 1;
             c.weightx = 0.0;
             c.ipadx = 0;
             gb.setConstraints(valueLabel, c);
-            mainPanel.add(valueLabel);
+            _mainPanel.add(valueLabel);
 
             c.gridx = 2;
             c.gridwidth = 8;
             c.weightx = 1.0;
             gb.setConstraints(decSlide, c);
-            mainPanel.add(decSlide);
+            _mainPanel.add(decSlide);
 
             c.gridy++;
         }
@@ -197,19 +192,16 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
     ////////////////////////////////////////////////////////////////
     // event handlers
 
-    /**
-     * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-     */
     public void stateChanged(ChangeEvent ce) {
         JSlider srcSlider = (JSlider) ce.getSource();
-        Decision d = (Decision) slidersToDecisions.get(srcSlider);
-        JLabel valLab = (JLabel) slidersToDigits.get(srcSlider);
+        Decision d = (Decision) _slidersToDecisions.get(srcSlider);
+        JLabel valLab = (JLabel) _slidersToDigits.get(srcSlider);
         int pri = srcSlider.getValue();
         d.setPriority((pri == 4) ? 0 : pri);
         valLab.setText(getValueText(pri));
     }
 
-    private String getValueText(int priority) {
+    protected String getValueText(int priority) {
         String label = "";
         switch(priority) {
         case 1:

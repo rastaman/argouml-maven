@@ -48,37 +48,37 @@ public class PropertyTable extends JTable {
     private static final String DEFAULT_VALUE_TITLE = "Value";
     private static final String DETERMINE_HEIGHT_TEXT = "ABC";
     
-    private Property[]          properties;
-    private String              nameColumnTitle;
-    private String              valueColumnTitle;
+    private Property[]          _properties;
+    private String              _nameColumnTitle;
+    private String              _valueColumnTitle;
 
     /**
      * Creates a new PropertyTable for the specified set of Properties.
      * 
-     * @param p set of properties to display in the table
+     * @param properties set of properties to display in the table
     **/
-    public PropertyTable(Property[] p) {
-        this(p, DEFAULT_NAME_TITLE, DEFAULT_VALUE_TITLE);
+    public PropertyTable(Property[] properties) {
+        this(properties, DEFAULT_NAME_TITLE, DEFAULT_VALUE_TITLE);
     }
 
     /**
      * Creates a new PropertyTable for the specified set of Properties.
      * 
-     * @param p        set of properties to display in the table
-     * @param nct title to be displayed in the first
+     * @param properties        set of properties to display in the table
+     * @param nameColumnTitle title to be displayed in the first
      * column header
-     * @param vct title to be displayed in the second
+     * @param valueColumnTitle title to be displayed in the second
      * column header
     **/
     public PropertyTable(
-            Property[] p,
-            String nct,
-            String vct) {
+            Property[] properties,
+            String nameColumnTitle,
+            String valueColumnTitle) {
         super();
 
-        properties = p;
-        nameColumnTitle = nct;
-        valueColumnTitle = vct;
+        _properties = properties;
+        _nameColumnTitle = nameColumnTitle;
+        _valueColumnTitle = valueColumnTitle;
         setModel(new PropertyTableModel());
 
         setRowSelectionAllowed(false);
@@ -107,14 +107,14 @@ public class PropertyTable extends JTable {
     public TableCellEditor getCellEditor(int row, int column) {
         TableCellEditor editor = null;
         if (column == 1) {
-            Object[] choices = properties[row].getAvailableValues();
+            Object[] choices = _properties[row].getAvailableValues();
             if (choices != null) {
                 JComboBox comboBox = new JComboBox(choices);
                 comboBox.setEditable(false);
                 editor = new DefaultCellEditor(comboBox);
             }
             else {
-                editor = getDefaultEditor(properties[row].getValueType());
+                editor = getDefaultEditor(_properties[row].getValueType());
             }
         }
 
@@ -133,7 +133,7 @@ public class PropertyTable extends JTable {
     public TableCellRenderer getCellRenderer(int row, int column) {
         TableCellRenderer renderer;
         if (column == 1) {
-            renderer = getDefaultRenderer(properties[row].getValueType());
+            renderer = getDefaultRenderer(_properties[row].getValueType());
         }
         else {
             renderer = getDefaultRenderer(Object.class);
@@ -155,7 +155,7 @@ public class PropertyTable extends JTable {
         }
 
         public int getRowCount() {
-            return properties.length;
+            return _properties.length;
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -164,10 +164,10 @@ public class PropertyTable extends JTable {
 
         public String getColumnName(int column) {
             if (column == 0) {
-                return nameColumnTitle;
+                return _nameColumnTitle;
             }
             else if (column == 1) {
-                return valueColumnTitle;
+                return _valueColumnTitle;
             }
             else {
                 return null;
@@ -176,10 +176,10 @@ public class PropertyTable extends JTable {
 
         public Object getValueAt(int row, int col) {
             if (col == 0) {
-                return properties[row].getName();
+                return _properties[row].getName();
             }
             else if (col == 1) {
-                return properties[row].getCurrentValue();
+                return _properties[row].getCurrentValue();
             }
             else {
                 return null;
@@ -188,7 +188,7 @@ public class PropertyTable extends JTable {
 
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (columnIndex == 1) {
-                properties[rowIndex].setCurrentValue(aValue);
+                _properties[rowIndex].setCurrentValue(aValue);
             }
         }
     }

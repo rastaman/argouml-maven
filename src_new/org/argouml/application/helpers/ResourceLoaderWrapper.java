@@ -30,8 +30,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import org.apache.log4j.Logger;
-import org.argouml.application.StartCritics;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
@@ -48,66 +46,66 @@ import org.tigris.gef.util.ResourceLoader;
  * @author jaap.branderhorst@xs4all.nl @stereotype singleton
  */
 public final class ResourceLoaderWrapper {
+    static {
+	initResourceLoader();
+    }
 
-    private static final Logger LOG = Logger.getLogger(ResourceLoaderWrapper.class);
-    
     private static ImageIcon actionStateIcon =
-        ResourceLoader.lookupIconResource("ActionState");
+	ResourceLoader.lookupIconResource("ActionState");
     private static ImageIcon stateIcon =
-        ResourceLoader.lookupIconResource("State");
+	ResourceLoader.lookupIconResource("State");
     private static ImageIcon initialStateIcon =
-        ResourceLoader.lookupIconResource("Initial");
+	ResourceLoader.lookupIconResource("Initial");
     private static ImageIcon deepIcon =
-        ResourceLoader.lookupIconResource("DeepHistory");
+	ResourceLoader.lookupIconResource("DeepHistory");
     private static ImageIcon shallowIcon =
-        ResourceLoader.lookupIconResource("ShallowHistory");
+	ResourceLoader.lookupIconResource("ShallowHistory");
     private static ImageIcon forkIcon =
-        ResourceLoader.lookupIconResource("Fork");
+	ResourceLoader.lookupIconResource("Fork");
     private static ImageIcon joinIcon =
-        ResourceLoader.lookupIconResource("Join");
+	ResourceLoader.lookupIconResource("Join");
     private static ImageIcon branchIcon =
-        ResourceLoader.lookupIconResource("Choice");
+	ResourceLoader.lookupIconResource("Branch");
     private static ImageIcon junctionIcon =
         ResourceLoader.lookupIconResource("Junction"); 
     private static ImageIcon finalStateIcon =
-        ResourceLoader.lookupIconResource("FinalState");
+	ResourceLoader.lookupIconResource("FinalState");
     private static ImageIcon realizeIcon =
-        ResourceLoader.lookupIconResource("Realization");
+	ResourceLoader.lookupIconResource("Realization");
     private static ImageIcon signalIcon =
-        ResourceLoader.lookupIconResource("SignalSending");
+	ResourceLoader.lookupIconResource("SignalSending");
     private static ImageIcon commentIcon =
-        ResourceLoader.lookupIconResource("Note");
-    private static ImageIcon callStateIcon =
-        ResourceLoader.lookupIconResource("CallState");
-    private static ImageIcon objectFlowStateIcon =
-        ResourceLoader.lookupIconResource("ObjectFlowState");
-    private static ImageIcon subactivityStateIcon =
-        ResourceLoader.lookupIconResource("SubactivityState");
-
-
+	ResourceLoader.lookupIconResource("Note");
 
     private Hashtable iconCache = new Hashtable();
 
     /**
      * Singleton implementation.
      */
-    private static ResourceLoaderWrapper instance = new ResourceLoaderWrapper();
-
+    private static ResourceLoaderWrapper instance;
 
     /**
      * Returns the singleton instance
      * 
      * @return ResourceLoaderWrapper
      */
-    public static ResourceLoaderWrapper getInstance() {
-        return instance;
+    public static ResourceLoaderWrapper getResourceLoaderWrapper() {
+	if (instance == null) {
+	    instance = new ResourceLoaderWrapper();
+	}
+	return instance;
     }
 
     /**
      * Constructor for ResourceLoaderWrapper.
+     * 
+     * @deprecated by Linus Tolke as of 0.15.5. Will be private. Use
+     *             {@link #getResourceLoaderWrapper()}to get hold of the
+     *             singleton.
      */
-    private ResourceLoaderWrapper() {
-        initResourceLoader();
+    public ResourceLoaderWrapper() {
+	super();
+	initResourceLoader();
     }
 
     /**
@@ -120,10 +118,10 @@ public final class ResourceLoaderWrapper {
      * @return the complete path.
      */
     private static String lookAndFeelPath(String classname, String element) {
-        return "/org/argouml/Images/plaf/"
-            + classname.replace('.', '/')
-            + "/toolbarButtonGraphics/"
-            + element;
+	return "/org/argouml/Images/plaf/"
+	    + classname.replace('.', '/')
+	    + "/toolbarButtonGraphics/"
+	    + element;
     }
 
     /**
@@ -132,7 +130,7 @@ public final class ResourceLoaderWrapper {
      * LookupIconResource checks if there are locations and extensions known.
      * If there are none, this method is called to initialize the resource
      * loader. Originally, this method was placed within Main but this coupled
-     * Main and the resourceLoader too much.
+     * Main and the resourceLoader to much.
      */
     private static void initResourceLoader() {
 	String lookAndFeelClassName;
@@ -254,86 +252,99 @@ public final class ResourceLoaderWrapper {
      *       elements are implemented outside of the Model component.
      */
     public Icon lookupIcon(Object value) {
-        if (value == null) {
-            throw new IllegalArgumentException(
-                    "Attempted to get an icon given a null key");
-        }
-        
-	Icon icon = (Icon) iconCache.get(value.getClass());
-        
-        if (ModelFacade.isAPseudostate(value)) {
-        
-            Object kind = ModelFacade.getKind(value);
-            DataTypesHelper helper = UmlHelper.getHelper().getDataTypes();
-            if (helper.equalsINITIALKind(kind)) {
-                icon = initialStateIcon;
-            }
-            if (helper.equalsDeepHistoryKind(kind)) {
-                icon = deepIcon;
-            }
-            if (helper.equalsShallowHistoryKind(kind)) {
-                icon = shallowIcon;
-            }
-            if (helper.equalsFORKKind(kind)) {
-                icon = forkIcon;
-            }
-            if (helper.equalsJOINKind(kind)) {
-                icon = joinIcon;
-            }
-            if (helper.equalsBRANCHKind(kind)) {
-                icon = branchIcon;
-            }
-            if (helper.equalsJUNCTIONKind(kind)) {
-                icon = junctionIcon;
-            } 
-            // if (MPseudostateKind.FINAL.equals(kind))
-            // icon = _FinalStateIcon;
-        }
-        
-        if (ModelFacade.isAAbstraction(value)) {
-            icon = realizeIcon;
-        }
-        // needs more work: sending and receiving icons
-        if (ModelFacade.isASignal(value)) {
-            icon = signalIcon;
-        }
-    
-        if (ModelFacade.isAComment(value)) {
-            icon = commentIcon;
-        }
+	Icon icon = null;
+	if (value != null) {
 
-        if (icon == null) {
-        
-            StringNamespace sns =
-                (StringNamespace) StringNamespace.parse(value.getClass());
-            StringNamespace org =
-                new StringNamespace(new String[] {"org"});
-            StringNamespace ru = new StringNamespace(new String[] {"ru"});
-            
-            if (ru.equals(sns.getCommonNamespace(ru))
-                    || org.equals(sns.getCommonNamespace(org))) {
-            
-                String cName = sns.popNamespaceElement().toString();
-            
-                if (cName.startsWith("UML")) {
-                    cName = cName.substring(3);
-                }
-                if (cName.startsWith("M")) {
-                    cName = cName.substring(1);
-                }
-                if (cName.endsWith("Impl")) {
-                    cName = cName.substring(0, cName.length() - 4);
-                }
-                icon = lookupIconResource(cName);
-                if (icon == null) {
-                    LOG.warn("Can't find icon for " + cName);
-                } else {
-                    synchronized (iconCache) {
-                        iconCache.put(value.getClass(), icon);
-                    }
-                }
-            }
+	    icon = (Icon) iconCache.get(value.getClass());
+
+	    if (ModelFacade.isAPseudostate(value)) {
+
+		Object kind = ModelFacade.getKind(value);
+		DataTypesHelper helper = UmlHelper.getHelper().getDataTypes();
+		if (helper.equalsINITIALKind(kind)) {
+		    icon = initialStateIcon;
+		}
+		if (helper.equalsDEEP_HISTORYKind(kind)) {
+		    icon = deepIcon;
+		}
+		if (helper.equalsSHALLOW_HISTORYKind(kind)) {
+		    icon = shallowIcon;
+		}
+		if (helper.equalsFORKKind(kind)) {
+		    icon = forkIcon;
+		}
+		if (helper.equalsJOINKind(kind)) {
+		    icon = joinIcon;
+		}
+		if (helper.equalsBRANCHKind(kind)) {
+		    icon = branchIcon;
+		}
+		if (helper.equalsJUNCTIONKind(kind)) {
+		    icon = junctionIcon;
+		} 
+		// if (MPseudostateKind.FINAL.equals(kind))
+		// icon = _FinalStateIcon;
+	    }
+	    if (ModelFacade.isAAbstraction(value)) {
+		icon = realizeIcon;
+	    }
+	    // needs more work: sending and receiving icons
+	    if (ModelFacade.isASignal(value)) {
+		icon = signalIcon;
+	    }
+
+	    if (ModelFacade.isAComment(value)) {
+		icon = commentIcon;
+	    }
+
+	    if (icon == null) {
+
+		StringNamespace sns =
+		    (StringNamespace) StringNamespace.parse(value.getClass());
+		StringNamespace org =
+		    new StringNamespace(new String[] {
+			"org"
+		    });
+		StringNamespace ru = new StringNamespace(new String[] {
+		    "ru"
+		});
+
+		if (ru.equals(sns.getCommonNamespace(ru))
+		    || org.equals(sns.getCommonNamespace(org))) {
+
+		    String cName = sns.popNamespaceElement().toString();
+
+		    if (cName.startsWith("UML")) {
+			cName = cName.substring(3);
+		    }
+		    if (cName.startsWith("M")) {
+			cName = cName.substring(1);
+		    }
+		    if (cName.endsWith("Impl")) {
+			cName = cName.substring(0, cName.length() - 4);
+		    }
+		    icon = getResourceLoaderWrapper().lookupIconResource(cName);
+		    if (icon != null) {
+			iconCache.put(value.getClass(), icon);
+		    }
+		}
+
+		//String clsPackName = value.getClass().getName();
+
+		/*
+		 * if (clsPackName.startsWith("org") ||
+		 * clsPackName.startsWith("ru")) { String cName =
+		 * clsPackName.substring(clsPackName.lastIndexOf(".") + 1); "
+		 * e.g. UMLClassDiagram if (cName.startsWith("UML")) { cName =
+		 * cName.substring(3); } if (cName.startsWith("M")) { cName =
+		 * cName.substring(1); } if (cName.endsWith("Impl")) { cName =
+		 * cName.substring(0, cName.length() - 4); } icon =
+		 * getResourceLoaderWrapper().lookupIconResource(cName); if
+		 * (icon != null) { iconCache.put(value.getClass(), icon); }
+		 */
+	    }
 	}
 	return icon;
+
     }
 }

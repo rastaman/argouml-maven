@@ -28,31 +28,23 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.border.EtchedBorder;
 import org.tigris.gef.ui.IStatusBar;
 
-/**
- * The splash screen.
- * 
- * TODO: JWindow? I don't want a frame or close widgets.
- *
- */
+// JWindow? I don't want a frame or close widgets
 public class SplashScreen extends JWindow implements IStatusBar {
 
-    private StatusBar statusBar = new StatusBar();
+    protected StatusBar _statusBar = new StatusBar();
 
     private static SplashScreen instance;
     // = new SplashScreen("Loading ArgoUML...", "Splash");
 
-    private static boolean doSplash;
-    
-    /**
-     * @return the splash screen instance / singleton
-     */
+    private static boolean _doSplash;
     public static synchronized SplashScreen getInstance() {
-        if (!doSplash) return null;
+        if (!_doSplash) return null;
         if (instance == null) {
             instance = new SplashScreen("Loading ArgoUML...", "Splash");
         }
@@ -60,12 +52,10 @@ public class SplashScreen extends JWindow implements IStatusBar {
     }
     
     /**
-     * The constructor.
-     * 
-     * @param title the title of the window
-     * @param iconName the icon for the window
+     * @deprecated 0.15 will become private in release 0.16.
+     * Use SplashScreen.getInstance() instead
      */
-    private SplashScreen(String title, String iconName) {
+    public SplashScreen(String title, String iconName) {
 	super();
 
 	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -83,7 +73,7 @@ public class SplashScreen extends JWindow implements IStatusBar {
 	JPanel splash = new JPanel(new BorderLayout());
 	splash.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 	splash.add(panel, BorderLayout.CENTER);
-	splash.add(statusBar, BorderLayout.SOUTH);
+	splash.add(_statusBar, BorderLayout.SOUTH);
 	getContentPane().add(splash);
 	// add preloading progress bar?
 	Dimension contentPaneSize = getContentPane().getPreferredSize();
@@ -91,42 +81,26 @@ public class SplashScreen extends JWindow implements IStatusBar {
 	pack();
     }
 
-    //public void preload(Vector classnames) {
+    public void preload(Vector classnames) {
 	//preload classes?
-    //}
+    }
 
 
-    /**
-     * @return the status bar of this dialog
-     */
-    public StatusBar getStatusBar() { return statusBar; }
+    public StatusBar getStatusBar() { return _statusBar; }
   
     ////////////////////////////////////////////////////////////////
     // IStatusBar
-    
-    /**
-     * @see org.tigris.gef.ui.IStatusBar#showStatus(java.lang.String)
-     */
-    public void showStatus(String s) { statusBar.showStatus(s); }
+    public void showStatus(String s) { _statusBar.showStatus(s); }
   
-    /**
-     * @see java.awt.Component#setVisible(boolean)
-     */
     public void setVisible(boolean b) {
 	super.setVisible(b);
     }
     
-    /**
-     * @param doTheSplash true if the splash screen should be shown
-     */
-    public static void setDoSplash(boolean doTheSplash) {
-        doSplash = doTheSplash;
+    public static void setDoSplash(boolean doSplash) {
+        _doSplash = doSplash;
     }
     
-    /**
-     * @return true if the splash should be shown
-     */
     public static boolean getDoSplash() {
-        return doSplash;
+        return _doSplash;
     }
 } /* end class SplashScreen */

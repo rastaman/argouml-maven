@@ -41,40 +41,31 @@ import org.apache.log4j.Logger;
  */
 public class TreeModelSupport extends PerspectiveSupport {
 
-    private static final Logger LOG =
+    private static Logger cat =
         Logger.getLogger(TreeModelSupport.class);
                 
     /** tree model listener list. */
-    private EventListenerList listenerList = new EventListenerList();
+    protected EventListenerList _listenerList = new EventListenerList();
 
-    /**
-     * The constructor.
-     * 
-     * @param name the name that will be localized
-     */
+    /** needs documenting */
     public TreeModelSupport(String name) {
         
         super(name);
     }
     
     // ---------------- listener management ----------------
-
+    
     /**
-     * Listener management.
-     * 
-     * @param l the listener to be added
+     *
      */
     public void addTreeModelListener(TreeModelListener l) {
-        listenerList.add(TreeModelListener.class, l);
+        _listenerList.add(TreeModelListener.class, l);
     }
 
     /**
-     * Listener management. 
-     * 
-     * @param l the listener to be removed
      */
     public void removeTreeModelListener(TreeModelListener l) {
-        listenerList.remove(TreeModelListener.class, l);
+        _listenerList.remove(TreeModelListener.class, l);
     }
     
     // --------------- tree nodes -------------------------
@@ -93,7 +84,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -126,7 +117,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					 Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -159,7 +150,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -181,15 +172,13 @@ public class TreeModelSupport extends PerspectiveSupport {
     // ------------- tree structure -----------------
     
     /**
-     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
+     *empty
      */
     public void fireTreeStructureChanged() {
     }
     
     /**
-     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
-     *
-     * @param path
+     *empty
      */
     public void fireTreeStructureChanged(TreePath path) {
     }
@@ -206,10 +195,7 @@ public class TreeModelSupport extends PerspectiveSupport {
       
 	fireTreeStructureChanged(this, path);
     }
-
     /**
-     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
-     * 
      */
     protected void fireTreeStructureChanged(Object source, Object[] path) {
         fireTreeStructureChanged(source, path, null, null);
@@ -229,7 +215,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					 Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] listeners = _listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event

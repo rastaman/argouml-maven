@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,10 +45,6 @@ import org.argouml.model.ModelFacade;
  */
 public class CrNoOperations extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
     public CrNoOperations() {
 	setHeadline("Add Operations to <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decBEHAVIOR);
@@ -56,20 +52,16 @@ public class CrNoOperations extends CrUML {
 	addTrigger("behavioralFeature");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClass(dm) 
-            || ModelFacade.isAInterface(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAClass(dm) || 
+            ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 
 	if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
 
         // if the object does not have a name,
         // than no problem
-        if ((ModelFacade.getName(dm) == null) 
-                || ("".equals(ModelFacade.getName(dm))))
+        if ((ModelFacade.getName(dm) == null) ||
+            ("".equals(ModelFacade.getName(dm))))
             return NO_PROBLEM;
 
  	// types can probably contain operations, but we should not nag at them
@@ -89,19 +81,16 @@ public class CrNoOperations extends CrUML {
 	return PROBLEM_FOUND;
     }
 
-    /**
-     * @see org.argouml.cognitive.Poster#getClarifier()
-     */
     public Icon getClarifier() {
-	return ClOperationCompartment.getTheInstance();
+	return ClOperationCompartment.TheInstance;
     }
 
     private boolean findInstanceOperationInInherited(Object dm, int depth)
     {
-	Iterator ops = ModelFacade.getOperations(dm).iterator();
+	Iterator enum = ModelFacade.getOperations(dm).iterator();
 
-	while (ops.hasNext()) {
-	    if (ModelFacade.isInstanceScope(ops.next()))
+	while (enum.hasNext()) {
+	    if (ModelFacade.isInstanceScope(enum.next()))
 		return true;
 	}
 
@@ -124,9 +113,6 @@ public class CrNoOperations extends CrUML {
 	return false;
     }
     
-    /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
-     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddOperation) {
 	    ToDoItem item = w.getToDoItem();
@@ -138,9 +124,6 @@ public class CrNoOperations extends CrUML {
 	}
     }
     
-    /**
-     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
-     */
     public Class getWizardClass(ToDoItem item) { return WizAddOperation.class; }
 } /* end class CrNoOperations */
 

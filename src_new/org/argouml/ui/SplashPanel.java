@@ -41,11 +41,11 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 
 class SplashPanel extends JPanel {
 
-    private ImageIcon splashImage = null;
+    ImageIcon splashImage = null;
     public SplashPanel(String iconName) {
 	super();
 	splashImage =
-	    ResourceLoaderWrapper
+	    ResourceLoaderWrapper.getResourceLoaderWrapper()
 	        .lookupIconResource(iconName);
 
 	JPanel topNorth = new JPanel(new BorderLayout());

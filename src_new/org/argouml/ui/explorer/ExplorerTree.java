@@ -53,7 +53,6 @@ import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
-
 /**
  * This class takes a lot of the responsibility from the NavigatorPane.
  *
@@ -78,12 +77,6 @@ public class ExplorerTree
      * prevents target event cycles between this and the TargetManager.
      */
     private boolean updatingSelection;
-    
-    /**
-     * prevents target event cycles between this and the Targetmanager 
-     * for tree selection events
-     */
-    private boolean updatingSelectionViaTreeSelection;
     
     /** Creates a new instance of ExplorerTree */
     public ExplorerTree() {
@@ -116,7 +109,7 @@ public class ExplorerTree
      */
     class NavigatorMouseListener extends MouseAdapter {
         
-        private JTree mLTree;
+        JTree mLTree;
         
         public NavigatorMouseListener(JTree newtree) {
             super();
@@ -175,9 +168,6 @@ public class ExplorerTree
      * override default JTree implementation to display the
      * appropriate text for any object that will be displayed in
      * the Nav pane.
-     *
-     * @see javax.swing.JTree#convertValueToText(java.lang.Object, 
-     * boolean, boolean, boolean, int, boolean)
      */
     public String convertValueToText(Object value,
 				     boolean selected,
@@ -337,86 +327,53 @@ public class ExplorerTree
          */
         public void valueChanged(TreeSelectionEvent e) {
             
-            if (!updatingSelectionViaTreeSelection) {
-                updatingSelectionViaTreeSelection = true;
+            if (!updatingSelection) {
+                updatingSelection = true;
                 
-                // get the elements                               
-                TreePath[] addedOrRemovedPaths = e.getPaths();                
-                TreePath[] selectedPaths = getSelectionPaths();
-                List elementsAsList = new ArrayList();                
-                for (int i = 0; 
-                    selectedPaths != null && i < selectedPaths.length; i++) {
-                    Object element = ((DefaultMutableTreeNode) selectedPaths[i]
-                                   .getLastPathComponent()).getUserObject();
-                    elementsAsList.add(element);
-//                  // scan the visible rows for duplicates of 
-                    // this elem and select them
-                    int rows = getRowCount();
-                    for (int row = 0; row < rows; row++) {
-                        Object rowItem =
-			    ((DefaultMutableTreeNode) getPathForRow(row)
-			            .getLastPathComponent())
-			            .getUserObject();
-                        if (rowItem == element
-			    && !(isRowSelected(row))) {
-                            addSelectionRow(row);
+                Set targets = new HashSet();
+                
+                //get existing selection
+                for (int i = 0; i < getSelectionCount(); i++) {
+                    Object rowItem =
+			((DefaultMutableTreeNode)
+			     getPathForRow(getSelectionRows()[i])
+			         .getLastPathComponent()).getUserObject();
+                    targets.add(rowItem);
+                }
+                
+                // add new selection from event
+                TreePath[] paths = e.getPaths();
+                if (paths != null) {
+                    // normally this will only be 1 path
+                    for (int i = 0; i < paths.length; i++) {
+                        
+                        if (e.isAddedPath(paths[i])) {
+                            
+                            Object element =
+				((DefaultMutableTreeNode) paths[i]
+				     .getLastPathComponent())
+                                         .getUserObject();
+                            
+                            // add a new target for notifying the other views
+                            targets.add(element);
+                            
+                            // scan the visible rows for duplicates of this elem
+                            int rows = getRowCount();
+                            for (int row = 0; row < rows; row++) {
+                                Object rowItem =
+				    ((DefaultMutableTreeNode) getPathForRow(row)
+				            .getLastPathComponent())
+				            .getUserObject();
+                                if (rowItem == element
+				    && !(isRowSelected(row))) {
+                                    addSelectionRow(row);
+                                }
+                            }
                         }
                     }
                 }
-               
-                // check which targetmanager method to call
-                
-                
-                boolean callSetTarget = true;
-                List addedElements = new ArrayList();
-                for (int i = 0; i < addedOrRemovedPaths.length; i++) {
-                    Object element = ((DefaultMutableTreeNode) 
-                            addedOrRemovedPaths[i].getLastPathComponent())
-                            .getUserObject();
-                    if (!e.isAddedPath(i)) {
-                        callSetTarget = false;
-                        break;
-                    } else {
-                        addedElements.add(element);
-                    }
-                }
-                
-                if (callSetTarget && addedElements.size() 
-                        == elementsAsList.size() 
-                        && elementsAsList.containsAll(addedElements)) {
-                    TargetManager.getInstance().setTargets(elementsAsList);
-                } else {
-                    // we must call the correct method on targetmanager 
-                    // for each added or removed target
-                    List removedTargets = new ArrayList();
-                    List addedTargets = new ArrayList();
-                    for (int i = 0; i < addedOrRemovedPaths.length; i++) {
-                        Object element = ((DefaultMutableTreeNode) 
-                                addedOrRemovedPaths[i]
-                             .getLastPathComponent()).getUserObject();
-                        if (e.isAddedPath(i)) {
-                            addedTargets.add(element);
-                        } else {
-                            removedTargets.add(element);
-                        }
-                    }
-                    // we can't remove the targets one by one, we have to 
-                    // do it in one go.
-                    if (!removedTargets.isEmpty()) {
-                        Iterator it = removedTargets.iterator();
-                        while (it.hasNext()) {
-                            TargetManager.getInstance().removeTarget(it.next());
-                        }
-                    }
-                    if (!addedTargets.isEmpty()) {
-                        Iterator it = addedTargets.iterator();
-                        while (it.hasNext()) {
-                            TargetManager.getInstance().addTarget(it.next());
-                        }
-                    }
-                }                                                
-                
-                updatingSelectionViaTreeSelection = false;
+                TargetManager.getInstance().setTargets(targets);
+                updatingSelection = false;
             }
         }
     }
@@ -446,31 +403,7 @@ public class ExplorerTree
 	 *         org.argouml.ui.targetmanager.TargetEvent)
          */
         public void targetAdded(TargetEvent e) {
-            if (!updatingSelection) {
-                updatingSelection = true;
-                Object[] targets = e.getAddedTargets();
-
-                int rows = getRowCount();
-                for (int i = 0; i < targets.length; i++) {
-                    Object target = targets[i];
-                    target = target instanceof Fig ? ((Fig) target).getOwner()
-                            : target;
-                    for (int j = 0; j < rows; j++) {
-                        Object rowItem = ((DefaultMutableTreeNode) 
-                            getPathForRow(j).getLastPathComponent())
-                            .getUserObject();
-                        if (rowItem == target) {
-                            addSelectionRow(j);
-                        }
-                    }
-                }
-
-                if (getSelectionCount() > 0) {
-                    scrollRowToVisible(getSelectionRows()[0]);
-                }
-                updatingSelection = false;
-            }
-            // setTargets(e.getNewTargets());
+            setTargets(e.getNewTargets());
         }
         
         /**
@@ -478,32 +411,7 @@ public class ExplorerTree
 	 *         org.argouml.ui.targetmanager.TargetEvent)
          */
         public void targetRemoved(TargetEvent e) {
-            if (!updatingSelection) {
-                updatingSelection = true;
-
-                Object[] targets = e.getRemovedTargets();
-
-                int rows = getRowCount();
-                for (int i = 0; i < targets.length; i++) {
-                    Object target = targets[i];
-                    target = target instanceof Fig ? ((Fig) target).getOwner()
-                            : target;
-                    for (int j = 0; j < rows; j++) {
-                        Object rowItem = ((DefaultMutableTreeNode) 
-                            getPathForRow(j).getLastPathComponent())
-                                .getUserObject();
-                        if (rowItem == target) {
-                            removeSelectionRow(j);
-                        }
-                    }
-                }
-
-                if (getSelectionCount() > 0) {
-                    scrollRowToVisible(getSelectionRows()[0]);
-                }
-                updatingSelection = true;
-            }
-            // setTargets(e.getNewTargets());
+            setTargets(e.getNewTargets());
         }
         
         /**

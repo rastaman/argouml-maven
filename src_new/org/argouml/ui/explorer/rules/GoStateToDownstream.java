@@ -28,26 +28,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 
-/**
- * Rule for State->Outgoing States.
- *
- */
 public class GoStateToDownstream extends AbstractPerspectiveRule {
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
-     */
-    public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state.outgoing-states");
-    }
+    public String getRuleName() { return "State->Outgoing States"; }
   
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) { 
 	if (ModelFacade.isAStateVertex(parent)) {
 	    return StateMachinesHelper.getHelper().getOutgoingStates(parent);
@@ -55,9 +42,6 @@ public class GoStateToDownstream extends AbstractPerspectiveRule {
 	return null;
     }
 
-    /**
-     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
-     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAStateVertex(parent)) {
 	    Set set = new HashSet();

@@ -60,11 +60,8 @@ import javax.swing.border.Border;
  */
 public class Horizontal extends Orientation {
 
-    private static final Horizontal HORIZONTAL = new Horizontal();
+    private static final Horizontal horizontal = new Horizontal();
 
-    /**
-     * The constructor.
-     */
     protected Horizontal() {
     }
 
@@ -74,7 +71,7 @@ public class Horizontal extends Orientation {
      * @return An instance of <code>Orientation</code>.
      */
     public static Orientation getInstance() {
-        return HORIZONTAL;
+        return horizontal;
     }
 
     /**

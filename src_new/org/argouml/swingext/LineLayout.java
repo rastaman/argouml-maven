@@ -38,85 +38,48 @@ import java.awt.*;
  */
 public abstract class LineLayout implements LayoutManager2 {
 
-    /**
-     * The horizoontal orientation.
-     */
     public static final Orientation HORIZONTAL = Horizontal.getInstance();
-    
-    /**
-     * The vertical orientation.
-     */
     public static final Orientation VERTICAL = Vertical.getInstance();
 
-    /**
-     * The orientation for this layout.
-     */
-    private Orientation myOrientation;
+    protected Orientation _orientation;
+    protected int _gap = 0;
     
-    /**
-     * The gap.
-     */
-    private int gap = 0;
-    
-    /**
-     * The constructor.
-     * 
-     * @param o the orientation
-     */
-    public LineLayout(Orientation o) {
-        myOrientation = o;
+    public LineLayout(Orientation orientation) {
+        _orientation = orientation;
     }
 
-    /**
-     * @param o the orientation
-     * @param g the gap
-     */
-    public LineLayout(Orientation o, int g) {
-        myOrientation = o;
-        gap = g;
+    public LineLayout(Orientation orientation, int gap) {
+        _orientation = orientation;
+        _gap = gap;
     }
 
-    /**
-     * @see java.awt.LayoutManager#addLayoutComponent(java.lang.String, 
-     * java.awt.Component)
-     */
     public void addLayoutComponent(String name, Component comp) {
     }
 
-    /**
-     * @see java.awt.LayoutManager2#addLayoutComponent(java.awt.Component, 
-     * java.lang.Object)
-     */
     public void addLayoutComponent(Component comp, Object constraints) {
     }
 
-    /**
-     * @see java.awt.LayoutManager#removeLayoutComponent(java.awt.Component)
-     */
     public void removeLayoutComponent(Component comp) {
     }
 
-    /**
-     * @see java.awt.LayoutManager#preferredLayoutSize(java.awt.Container)
-     */
     public Dimension preferredLayoutSize(Container parent) {
         int nComps = parent.getComponentCount();
         Dimension preferredSize = new Dimension(0, 0);
-        int myGap = 0;
+        int gap = 0;
         for (int i = 0; i < nComps; i++) {
             Component comp = parent.getComponent(i);
             if (comp.isVisible()) {
                 preferredSize =
-		    myOrientation.addLength(preferredSize,
-					   myOrientation
+		    _orientation.addLength(preferredSize,
+					   _orientation
 					   .getLength(comp.getPreferredSize())
-					   + myGap);
-                myGap = gap;
-                if (myOrientation.getBreadth(comp.getPreferredSize())
-		    > myOrientation.getBreadth(preferredSize))
+					   + gap);
+                gap = _gap;
+                if (_orientation.getBreadth(comp.getPreferredSize())
+		    > _orientation.getBreadth(preferredSize))
 		{
                     preferredSize =
-			myOrientation.setBreadth(preferredSize,
+			_orientation.setBreadth(preferredSize,
 						comp.getPreferredSize());
                 }
             }
@@ -125,27 +88,24 @@ public abstract class LineLayout implements LayoutManager2 {
         return preferredSize;
     }
 
-    /**
-     * @see java.awt.LayoutManager#minimumLayoutSize(java.awt.Container)
-     */
     public Dimension minimumLayoutSize(Container parent) {
         int nComps = parent.getComponentCount();
         Dimension minimumSize = new Dimension(0, 0);
-        int myGap = 0;
+        int gap = 0;
         for (int i = 0; i < nComps; i++) {
             Component comp = parent.getComponent(i);
             if (comp.isVisible()) {
                 minimumSize =
-		    myOrientation.addLength(minimumSize,
-					   myOrientation
+		    _orientation.addLength(minimumSize,
+					   _orientation
 					   .getLength(comp.getMinimumSize())
-					   + myGap);
-                myGap = gap;
-                if (myOrientation.getBreadth(comp.getMinimumSize())
-		    > myOrientation.getBreadth(minimumSize))
+					   + gap);
+                gap = _gap;
+                if (_orientation.getBreadth(comp.getMinimumSize())
+		    > _orientation.getBreadth(minimumSize))
 		{
                     minimumSize =
-			myOrientation.setBreadth(minimumSize,
+			_orientation.setBreadth(minimumSize,
 						comp.getMinimumSize());
                 }
             }
@@ -154,29 +114,26 @@ public abstract class LineLayout implements LayoutManager2 {
         return minimumSize;
     }
 
-    /**
-     * @see java.awt.LayoutManager2#maximumLayoutSize(java.awt.Container)
-     */
     public Dimension maximumLayoutSize(Container parent) {
         int nComps = parent.getComponentCount();
         Dimension maximumSize =
 	    new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        int myGap = 0;
+        int gap = 0;
         for (int i = 0; i < nComps; i++) {
             Component comp = parent.getComponent(i);
             Dimension componentMaxSize = comp.getMaximumSize();
             if (comp.isVisible() && componentMaxSize != null) {
                 maximumSize =
-		    myOrientation.addLength(maximumSize,
-					   myOrientation
+		    _orientation.addLength(maximumSize,
+					   _orientation
 					   .getLength(componentMaxSize)
-					   + myGap);
-                myGap = gap;
-                if (myOrientation.getBreadth(componentMaxSize)
-		    < myOrientation.getBreadth(maximumSize))
+					   + gap);
+                gap = _gap;
+                if (_orientation.getBreadth(componentMaxSize)
+		    < _orientation.getBreadth(maximumSize))
 		{
                     maximumSize =
-			myOrientation.setBreadth(maximumSize, componentMaxSize);
+			_orientation.setBreadth(maximumSize, componentMaxSize);
                 }
             }
         }
@@ -184,32 +141,7 @@ public abstract class LineLayout implements LayoutManager2 {
         return maximumSize;
     }
 
-    /**
-     * @see java.awt.LayoutManager2#invalidateLayout(java.awt.Container)
-     */
     public void invalidateLayout(Container target) { }
-    
-    /**
-     * @see java.awt.LayoutManager2#getLayoutAlignmentX(java.awt.Container)
-     */
     public float getLayoutAlignmentX(Container target) { return (float) 0.5; }
-    
-    /**
-     * @see java.awt.LayoutManager2#getLayoutAlignmentY(java.awt.Container)
-     */
     public float getLayoutAlignmentY(Container target) { return (float) 0.5; }
-
-    /**
-     * @return Returns the myOrientation.
-     */
-    protected Orientation getMyOrientation() {
-        return myOrientation;
-    }
-
-    /**
-     * @return Returns the gap.
-     */
-    protected int getGap() {
-        return gap;
-    }
 }

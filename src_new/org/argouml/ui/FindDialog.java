@@ -58,8 +58,8 @@ import org.tigris.gef.util.PredicateStringMatch;
 import org.tigris.gef.util.PredicateType;
 
 
-/** This is one of the few classes in Argo that is
- * self running (i.e. not modal).
+/** this one of the few classes in Argo that is
+ * self running.
  *
  * The search is buggy and needs work.
  */
@@ -69,83 +69,75 @@ public class FindDialog extends ArgoDialog
     ////////////////////////////////////////////////////////////////
     // class variables
 
-    private static FindDialog instance;
-    private static int nextResultNum = 1;
+    public static FindDialog _Instance;
+    public static int nextResultNum = 1;
 
-    private static int numFinds = 0;
+    public static int _numFinds = 0;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private JButton     search     = new JButton("Find");
-    private JButton     clearTabs  = new JButton("Clear Tabs");
-    private JTabbedPane tabs       = new JTabbedPane();
-    private JPanel      nameLocTab = new JPanel();
-    private JPanel     modifiedTab = new JPanel();
-    private JPanel      tagValsTab = new JPanel();
-    private JPanel  constraintsTab = new JPanel();
+    protected JButton     _search     = new JButton("Find");
+    protected JButton     _clearTabs  = new JButton("Clear Tabs");
+    protected JTabbedPane _tabs       = new JTabbedPane();
+    protected JPanel      _nameLocTab = new JPanel();
+    protected JPanel     _modifiedTab = new JPanel();
+    protected JPanel      _tagValsTab = new JPanel();
+    protected JPanel  _constraintsTab = new JPanel();
 
-    private JComboBox   elementName = new JComboBox();
-    private JComboBox   diagramName = new JComboBox();
-    private JComboBox   location    = new JComboBox();
-    private JComboBox   type        = new JComboBox();
-    private JPanel      typeDetails = new JPanel();
-    private JTextField  tag         = new JTextField();
-    private JTextField  val         = new JTextField();
+    protected JComboBox   _elementName = new JComboBox();
+    protected JComboBox   _diagramName = new JComboBox();
+    protected JComboBox   _location    = new JComboBox();
+    protected JComboBox   _type        = new JComboBox();
+    protected JPanel      _typeDetails = new JPanel();
+    protected JTextField  _tag         = new JTextField();
+    protected JTextField  _val         = new JTextField();
 
-    private JTabbedPane results     = new JTabbedPane();
-    private JPanel      help        = new JPanel();
-    private Vector      resultTabs  = new Vector();
+    protected JTabbedPane _results     = new JTabbedPane();
+    protected JPanel      _help        = new JPanel();
+    protected Vector      _resultTabs  = new Vector();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /**
-     * @return the instance of this dialog 
-     */
     public static FindDialog getInstance() {
-        if (instance == null) {
-            instance = new FindDialog();
+        if (_Instance == null) {
+            _Instance = new FindDialog();
         }
-        return instance;
+        return _Instance;
     }
     
-    /**
-     * The constructor.
-     * 
-     */
     public FindDialog() {
-        super(ProjectBrowser.getInstance(), "Find", 
-                ArgoDialog.OK_CANCEL_OPTION, false);
+        super(ProjectBrowser.getInstance(), "Find", ArgoDialog.OK_CANCEL_OPTION, false);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         initNameLocTab();
-        tabs.addTab("Name and Location", nameLocTab);
+        _tabs.addTab("Name and Location", _nameLocTab);
 
         initModifiedTab();
-        tabs.addTab("Last Modified", modifiedTab);
-        tabs.setEnabledAt(1, false);
+        _tabs.addTab("Last Modified", _modifiedTab);
+        _tabs.setEnabledAt(1, false);
 
         initTagValsTab();
-        tabs.addTab("Tagged Values", tagValsTab);
-        tabs.setEnabledAt(2, false);
+        _tabs.addTab("Tagged Values", _tagValsTab);
+        _tabs.setEnabledAt(2, false);
 
         initConstraintsTab();
-        tabs.addTab(Translator.localize("UMLMenu", "tab.constraints"),
-		     constraintsTab);
-        tabs.setEnabledAt(3, false);
+        _tabs.addTab(Translator.localize("UMLMenu", "tab.constraints"),
+		     _constraintsTab);
+        _tabs.setEnabledAt(3, false);
 
         //_tabs.addTab("Tagged Values", _tagValsTab);
-        tabs.setMinimumSize(new Dimension(300, 250));
+        _tabs.setMinimumSize(new Dimension(300, 250));
 
         JPanel north = new JPanel();
         north.setLayout(new BorderLayout());
-        north.add(tabs, BorderLayout.CENTER);
+        north.add(_tabs, BorderLayout.CENTER);
         mainPanel.add(north, BorderLayout.NORTH);
 
         initHelpTab();
-        results.addTab("Help", help);
-        mainPanel.add(results, BorderLayout.CENTER);
+        _results.addTab("Help", _help);
+        mainPanel.add(_results, BorderLayout.CENTER);
 
         //     JPanel south = new JPanel();
         //     south.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -158,11 +150,11 @@ public class FindDialog extends ArgoDialog
         //     south.add(buttonPane);
         //     getContentPane().add(south, BorderLayout.SOUTH);
         //     getRootPane().setDefaultButton(_search);
-        search.addActionListener(this);
-        results.addMouseListener(this);
+        _search.addActionListener(this);
+        _results.addMouseListener(this);
 
-        clearTabs.addActionListener(this);
-        clearTabs.setEnabled(false);
+        _clearTabs.addActionListener(this);
+        _clearTabs.setEnabled(false);
         //     _spawn.addActionListener(this);
         //     _go.addActionListener(this);
         //     _close.addActionListener(this);
@@ -173,40 +165,35 @@ public class FindDialog extends ArgoDialog
         getOkButton().setEnabled(false);
     }
 
-    /**
-     * Initialise the tab "Name and Location".
-     */
     public void initNameLocTab() {
-        elementName.setEditable(true);
-        elementName.getEditor()
+        _elementName.setEditable(true);
+        _elementName.getEditor()
 	    .getEditorComponent().setBackground(Color.white);
-        diagramName.setEditable(true);
-        diagramName.getEditor()
+        _diagramName.setEditable(true);
+        _diagramName.getEditor()
 	    .getEditorComponent().setBackground(Color.white);
 
-        elementName.addItem("*");
-        diagramName.addItem("*");
+        _elementName.addItem("*");
+        _diagramName.addItem("*");
 
         // TODO: add recent patterns
         GridBagLayout gb = new GridBagLayout();
-        nameLocTab.setLayout(gb);
+        _nameLocTab.setLayout(gb);
 
         JLabel elementNameLabel = new JLabel("Element Name:");
         JLabel diagramNameLabel = new JLabel("In Diagram:");
         JLabel typeLabel = new JLabel("Element Type:");
         JLabel locLabel = new JLabel("Find In:");
 
-        location.addItem("Entire Project");
-        /*      MVW: The following panel is not used at all. 
-         *      So let's not show it. 
-         *      See issue 2502. 
-         */
+        _location.addItem("Entire Project");
+        /*      MVW: The following panel is not used at all. So let's not show it. 
+                See issue 2502. */
         // _typeDetails.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         initTypes();
 
-        typeDetails.setMinimumSize(new Dimension(200, 100));
-        typeDetails.setPreferredSize(new Dimension(200, 100));
-        typeDetails.setSize(new Dimension(200, 100));
+        _typeDetails.setMinimumSize(new Dimension(200, 100));
+        _typeDetails.setPreferredSize(new Dimension(200, 100));
+        _typeDetails.setSize(new Dimension(200, 100));
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -216,145 +203,124 @@ public class FindDialog extends ArgoDialog
         c.gridx = 0;     c.gridy = 0;
         c.weightx = 0.0;
         gb.setConstraints(elementNameLabel, c);
-        nameLocTab.add(elementNameLabel);
+        _nameLocTab.add(elementNameLabel);
 
         c.gridx = 1;     c.gridy = 0;
         c.weightx = 1.0;
-        gb.setConstraints(elementName, c);
-        nameLocTab.add(elementName);
+        gb.setConstraints(_elementName, c);
+        _nameLocTab.add(_elementName);
 
         c.gridx = 0;     c.gridy = 1;
         c.weightx = 0.0;
         gb.setConstraints(diagramNameLabel, c);
-        nameLocTab.add(diagramNameLabel);
+        _nameLocTab.add(diagramNameLabel);
 
         c.gridx = 1;     c.gridy = 1;
         c.weightx = 1.0;
-        gb.setConstraints(diagramName, c);
-        nameLocTab.add(diagramName);
+        gb.setConstraints(_diagramName, c);
+        _nameLocTab.add(_diagramName);
 
         // open space at gridy = 2
 
         c.gridx = 0;     c.gridy = 3;
         c.weightx = 0.0;
         gb.setConstraints(locLabel, c);
-        nameLocTab.add(locLabel);
+        _nameLocTab.add(locLabel);
 
         c.gridx = 1;     c.gridy = 3;
         c.weightx = 1.0;
-        gb.setConstraints(location, c);
-        nameLocTab.add(location);
+        gb.setConstraints(_location, c);
+        _nameLocTab.add(_location);
 
         SpacerPanel spacer = new SpacerPanel();
         c.gridx = 2;     c.gridy = 0;
         c.weightx = 0.0;
         gb.setConstraints(spacer, c);
-        nameLocTab.add(spacer);
+        _nameLocTab.add(spacer);
 
         c.gridx = 3;     c.gridy = 0;
         c.weightx = 0.0;
         gb.setConstraints(typeLabel, c);
-        nameLocTab.add(typeLabel);
+        _nameLocTab.add(typeLabel);
 
         c.gridx = 4;     c.gridy = 0;
         c.weightx = 1.0;
-        gb.setConstraints(type, c);
-        nameLocTab.add(type);
+        gb.setConstraints(_type, c);
+        _nameLocTab.add(_type);
 
         c.gridx = 3;     c.gridy = 1;
         c.gridwidth = 2; c.gridheight = 5;
-        gb.setConstraints(typeDetails, c);
-        nameLocTab.add(typeDetails);
+        gb.setConstraints(_typeDetails, c);
+        _nameLocTab.add(_typeDetails);
 
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new GridLayout(1, 2, 5, 5));
-        searchPanel.add(clearTabs);
-        searchPanel.add(search);
+        searchPanel.add(_clearTabs);
+        searchPanel.add(_search);
         searchPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         c.gridx = 0;     c.gridy = 4;
         c.weightx = 0.0; c.weighty = 0.0;
         c.gridwidth = 2; c.gridheight = 1;
         gb.setConstraints(searchPanel, c);
-        nameLocTab.add(searchPanel);
+        _nameLocTab.add(searchPanel);
     }
 
-    /**
-     * Initialise the help tab.
-     */
     public void initHelpTab() {
-        help.setLayout(new BorderLayout());
+        _help.setLayout(new BorderLayout());
         JTextArea helpText = new JTextArea();
-        String s; // TODO: i18n
-        s = "Please follow these steps to find model elements:\n\n" 
-            + "1. Enter search information in the tabs at the top of this window.\n\n" 
-            + "2. Press the \"Find\" button.  This will produce a new tab.\n\n" 
-            + "3. The top half of each result tab lists each results.\n" 
-            + "   + Single clicking on a result shows more information about it,\n" 
-            + "     including a list of related objects.\n" 
-            + "   + Double clicking on a result jumps to the selected diagram.\n\n" 
-            + "You can \"tear-off\" a results tab by double clicking on the tab name.\n" 
-            + "If you accumulate too many tabs, press \"Clear Tabs\" to remove " 
-            + "them all.";
+        String s;
+        s =
+            "Please follow these steps to find model elements:\n\n" +
+            "1. Enter search information in the tabs at the top of this window.\n\n" +
+            "2. Press the \"Find\" button.  This will produce a new tab.\n\n" +
+            "3. The top half of each result tab lists each results.\n" +
+            "   + Single clicking on a result shows more information about it,\n" +
+            "     including a list of related objects.\n" +
+            "   + Double clicking on a result jumps to the selected diagram.\n\n" +
+            "You can \"tear-off\" a results tab by double clicking on the tab name.\n" +
+            "If you accumulate too many tabs, press \"Clear Tabs\" to remove " +
+            "them all.";
     
         helpText.setText(s);
         helpText.setEditable(false);
-        help.add(new JScrollPane(helpText), BorderLayout.CENTER);
+        _help.add(new JScrollPane(helpText), BorderLayout.CENTER);
     }
 
-    /**
-     * Init the tab with the tagged values.
-     * TODO: This tab does not work currently.
-     */
     public void initTagValsTab() {
         //  _tag         = new JTextField();
         //  _val         = new JTextField();
     }
 
-    /**
-     * Init the Last Modified tab.
-     * TODO: This tab does not work currently.
-     */
     public void initModifiedTab() { }
-    
-    /**
-     * Init the Constraints tab.
-     * TODO: This tab does not work currently.
-     */
     public void initConstraintsTab() { }
 
 
-    /**
-     * Init the modelelement types that we can look for.
-     */
     public void initTypes() {
-        type.addItem(PredicateMType.create());
+        _type.addItem(PredicateMType.create());
 
-        type.addItem(PredicateMType.create(ModelFacade.CLASS));
-        type.addItem(PredicateMType.create(ModelFacade.INTERFACE));
-        type.addItem(PredicateMType.create(ModelFacade.ACTOR));
-        type.addItem(PredicateMType.create(ModelFacade.ASSOCIATION));
-        type.addItem(PredicateMType.create(ModelFacade.ATTRIBUTE));
-        type.addItem(PredicateMType.create(ModelFacade.CLASSIFIER));
-        type.addItem(PredicateMType.create(ModelFacade.COMPOSITESTATE));
-        type.addItem(PredicateMType.create(ModelFacade.DEPENDENCY));
-        type.addItem(PredicateMType.create(ModelFacade.GENERALIZATION));
-        type.addItem(PredicateMType.create(ModelFacade.INSTANCE));
-        type.addItem(PredicateMType.create(ModelFacade.INTERFACE));
-        type.addItem(PredicateMType.create(ModelFacade.LINK));
-        type.addItem(PredicateMType.create(ModelFacade.CLASS));
-        type.addItem(PredicateMType.create(ModelFacade.PACKAGE));
-        type.addItem(PredicateMType.create(ModelFacade.OPERATION));
-        type.addItem(PredicateMType.create(ModelFacade.PSEUDOSTATE));
-        type.addItem(PredicateMType.create(ModelFacade.STATE));
-        type.addItem(PredicateMType.create(ModelFacade.STATEVERTEX));
-        type.addItem(PredicateMType.create(ModelFacade.TRANSITION));
-        type.addItem(PredicateMType.create(ModelFacade.USE_CASE));
+        _type.addItem(PredicateMType.create(ModelFacade.CLASS));
+        _type.addItem(PredicateMType.create(ModelFacade.INTERFACE));
+        _type.addItem(PredicateMType.create(ModelFacade.ACTOR));
+        _type.addItem(PredicateMType.create(ModelFacade.ASSOCIATION));
+        _type.addItem(PredicateMType.create(ModelFacade.ATTRIBUTE));
+        _type.addItem(PredicateMType.create(ModelFacade.CLASSIFIER));
+        _type.addItem(PredicateMType.create(ModelFacade.COMPOSITESTATE));
+        _type.addItem(PredicateMType.create(ModelFacade.DEPENDENCY));
+        _type.addItem(PredicateMType.create(ModelFacade.GENERALIZATION));
+        _type.addItem(PredicateMType.create(ModelFacade.INSTANCE));
+        _type.addItem(PredicateMType.create(ModelFacade.INTERFACE));
+        _type.addItem(PredicateMType.create(ModelFacade.LINK));
+        _type.addItem(PredicateMType.create(ModelFacade.CLASS));
+        _type.addItem(PredicateMType.create(ModelFacade.PACKAGE));
+        _type.addItem(PredicateMType.create(ModelFacade.OPERATION));
+        _type.addItem(PredicateMType.create(ModelFacade.PSEUDOSTATE));
+        _type.addItem(PredicateMType.create(ModelFacade.STATE));
+        _type.addItem(PredicateMType.create(ModelFacade.STATEVERTEX));
+        _type.addItem(PredicateMType.create(ModelFacade.TRANSITION));
+        _type.addItem(PredicateMType.create(ModelFacade.USE_CASE));
 
     }
 
-    /**
-     * @see org.argouml.swingext.Dialog#nameButtons()
-     */
     protected void nameButtons() {
         super.nameButtons();
         nameButton(getOkButton(), "button.go-to-selection");
@@ -363,15 +329,11 @@ public class FindDialog extends ArgoDialog
     
     ////////////////////////////////////////////////////////////////
     // event handlers
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(
-     * java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == search) {
+        if (e.getSource() == _search) {
             doSearch();
         } 
-        else if (e.getSource() == clearTabs) {
+        else if (e.getSource() == _clearTabs) {
             doClearTabs();
         } 
         else if (e.getSource() == getOkButton()) {
@@ -388,28 +350,25 @@ public class FindDialog extends ArgoDialog
     ////////////////////////////////////////////////////////////////
     // actions
 
-    /**
-     * Do the search.
-     */
     public void doSearch() {
-        numFinds++;
+        _numFinds++;
         String eName = "";
-        if (elementName.getSelectedItem() != null) {
-            eName += elementName.getSelectedItem();
-            elementName.removeItem(eName);
-            elementName.insertItemAt(eName, 0);
-            elementName.setSelectedItem(eName);
+        if (_elementName.getSelectedItem() != null) {
+            eName += _elementName.getSelectedItem();
+            _elementName.removeItem(eName);
+            _elementName.insertItemAt(eName, 0);
+            _elementName.setSelectedItem(eName);
         }
         String dName = "";
-        if (diagramName.getSelectedItem() != null) {
-            dName += diagramName.getSelectedItem();
-            diagramName.removeItem(dName);
-            diagramName.insertItemAt(dName, 0);
-            diagramName.setSelectedItem(dName);
+        if (_diagramName.getSelectedItem() != null) {
+            dName += _diagramName.getSelectedItem();
+            _diagramName.removeItem(dName);
+            _diagramName.insertItemAt(dName, 0);
+            _diagramName.setSelectedItem(dName);
         }
         String name = eName;
         if (dName.length() > 0) name += " in " + dName;
-        String typeName = type.getSelectedItem().toString();
+        String typeName = _type.getSelectedItem().toString();
         if (!typeName.equals("Any Type")) name += " " + typeName;
         if (name.length() == 0)
             name = "Find" + (nextResultNum++);
@@ -421,11 +380,11 @@ public class FindDialog extends ArgoDialog
         Predicate eNamePred = PredicateStringMatch.create(eName);
         Predicate pNamePred = PredicateStringMatch.create(pName);
         Predicate dNamePred = PredicateStringMatch.create(dName);
-        Predicate typePred = (Predicate) type.getSelectedItem();
+        Predicate typePred = (Predicate) _type.getSelectedItem();
         PredicateFind pred =
             new PredicateFind(eNamePred, pNamePred, dNamePred, typePred);
 
-        ChildGenFind gen = ChildGenFind.getSingleton();
+        ChildGenFind gen = ChildGenFind.SINGLETON;
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Object root = ProjectManager.getManager().getCurrentProject();
 
@@ -434,64 +393,50 @@ public class FindDialog extends ArgoDialog
         newResults.setPredicate(pred);
         newResults.setRoot(root);
         newResults.setGenerator(gen);
-        resultTabs.addElement(newResults);
-        results.addTab(name, newResults);
-        clearTabs.setEnabled(true);
+        _resultTabs.addElement(newResults);
+        _results.addTab(name, newResults);
+        _clearTabs.setEnabled(true);
         getOkButton().setEnabled(true);
-        results.setSelectedComponent(newResults);
-        location.addItem("In Tab: " + name);
+        _results.setSelectedComponent(newResults);
+        _location.addItem("In Tab: " + name);
         invalidate();
-        results.invalidate();
+        _results.invalidate();
         validate();
         newResults.run();
         newResults.requestFocus();
         newResults.selectResult(0);
     }
 
-    /**
-     * Clear the tabs.
-     */
     public void doClearTabs() {
-        int numTabs = resultTabs.size();
+        int numTabs = _resultTabs.size();
         for (int i = 0; i < numTabs; i++)
-            results.remove((Component) resultTabs.elementAt(i));
-        resultTabs.removeAllElements();
-        clearTabs.setEnabled(false);
+            _results.remove((Component) _resultTabs.elementAt(i));
+        _resultTabs.removeAllElements();
+        _clearTabs.setEnabled(false);
         getOkButton().setEnabled(false);
         doResetFields(false);
     }
 
 
     
-    /**
-     * Reset the fields.
-     * 
-     * @param complete if true, reset all 3 fields, otherwise only the latter 
-     */
     private void doResetFields(boolean complete) {
         if (complete) {
-            elementName.removeAllItems();
-            diagramName.removeAllItems();
-            elementName.addItem("*");
-            diagramName.addItem("*");
+            _elementName.removeAllItems();
+            _diagramName.removeAllItems();
+            _elementName.addItem("*");
+            _diagramName.addItem("*");
         }
-        location.removeAllItems();
-        location.addItem("Entire Project");
+        _location.removeAllItems();
+        _location.addItem("Entire Project");
     }
 
-    /**
-     * Reset all 3 fields.
-     */
     public void doResetFields() {
         doResetFields(true);
     }
     
-    /**
-     * Execute the GoTo selection command.
-     */
     public void doGoToSelection() {
-        if (results.getSelectedComponent() instanceof TabResults) {
-            ((TabResults) results.getSelectedComponent()).doDoubleClick();
+        if (_results.getSelectedComponent() instanceof TabResults) {
+            ((TabResults) _results.getSelectedComponent()).doDoubleClick();
         }
     }
   
@@ -504,50 +449,26 @@ public class FindDialog extends ArgoDialog
     ////////////////////////////////////////////////////////////////
     // MouseListener implementation
 
-    /**
-     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-     */
     public void mousePressed(MouseEvent me) { }
-    
-    /**
-     * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-     */
     public void mouseReleased(MouseEvent me) { }
-    
-    /**
-     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-     */
     public void mouseEntered(MouseEvent me) { }
-    
-    /**
-     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-     */
     public void mouseExited(MouseEvent me) { }
-    
-    /**
-     * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-     */
     public void mouseClicked(MouseEvent me) {
-        int tab = results.getSelectedIndex();
+        int tab = _results.getSelectedIndex();
         if (tab != -1) {
-            Rectangle tabBounds = results.getBoundsAt(tab);
+            Rectangle tabBounds = _results.getBoundsAt(tab);
             if (!tabBounds.contains(me.getX(), me.getY())) return;
             if (tab >= 1 && me.getClickCount() >= 2)
                 myDoubleClick(tab - 1); //help tab is 0
         }
     }
 
-    /**
-     * React on a double-click on a given tab.
-     * 
-     * @param tab the given tab
-     */
     public void myDoubleClick(int tab) {
-        JPanel t = (JPanel) resultTabs.elementAt(tab);
+        JPanel t = (JPanel) _resultTabs.elementAt(tab);
         if (t instanceof TabSpawnable) {
             ((TabSpawnable) t).spawn();
-            resultTabs.removeElementAt(tab);
-            location.removeItem("In Tab:" + ((TabSpawnable) t).getTitle());
+            _resultTabs.removeElementAt(tab);
+            _location.removeItem("In Tab:" + ((TabSpawnable) t).getTitle());
 	
         }
     }

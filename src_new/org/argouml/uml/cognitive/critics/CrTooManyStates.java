@@ -37,12 +37,12 @@ import org.argouml.model.ModelFacade;
 
 public class CrTooManyStates extends CrUML {
 
-    private static final String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-    /**
-     * The constructor.
-     * 
-     */
+    ////////////////////////////////////////////////////////////////
+    // constructor
     public CrTooManyStates() {
 	setHeadline("Reduce States in machine <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
@@ -50,10 +50,8 @@ public class CrTooManyStates extends CrUML {
 	addTrigger("substate");
     }
 
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isACompositeState(dm))) return NO_PROBLEM;
 	Object cs = /*(MCompositeState)*/ dm;
