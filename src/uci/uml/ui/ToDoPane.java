@@ -129,7 +129,7 @@ implements ItemListener, TreeSelectionListener, MouseListener, ToDoListListener 
     else _curPerspective = (ToDoPerspective) pers.elementAt(0);
 
     //_combo.removeAllItems(); // broken in Swing-1.0.3?
-    Enumeration persEnum = _perspectives.elements();
+    java.util.Enumeration persEnum = _perspectives.elements();
     while (persEnum.hasMoreElements()) 
       _combo.addItem(persEnum.nextElement());
 

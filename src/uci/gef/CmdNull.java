@@ -33,6 +33,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Cmd to do nothing.  This might make some other code simpler.  For
  *  example, keybinding query funcitons can return a "real" Cmd if

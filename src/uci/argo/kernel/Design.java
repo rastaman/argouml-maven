@@ -31,6 +31,8 @@
 package uci.argo.kernel;
 
 import java.util.*;
+import java.util.Enumeration;
+import java.util.Observable;
 
 /** A composite DesignMaterial that contains other
  *  DesignMaterial's. */
@@ -61,6 +63,8 @@ public class Design extends DesignMaterial {
 
   /** Enumerate all contained DesignMaterial's. */
   public Enumeration elements() { return _subdesigns.elements(); }
+  /** Enumerate all contained DesignMaterial's. */
+  public Iterator iterator() { return _subdesigns.iterator(); }
 
   /** Reply true if the given DesignMaterial is part of this design. */
   public boolean transativelyIncludes(DesignMaterial dm) {

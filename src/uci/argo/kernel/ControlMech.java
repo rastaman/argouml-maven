@@ -33,6 +33,7 @@
 package uci.argo.kernel;
 
 import java.util.*;
+import java.util.Enumeration;
 import uci.util.*;
 
 /** A ControlMech determines when a Critic should be active.  New

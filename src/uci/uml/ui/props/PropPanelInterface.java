@@ -38,19 +38,20 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.*;
 
-public class PropPanelInterface extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelInterface extends PropPanel implements ItemListener{
 
   ////////////////////////////////////////////////////////////////
   // constants
-  public static final VisibilityKind VISIBILITIES[] = {
-    VisibilityKind.PUBLIC, VisibilityKind.PACKAGE };
 
+  public static final String VISIBILITIES[] = { "",
+    MVisibilityKind.PUBLIC.getName(), MVisibilityKind.PRIVATE.getName(),
+    MVisibilityKind.PROTECTED.getName() };
+	// what about PACKAGE in nsuml?
   
   ////////////////////////////////////////////////////////////////
   // instance vars
@@ -93,11 +94,9 @@ implements DocumentListener, ItemListener {
     gb.setConstraints(_extendsField, c);
     add(_extendsField);
 
-    Component ed = _extendsField.getEditor().getEditorComponent();
-    Document extendsDoc = ((JTextField)ed).getDocument();
-    extendsDoc.addDocumentListener(this);
     _visField.addItemListener(this);
-    _extendsField.addItemListener(this);
+    _extendsField.addKeyListener(this);
+    _extendsField.addFocusListener(this);
     
   }
 
@@ -106,10 +105,33 @@ implements DocumentListener, ItemListener {
 
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    Interface inf = (Interface) t;
+    MInterface inf = (MInterface) t;
 
-    VisibilityKind vk = inf.getElementOwnership().getVisibility();
-    _visField.setSelectedItem(vk);
+    MVisibilityKind vk = inf.getVisibility();
+    if (vk != null)
+	_visField.setSelectedItem(vk.getName());
+    else
+	_visField.setSelectedItem("");
+
+    Vector gens = new Vector(inf.getGeneralizations());
+    MGeneralization gen = null;
+    JTextField ed = (JTextField) _extendsField.getEditor().getEditorComponent();
+    if (gens != null && gens.size() == 1)
+      gen = (MGeneralization) gens.firstElement();
+    if (gen == null) {
+      //System.out.println("null base class");
+      _extendsField.setSelectedItem(null);
+      ed.setText("");
+    }
+    else {
+      //System.out.println("base class found");
+		MGeneralizableElement parent = gen.getParent();
+      _extendsField.setSelectedItem(parent);
+      if (parent != null)
+		  ed.setText(parent.getName());
+      else
+		  ed.setText("");
+    }
 
     updateExtendsChoices();
   }
@@ -128,9 +150,9 @@ implements DocumentListener, ItemListener {
   public void setTargetVisibility() {
     if (_target == null) return;
     if (_inChange) return;
-    VisibilityKind vk = (VisibilityKind) _visField.getSelectedItem();
-    Interface inf = (Interface) _target;
-    inf.getElementOwnership().setVisibility(vk);
+    MVisibilityKind vk = MVisibilityKind.forName((String)_visField.getSelectedItem());
+    MInterface inf = (MInterface) _target;
+    inf.setVisibility(vk);
   }
 
 
@@ -145,26 +167,16 @@ implements DocumentListener, ItemListener {
   ////////////////////////////////////////////////////////////////
   // event handling
 
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    Component ed = _extendsField.getEditor().getEditorComponent();
-    Document extendsDoc = ((JTextField)ed).getDocument();
-    if (e.getDocument() == extendsDoc) setTargetExtends();
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
+    public void focusLost(FocusEvent e){
+	super.focusLost(e);
+	if (e.getComponent() == _extendsField)
+	    setTargetExtends();
+    }
 
   public void itemStateChanged(ItemEvent e) {
     Object src = e.getSource();
     if (src == _visField) {
-      System.out.println("class VisibilityKind now is " +
+      System.out.println("class MVisibilityKind now is " +
 			 _visField.getSelectedItem());
       setTargetVisibility();
     }

@@ -343,7 +343,7 @@ implements ChangeListener, ActionListener {
 // //     //choicePanel.remove(sheetChoice);
 // //     universeChoice = new Choice();
 // //     if (_universe != null) {
-// //       Enumeration items = _universe.elements();
+// //       java.util.Enumeration items = _universe.elements();
 // //       while (items.hasMoreElements()) {
 // // 	Object item = items.nextElement();
 // // 	String str = item.toString();

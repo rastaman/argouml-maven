@@ -33,7 +33,7 @@ package uci.util;
 
 import java.util.*;
 
-/** Interface to define Functor objects.  Functor's are described in
+/** MInterface to define Functor objects.  Functor's are described in
  *  many papers and books about design patterns or coding idioms.  They
  *  are basically functions, but implemented as instances of a class
  *  with only one method. That allows passing the Functor object

@@ -26,6 +26,7 @@
 package uci.gef.event;
 
 import java.util.*;
+import java.util.EventObject;
 
 
 /** An event object that contains information about the current

@@ -32,18 +32,19 @@
 package uci.util;
 
 import java.util.*;
+import java.util.Enumeration;
 
 /** A enumeration that is always empty. Functially equivelant to:
- * 
+ *
  *  <code>(new Vector()).elements();</code>
- * 
+ *
  *  This is useful when you must pass or return an enumeration, but you
  *  do not have any elements.
  *
  * @see uci.gef.DiagramElement#keysIn */
 
 public class EnumerationEmpty
-implements Enumeration, java.io.Serializable {
+implements Enumeration, Iterator, java.io.Serializable {
 
   public boolean hasMoreElements() { return false; }
   public Object nextElement() {
@@ -52,6 +53,22 @@ implements Enumeration, java.io.Serializable {
   protected static EnumerationEmpty _theInstance = new EnumerationEmpty();
   public static EnumerationEmpty theInstance() { return _theInstance; }
 
-  
+
   static final long serialVersionUID = -4072852623703469113L;
+  // Implementing the Iterator interface:
+  public boolean hasNext()
+  {
+    return hasMoreElements();
+  };
+
+  public Object next()
+  {
+    return nextElement();
+  };
+
+  public void remove()
+  {
+	  throw new java.util.NoSuchElementException();
+  };
+
 } /* end class EnumerationEmpty */

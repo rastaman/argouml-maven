@@ -33,6 +33,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Set the current editor to use a SelectionRotate on its current
  *  selections.

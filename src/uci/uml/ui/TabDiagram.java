@@ -77,17 +77,11 @@ uci.gef.event.ModeChangeListener {
     _jgraph.addModeChangeListener(this);
   }
 
-  public Object clone() {
-    try {
-      TabDiagram newPanel = new TabDiagram();
-      return newPanel;
+    public Object clone() {
+	TabDiagram newPanel = new TabDiagram();
+	return newPanel;
     }
-    catch (Exception ex) {
-      System.out.println("exception in TabDiagram clone()");
-    }
-    return null;
-  }
-
+    
 
   ////////////////////////////////////////////////////////////////
   // accessors

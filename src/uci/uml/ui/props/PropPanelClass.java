@@ -39,9 +39,9 @@ import javax.swing.border.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.*;
 
 
@@ -49,12 +49,15 @@ import uci.uml.ui.*;
 // needs-more-work: setting base class
 
 public class PropPanelClass extends PropPanel
-implements ItemListener, DocumentListener {
+implements ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  public static final VisibilityKind
-  VISIBILITIES[] = { VisibilityKind.PUBLIC, VisibilityKind.PACKAGE };
+  public static final String VISIBILITIES[] = {
+      "", MVisibilityKind.PUBLIC.getName()};// MVisibilityKind.PRIVATE.getName(), MVisibilityKind.PROTECTED.getName() };
+	// what about PACKAGE in nsuml?
+
+
   public static final String CLASSKEYWORDS[] = { "none", "abstract", "final"};
 
   
@@ -85,9 +88,8 @@ implements ItemListener, DocumentListener {
     _extendsField.setEditable(true);
     _extendsField.getEditor().getEditorComponent().setBackground(Color.white);
 
-    Component ed = _extendsField.getEditor().getEditorComponent();
-    Document extendsDoc = ((JTextField)ed).getDocument();
-    extendsDoc.addDocumentListener(this);
+    _extendsField.addKeyListener(this);
+    _extendsField.addFocusListener(this);
     _visField.addItemListener(this);
     _keywordsField.addItemListener(this);
     _extendsField.addItemListener(this);
@@ -157,25 +159,28 @@ implements ItemListener, DocumentListener {
 
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    MMClass cls = (MMClass) t;
+	//System.out.println("PropPanelClass: setTargetInternal "+t);
+    MClass cls = (MClass) t;
 
-    VisibilityKind vk = VisibilityKind.PUBLIC;
-    ElementOwnership oe = cls.getElementOwnership();
-    if (oe != null) vk = oe.getVisibility();
-    _visField.setSelectedItem(vk);
+    MVisibilityKind vk = cls.getVisibility();
+	//System.out.println("visibility:"+vk + " Name: "+vk.getName() );
+    if (vk == null)
+	_visField.setSelectedItem("");
+    else
+        _visField.setSelectedItem(vk.getName());
 
-    if (cls.getIsAbstract())
+    if (cls.isAbstract())
       _keywordsField.setSelectedItem("abstract");
-    else if (cls.getIsLeaf())
+    else if (cls.isLeaf())
       _keywordsField.setSelectedItem("final");
     else
       _keywordsField.setSelectedItem("none");
 
-    Vector gens = cls.getGeneralization();
-    Generalization gen = null;
+    Vector gens = new Vector(cls.getGeneralizations());
+    MGeneralization gen = null;
     JTextField ed = (JTextField) _extendsField.getEditor().getEditorComponent();
     if (gens != null && gens.size() == 1)
-      gen = (Generalization) gens.firstElement();
+      gen = (MGeneralization) gens.firstElement();
     if (gen == null) {
       //System.out.println("null base class");
       _extendsField.setSelectedItem(null);
@@ -183,21 +188,23 @@ implements ItemListener, DocumentListener {
     }
     else {
       //System.out.println("base class found");
-      _extendsField.setSelectedItem(gen.getSupertype());
-      if (gen.getSupertype() != null)
-	ed.setText(gen.getSupertype().getName().getBody());
+		MGeneralizableElement parent = gen.getParent();
+      _extendsField.setSelectedItem(parent);
+      if (parent != null)
+		  ed.setText(parent.getName());
       else
-      ed.setText("");
+		  ed.setText("");
     }
-    Vector interfaces = new Vector();
-    Vector specs = cls.getSpecification();
-    int size = specs.size();
-    for (int i = 0; i < size; i++) {
-      Realization r = (Realization) specs.elementAt(i);
-      interfaces.addElement(r.getSupertype());
-    }
-    _implList.setListData(interfaces);
-    _implList.setCellRenderer(new UMLListCellRenderer());
+	/*    Vector interfaces = new Vector();
+		  Vector specs = cls.getSpecification();
+		  int size = specs.size();
+		  for (int i = 0; i < size; i++) {
+		  Realization r = (Realization) specs.elementAt(i);
+		  interfaces.addElement(r.getSupertype());
+		  }
+		  _implList.setListData(interfaces);
+		  _implList.setCellRenderer(new UMLListCellRenderer());
+	*/
     updateExtendsChoices();
   }
 
@@ -213,10 +220,9 @@ implements ItemListener, DocumentListener {
   public void setTargetVisibility() {
     if (_target == null) return;
     if (_inChange) return;
-    VisibilityKind vk = (VisibilityKind) _visField.getSelectedItem();
-    MMClass cls = (MMClass) _target;
-    ElementOwnership oe = cls.getElementOwnership();
-    if (oe != null) oe.setVisibility(vk);
+    MVisibilityKind vk = MVisibilityKind.forName((String)_visField.getSelectedItem());
+    MClass cls = (MClass) _target;
+	cls.setVisibility(vk);
   }
 
   public void setTargetKeywords() {
@@ -227,24 +233,19 @@ implements ItemListener, DocumentListener {
       //System.out.println("keywords are null");
       return;
     }
-    MMClass cls = (MMClass) _target;
-    try {
-      if (keys.equalsIgnoreCase("none")) {
-	cls.setIsAbstract(false);
-	cls.setIsLeaf(false);
-      }
-      else if (keys.equalsIgnoreCase("abstract")) {
-	cls.setIsAbstract(true);
-	cls.setIsLeaf(false);
-      }
-      else if (keys.equalsIgnoreCase("final")) {
-	cls.setIsAbstract(false);
-      cls.setIsLeaf(true);
-      }
-    }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not set keywords!");
-    }
+    MClass cls = (MClass) _target;
+	if (keys.equalsIgnoreCase("none")) {
+		cls.setAbstract(false);
+		cls.setLeaf(false);
+	}
+	else if (keys.equalsIgnoreCase("abstract")) {
+		cls.setAbstract(true);
+		cls.setLeaf(false);
+	}
+	else if (keys.equalsIgnoreCase("final")) {
+		cls.setAbstract(false);
+		cls.setLeaf(true);
+	}
   }
 
   ////////////////////////////////////////////////////////////////
@@ -258,31 +259,22 @@ implements ItemListener, DocumentListener {
   ////////////////////////////////////////////////////////////////
   // event handling
 
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    Component ed = _extendsField.getEditor().getEditorComponent();
-    Document extendsDoc = ((JTextField)ed).getDocument();
-    if (e.getDocument() == extendsDoc) setTargetExtends();
-    super.insertUpdate(e);
-  }
 
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
+    public void focusLost(FocusEvent e){
+	super.focusLost(e);
+	if (e.getComponent() == _extendsField)
+	    setTargetExtends();
+    }
 
   public void itemStateChanged(ItemEvent e) {
     Object src = e.getSource();
     if (src == _keywordsField) {
       //System.out.println("class keywords now is " +
-      //_keywordsField.getSelectedItem());
+      //_keywordsField.getSelectedItem());                                                                     se
       setTargetKeywords();
     }
     else if (src == _visField) {
-      //System.out.println("class VisibilityKind now is " +
+      //System.out.println("class MVisibilityKind now is " +
       //_visField.getSelectedItem());
       setTargetVisibility();
     }
@@ -291,6 +283,13 @@ implements ItemListener, DocumentListener {
       //_extendsField.getSelectedItem());
       setTargetExtends();
     } 
+	else if (src == _namespaceField) {
+		// what to do here?
+		//setTargetInternal();
+	}
+	else if (src == _stereoField) {
+		setTargetStereotype();
+	}
   }
 
   

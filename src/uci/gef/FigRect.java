@@ -35,6 +35,7 @@ import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Primitive Fig to paint rectangles on a LayerDiagram. */
 

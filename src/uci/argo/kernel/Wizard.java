@@ -30,6 +30,7 @@
 package uci.argo.kernel;
 
 import java.util.*;
+import java.util.Enumeration;
 import javax.swing.*;
 
 import uci.util.*;

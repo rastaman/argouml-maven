@@ -33,6 +33,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Cmd to group all the Fig's selected in the current
  *  editor into a single FigGroup. 

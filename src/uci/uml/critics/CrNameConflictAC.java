@@ -33,16 +33,16 @@ package uci.uml.critics;
 import java.util.*;
 import uci.argo.kernel.*;
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.foundation.core.*;
 
-/** Well-formedness rule [1] for AssociationClass. See page 28 of UML 1.1
+/** Well-formedness rule [1] for MAssociationClass. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
 
 public class CrNameConflictAC extends CrUML {
 
   public CrNameConflictAC() {
     setHeadline("Role name conflicts with member");
-    sd("Association role names of an AssociationClass must not conflict \n"+
+    sd("MAssociation role names of an MAssociationClass must not conflict \n"+
        "with the names of structral features (e.g., instance variables) \n"+
        "of the class.\n");
 

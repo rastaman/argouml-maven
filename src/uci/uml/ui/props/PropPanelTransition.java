@@ -42,11 +42,11 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
-import uci.uml.Behavioral_Elements.Common_Behavior.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
 import uci.uml.generate.*;
 import uci.uml.ui.*;
 
@@ -111,13 +111,16 @@ public class PropPanelTransition extends PropPanelTwoEnds {
     gb.setConstraints(_effectField, c);
     add(_effectField);
 
-    _triggerField.getDocument().addDocumentListener(this);
+    // _triggerField.getDocument().addDocumentListener(this);
+    _triggerField.addFocusListener(this);
+    _triggerField.addKeyListener(this);
     _triggerField.setFont(_stereoField.getFont());
-    _guardField.getDocument().addDocumentListener(this);
+    _guardField.addFocusListener(this);
     _guardField.setFont(_stereoField.getFont());
-    _effectField.getDocument().addDocumentListener(this);
+    _guardField.addFocusListener(this);
+    _effectField.addFocusListener(this);
     _effectField.setFont(_stereoField.getFont());
-
+    _effectField.addFocusListener(this);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -126,95 +129,75 @@ public class PropPanelTransition extends PropPanelTwoEnds {
   /** Set the values to be shown in all widgets based on model */
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    Transition tt = (Transition) t;
+    MTransition tt = (MTransition) t;
     _triggerField.setText(GeneratorDisplay.Generate(tt.getTrigger()));
     _guardField.setText(GeneratorDisplay.Generate(tt.getGuard()));
     _effectField.setText(GeneratorDisplay.Generate(tt.getEffect()));
   }
 
   public String getSourceLabel() {
-    if (!(_target instanceof Transition)) return "non Transition";
+    if (!(_target instanceof MTransition)) return "non MTransition";
     return "Source:";
   }
   public String getSourceValue() {
-    if (!(_target instanceof Transition)) return "non Transition";
-    Transition g = (Transition) _target;
-    StateVertex src = g.getSource();
+    if (!(_target instanceof MTransition)) return "non MTransition";
+    MTransition g = (MTransition) _target;
+    MStateVertex src = g.getSource();
     if (src == null) return "null";
-    return src.getName().getBody();
+    return src.getName();
   }
   public String getDestLabel() {
-    if (!(_target instanceof Transition)) return "non Transition";
+    if (!(_target instanceof MTransition)) return "non MTransition";
     return "Target:";
   }
   public String getDestValue() {
-    if (!(_target instanceof Transition)) return "non Transition";
-    Transition g = (Transition) _target;
-    StateVertex tar = g.getTarget();
+    if (!(_target instanceof MTransition)) return "non MTransition";
+    MTransition g = (MTransition) _target;
+    MStateVertex tar = g.getTarget();
     if (tar == null) return "null";
-    return tar.getName().getBody();
+    return tar.getName();
   }
   
 
   public void setTargetTrigger() {
     if (_inChange) return;
-    Transition t = (Transition) _target;
+    MTransition t = (MTransition) _target;
     String newText = _triggerField.getText();
     //System.out.println("setTargetTrigger: " + newText);
-    try {
-      t.setTrigger(ParserDisplay.SINGLETON.parseEvent(newText));
-    }
-    catch (PropertyVetoException pve) { }
+	t.setTrigger(ParserDisplay.SINGLETON.parseEvent(newText));
   }
 
   public void setTargetGuard() {
     if (_inChange) return;
-    Transition t = (Transition) _target;
+    MTransition t = (MTransition) _target;
     String newText = _guardField.getText();
     //System.out.println("setTargetGuard: " + newText);
-    try {
-      t.setGuard(ParserDisplay.SINGLETON.parseGuard(newText));
-    }
-    catch (PropertyVetoException pve) { }
+	t.setGuard(ParserDisplay.SINGLETON.parseGuard(newText));
   }
 
   public void setTargetEffect() {
     if (_inChange) return;
-    Transition t = (Transition) _target;
+    MTransition t = (MTransition) _target;
     String newText = _effectField.getText();
     //System.out.println("setTargetEffect: " + newText);
-    try {
-      t.setEffect(ParserDisplay.SINGLETON.parseActions(newText));
-    }
-    catch (PropertyVetoException pve) { }
+	t.setEffect(ParserDisplay.SINGLETON.parseAction(newText));
   }
 
   ////////////////////////////////////////////////////////////////
   // event handlers
 
 
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    if (e.getDocument() == _triggerField.getDocument()) setTargetTrigger();
-    if (e.getDocument() == _guardField.getDocument()) setTargetGuard();
-    if (e.getDocument() == _effectField.getDocument()) setTargetEffect();
-    super.insertUpdate(e);
-  }
+    /** focus listener implementation, overrides from PropPanel */
 
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
-  }
+    public void focusLost(FocusEvent e){
+	super.focusLost(e);
+	if (e.getComponent() == _triggerField)
+	    setTargetTrigger();
+  	else if (e.getComponent() == _guardField)
+	    setTargetGuard();
+ 	else if (e.getComponent() == _effectField)
+	    setTargetEffect();
+    }
 
 
 } /* end class PropPanelState */

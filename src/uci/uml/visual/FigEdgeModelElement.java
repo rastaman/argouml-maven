@@ -41,16 +41,18 @@ import uci.gef.*;
 import uci.graph.*;
 import uci.argo.kernel.*;
 import uci.uml.ui.*;
+import uci.uml.util.*;
 import uci.uml.generate.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Foundation.Extension_Mechanisms.*;
+import ru.novosoft.uml.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 /** Abstract class to display diagram arcs for UML ModelElements that
  *  look like arcs and that have editiable names. */
 
 public abstract class FigEdgeModelElement extends FigEdgePoly
-implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyListener, PropertyChangeListener  { 
+implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyListener, PropertyChangeListener, MElementListener  {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -105,7 +107,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   public FigEdgeModelElement(Object edge) {
     this();
     setOwner(edge);
-    //ModelElement me = (ModelElement) edge;
+    //MModelElement me = (MModelElement) edge;
     //me.addVetoableChangeListener(this);
   }
 
@@ -285,9 +287,9 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
    *  should override to handle other text elements. */
   protected void textEdited(FigText ft) throws PropertyVetoException {
     if (ft == _name) {
-      ModelElement me = (ModelElement) getOwner();
+      MModelElement me = (MModelElement) getOwner();
       if (me == null) return;
-      me.setName(new Name(ft.getText()));
+      me.setName(ft.getText());
     }
   }
 
@@ -319,7 +321,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     if (ke.isConsumed()) return;
     if (_name != null && canEdit(_name)) _name.keyPressed(ke);
     //ke.consume();
-//     ModelElement me = (ModelElement) getOwner();
+//     MModelElement me = (MModelElement) getOwner();
 //     if (me == null) return;
 //     try { me.setName(new Name(_name.getText())); }
 //     catch (PropertyVetoException pve) { }
@@ -333,7 +335,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 //     System.out.println("hjasdjsg222");
 //     _name.keyTyped(ke);
 //     //ke.consume();
-//     ModelElement me = (ModelElement) getOwner();
+//     MModelElement me = (MModelElement) getOwner();
 //      if (me == null) return;
 //     try { me.setName(new Name(_name.getText())); }
 //     catch (PropertyVetoException pve) { }
@@ -342,7 +344,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   ////////////////////////////////////////////////////////////////
   // internal methods
 
-  /** This is called aftern any part of the UML ModelElement has
+  /** This is called aftern any part of the UML MModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
   protected void modelChanged() {
@@ -352,21 +354,21 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
 
   public void updateNameText() {
-    ModelElement me = (ModelElement) getOwner();
+    MModelElement me = (MModelElement) getOwner();
     if (me == null) return;
     String nameStr = GeneratorDisplay.Generate(me.getName());
     _name.setText(nameStr);
   }
 
   public void updateStereotypeText() {
-    ModelElement me = (ModelElement) getOwner();
+    MModelElement me = (MModelElement) getOwner();
     if (me == null) return;
-    Vector stereos = me.getStereotype();
-    if (stereos == null || stereos.size() == 0) {
+    MStereotype stereos = me.getStereotype();
+    if (stereos == null) {
       _stereo.setText("");
       return;
     }
-    String stereoStr = ((Stereotype) stereos.elementAt(0)).getName().getBody();
+    String stereoStr = stereos.getName();
     if (stereoStr.length() == 0) _stereo.setText("");
     else _stereo.setText("<<" + stereoStr + ">>");
   }
@@ -374,13 +376,45 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   public void setOwner(Object own) {
     Object oldOwner = getOwner();
     super.setOwner(own);
-    if (oldOwner instanceof ModelElement)
-      ((ModelElement)oldOwner).removeVetoableChangeListener(this);
-    if (own instanceof ModelElement)
-      ((ModelElement)own).addVetoableChangeListener(this);
+    if (oldOwner instanceof MModelElement)
+      ((MModelElement)oldOwner).removeMElementListener(this);
+    if (own instanceof MModelElement) {
+	MModelElement me = (MModelElement)own;
+	me.addMElementListener(this);
+	if ( me.getUUID() == null) 
+	    me.setUUID(UUIDManager.SINGLETON.getNewUUID());
+    }
     modelChanged();
   }
 
 
+	public void propertySet(MElementEvent mee) {
+	    //if (_group != null) _group.propertySet(mee);
+	    modelChanged();
+	    damage();
+	}
+	public void listRoleItemSet(MElementEvent mee) {
+	    //if (_group != null) _group.listRoleItemSet(mee);
+	    modelChanged();
+	    damage();
+	}
+	public void recovered(MElementEvent mee) {
+	    //if (_group != null) _group.recovered(mee);
+	}
+	public void removed(MElementEvent mee) {
+		//System.out.println("deleting: "+this + mee);
+	    //if (_group != null) _group.removed(mee);
+	    this.delete();
+	}
+	public void roleAdded(MElementEvent mee) {
+	    //if (_group != null) _group.roleAdded(mee);
+	    modelChanged();
+	    damage();
+	}
+	public void roleRemoved(MElementEvent mee) {
+	    //if (_group != null) _group.roleRemoved(mee);
+	    modelChanged();
+	    damage();
+	}
 
 } /* end class FigEdgeModelElement */

@@ -32,6 +32,7 @@
 package uci.util;
 
 import java.util.*;
+import java.util.Enumeration;
 
 public class Enum implements Enumeration, java.io.Serializable {
 

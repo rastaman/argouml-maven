@@ -34,6 +34,7 @@ package uci.gef.demo;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
 import uci.gef.*;
 
 /** An example subclass of NetNode for use in the EquipmentApplet

@@ -33,6 +33,7 @@ package uci.uml.visual;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Enumeration;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -42,8 +43,8 @@ import uci.graph.*;
 import uci.argo.kernel.*;
 import uci.uml.ui.*;
 import uci.uml.generate.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
 
 /** This class is a FigNodeModeleElement with compartments.<BR>
  *  i.e. abstract class to display diagram icons for UML ModelElements that
@@ -206,5 +207,27 @@ public abstract class FigNodeWithCompartments extends FigNodeModelElement {
     super.calcBounds();
     _figs = allFigs;
   }
+
+   public Object clone() {
+     FigNodeWithCompartments _clone = (FigClass) super.clone();
+     _clone._compartments = new Vector();
+     Vector _cloneFigs = (Vector)_clone.getFigs().clone();
+     for(int i=0; i < _cloneFigs.size(); i++ ) {
+       if ( _cloneFigs.elementAt(i) instanceof FigCompartment) {
+        _clone._compartments.addElement(_cloneFigs.elementAt(i)); 
+       }
+       if ( _cloneFigs.elementAt(i) instanceof FigRect ) {
+         FigRect rect = (FigRect)_cloneFigs.elementAt(i);
+         if ( rect.getBounds().equals(_clone._bigPort.getBounds()))  {
+           _clone._bigPort = rect;
+         }
+         
+       }  
+     }
+     _cloneFigs.removeAllElements();
+     _cloneFigs = null;
+
+     return _clone;
+   }
 
 } /* end class FigNodeWithCompartments */

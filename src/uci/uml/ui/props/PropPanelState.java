@@ -44,11 +44,12 @@ import javax.swing.plaf.metal.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
-import uci.uml.Behavioral_Elements.Common_Behavior.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
 import uci.uml.generate.*;
 import uci.uml.ui.*;
 
@@ -56,8 +57,7 @@ import uci.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelState extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelState extends PropPanel {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -155,10 +155,10 @@ implements DocumentListener, ItemListener {
     add(scroll);
     _internalTable.setTableHeader(null);
 
-    _entryField.getDocument().addDocumentListener(this);
-    _entryField.setFont(_stereoField.getFont());
-    _exitField.getDocument().addDocumentListener(this);
-    _exitField.setFont(_stereoField.getFont());
+    _entryField.addKeyListener(this);
+    _entryField.addFocusListener(this);
+    _exitField.addKeyListener(this);
+    _exitField.addFocusListener(this);
 
     resizeColumns();
   }
@@ -169,7 +169,7 @@ implements DocumentListener, ItemListener {
   /** Set the values to be shown in all widgets based on model */
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    State st = (State) t;
+    MState st = (MState) t;
 
     _entryField.setText(GeneratorDisplay.Generate(st.getEntry()));
     _exitField.setText(GeneratorDisplay.Generate(st.getExit()));
@@ -189,61 +189,44 @@ implements DocumentListener, ItemListener {
 
   public void setTargetEntry() {
     if (_inChange) return;
-    State s = (State) _target;
+    MState s = (MState) _target;
     String newText = _entryField.getText();
-    System.out.println("setTargetEntry: " + newText);
-    try {
-      s.setEntry(new ActionSequence(new Name(newText)));
-    }
-    catch (PropertyVetoException pve) { }
+	MActionExpression expr = new MActionExpression("Java",newText);
+	MUninterpretedAction action = new MUninterpretedActionImpl();
+	action.setScript(expr);
+	s.setEntry(action);
   }
 
   public void setTargetExit() {
     if (_inChange) return;
-    State s = (State) _target;
+    MState s = (MState) _target;
     String newText = _exitField.getText();
-    System.out.println("setTargetExit: " + newText);
-    try {
-      s.setExit(new ActionSequence(new Name(newText)));
-    }
-    catch (PropertyVetoException pve) { }
+	MActionExpression expr = new MActionExpression("Java",newText);
+	MUninterpretedAction action = new MUninterpretedActionImpl();
+	action.setScript(expr);
+	s.setExit(action);
   }
 
 
   ////////////////////////////////////////////////////////////////
   // event handlers
 
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    if (e.getDocument() == _entryField.getDocument()) setTargetEntry();
-    if (e.getDocument() == _exitField.getDocument()) setTargetExit();
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
-  }
-
+    public void focusLost(FocusEvent e){
+	super.focusLost(e);
+	if (e.getComponent() == _entryField)
+	    setTargetEntry();
+	else if (e.getComponent() == _exitField)
+	    setTargetExit();
+    }
 
 } /* end class PropPanelState */
 
 
 class TableModelInternalTrans extends AbstractTableModel
-implements VetoableChangeListener, DelayedVChangeListener {
+implements VetoableChangeListener, DelayedVChangeListener, MElementListener {
   ////////////////
   // instance varables
-  State _target;
+  MState _target;
   PropPanelState _panel;
 
   ////////////////
@@ -252,12 +235,12 @@ implements VetoableChangeListener, DelayedVChangeListener {
 
   ////////////////
   // accessors
-  public void setTarget(State s) {
-    if (_target instanceof ElementImpl)
-      ((ModelElementImpl)_target).removeVetoableChangeListener(this);
+  public void setTarget(MState s) {
+    if (_target instanceof MElementImpl)
+      ((MModelElementImpl)_target).removeMElementListener(this);
     _target = s;
-    if (_target instanceof ElementImpl)
-      ((ModelElementImpl)_target).addVetoableChangeListener(this);
+    if (_target instanceof MElementImpl)
+      ((MModelElementImpl)_target).addMElementListener(this);
     fireTableStructureChanged();
     _panel.resizeColumns();
   }
@@ -281,16 +264,16 @@ implements VetoableChangeListener, DelayedVChangeListener {
 
   public int getRowCount() {
     if (_target == null) return 0;
-    Vector trans = _target.getInternalTransition();
+    Vector trans = new Vector(_target.getInternalTransitions());
     if (trans == null) return 1;
     return trans.size() + 1;
   }
 
   public Object getValueAt(int row, int col) {
-    Vector trans = _target.getInternalTransition();
+    Vector trans = new Vector(_target.getInternalTransitions());
     if (trans == null) return "";
     if (row >= trans.size()) return ""; // blank line allows adding
-    Transition t = (Transition) trans.elementAt(row);
+    MTransition t = (MTransition) trans.elementAt(row);
     String tStr = GeneratorDisplay.Generate(t);
     if (col == 0) return tStr;
     else return "UC-" + row*2+col; // for debugging
@@ -302,20 +285,15 @@ implements VetoableChangeListener, DelayedVChangeListener {
     if (!(aValue instanceof String)) return;
     String val = (String) aValue;
     val = val.trim();
-    Vector trans = ((State)_target).getInternalTransition();
+    Vector trans = new Vector(((MState)_target).getInternalTransitions());
     if (trans == null) trans = new Vector();
-    Transition newTrans = ParserDisplay.SINGLETON.parseTransition(val);
+    MTransition newTrans = ParserDisplay.SINGLETON.parseTransition(val);
     if (newTrans != null) {
-      try {
-	State st = (State) _target;
+	MState st = (MState) _target;
 	newTrans.setSource(st);
 	newTrans.setTarget(st);
 	newTrans.setStateMachine(st.getStateMachine());
 	//newTrans.setState(st);
-      }
-      catch (PropertyVetoException pve) {
-	System.out.println("PropertyVetoException in PropPanelState");
-      }
     }
     else {
       System.out.println("newTrans is null!");
@@ -328,10 +306,7 @@ implements VetoableChangeListener, DelayedVChangeListener {
     else if (val.equals("")) trans.removeElementAt(rowIndex);
     else trans.setElementAt(newTrans, rowIndex);
 
-    try { ((State)_target).setInternalTransition(trans); }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not set internal transitions");
-    }
+    ((MState)_target).setInternalTransitions(trans); 
 
     fireTableStructureChanged();
     _panel.resizeColumns();
@@ -339,6 +314,19 @@ implements VetoableChangeListener, DelayedVChangeListener {
 
   ////////////////
   // event handlers
+
+	public void propertySet(MElementEvent mee) {
+	}
+	public void listRoleItemSet(MElementEvent mee) {
+	}
+	public void recovered(MElementEvent mee) {
+	}
+	public void removed(MElementEvent mee) {
+	}
+	public void roleAdded(MElementEvent mee) {
+	}
+	public void roleRemoved(MElementEvent mee) {
+	}
 
   public void vetoableChange(PropertyChangeEvent pce) {
     DelayedChangeNotify delayedNotify = new DelayedChangeNotify(this, pce);

@@ -32,50 +32,109 @@ import java.util.*;
 import java.beans.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import uci.uml.util.UUIDManager;
+import java.util.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.xmi.*;
 
 /** A file of information about the Java language.  This is used to
  *  fill in the offered data types in variable and operation
- *  declarations. */
+ *  declarations. 
+ * In the end, it would be better to have these in XMI files that are loaded at starting time.
+*/
 
 public class JavaUML {
 
   // java.lang
-  public static MMClass STRING_CLASS = new MMClass("String");
+  
+  public static MClass STRING_CLASS = new MClassImpl();
 
-  public static DataType VOID_TYPE = new DataType("void");
-  public static DataType CHAR_TYPE = new DataType("char");
-  public static DataType INT_TYPE = new DataType("int");
-  public static DataType BOOLEAN_TYPE = new DataType("boolean");
-  public static DataType BYTE_TYPE = new DataType("byte");
-  public static DataType LONG_TYPE = new DataType("long");
-  public static DataType FLOAT_TYPE = new DataType("float");
-  public static DataType DOUBLE_TYPE = new DataType("double");
+  public static MDataType VOID_TYPE = new MDataTypeImpl();
+  public static MDataType CHAR_TYPE = new MDataTypeImpl();
+  public static MDataType INT_TYPE = new MDataTypeImpl();
+  public static MDataType BOOLEAN_TYPE = new MDataTypeImpl();
+  public static MDataType BYTE_TYPE = new MDataTypeImpl();
+  public static MDataType LONG_TYPE = new MDataTypeImpl();
+  public static MDataType FLOAT_TYPE = new MDataTypeImpl();
+  public static MDataType DOUBLE_TYPE = new MDataTypeImpl();
 
-  public static MMClass CHAR_CLASS = new MMClass("Character");
-  public static MMClass INT_CLASS = new MMClass("Integer");
-  public static MMClass BOOLEAN_CLASS = new MMClass("Boolean");
-  public static MMClass BYTE_CLASS = new MMClass("Byte");
-  public static MMClass LONG_CLASS = new MMClass("Long");
-  public static MMClass FLOAT_CLASS = new MMClass("Float");
-  public static MMClass DOUBLE_CLASS = new MMClass("Double");
+  public static MClass CHAR_CLASS = new MClassImpl();
+  public static MClass INT_CLASS = new MClassImpl();
+  public static MClass BOOLEAN_CLASS = new MClassImpl();
+  public static MClass BYTE_CLASS = new MClassImpl();
+  public static MClass LONG_CLASS = new MClassImpl();
+  public static MClass FLOAT_CLASS = new MClassImpl();
+  public static MClass DOUBLE_CLASS = new MClassImpl();
 
 
   // java.awt
-  public static MMClass RECTANGLE_CLASS = new MMClass("Rectangle");
-  public static MMClass POINT_CLASS = new MMClass("Point");
-  public static MMClass COLOR_CLASS = new MMClass("Color");
+  public static MClass RECTANGLE_CLASS = new MClassImpl();
+  public static MClass POINT_CLASS = new MClassImpl();
+  public static MClass COLOR_CLASS = new MClassImpl();
 
   
   // java.util
-  public static MMClass VECTOR_CLASS = new MMClass("Vector");
-  public static MMClass HASHTABLE_CLASS = new MMClass("Hashtable");
-  public static MMClass STACK_CLASS = new MMClass("Stack");
+  public static MClass VECTOR_CLASS = new MClassImpl();
+  public static MClass HASHTABLE_CLASS = new MClassImpl();
+  public static MClass STACK_CLASS = new MClassImpl();
 
+	public static MModel javastandards = new MModelImpl();
 
+  static{
+   STRING_CLASS.setName("String");
+   CHAR_CLASS.setName("Character");
+   INT_CLASS.setName("Integer");
+   BOOLEAN_CLASS.setName("Boolean");
+   BYTE_CLASS.setName("Byte");
+   LONG_CLASS.setName("Long");
+   FLOAT_CLASS.setName("Float");
+   DOUBLE_CLASS.setName("Double");
+   RECTANGLE_CLASS.setName("Rectangle");
+   POINT_CLASS.setName("Point");
+   COLOR_CLASS.setName("Color");
+   VECTOR_CLASS.setName("Vector");
+   HASHTABLE_CLASS.setName("Hashtable");
+   STACK_CLASS.setName("Stack");
+   
+   VOID_TYPE.setName("void");
+   CHAR_TYPE.setName("char");
+   INT_TYPE.setName("int");
+   BOOLEAN_TYPE.setName("boolean");
+   BYTE_TYPE.setName("byte");
+   LONG_TYPE.setName("long");
+   FLOAT_TYPE.setName("float");
+   DOUBLE_TYPE.setName("double");
 
+//    javastandards.addOwnedElement(STRING_CLASS);
+//    javastandards.addOwnedElement(CHAR_CLASS);
+//    javastandards.addOwnedElement(INT_CLASS);
+//    javastandards.addOwnedElement(BOOLEAN_CLASS);
+//    javastandards.addOwnedElement(BYTE_CLASS);
+//    javastandards.addOwnedElement(LONG_CLASS);
+//    javastandards.addOwnedElement(FLOAT_CLASS);
+//    javastandards.addOwnedElement(DOUBLE_CLASS);
+//    javastandards.addOwnedElement(RECTANGLE_CLASS);
+//    javastandards.addOwnedElement(POINT_CLASS);
+//    javastandards.addOwnedElement(COLOR_CLASS);
+//    javastandards.addOwnedElement(VECTOR_CLASS);
+//    javastandards.addOwnedElement(HASHTABLE_CLASS);
+//    javastandards.addOwnedElement(STACK_CLASS);
+//    javastandards.addOwnedElement(VOID_TYPE);
+//    javastandards.addOwnedElement(CHAR_TYPE);
+//    javastandards.addOwnedElement(INT_TYPE);
+//    javastandards.addOwnedElement(BOOLEAN_TYPE);
+//    javastandards.addOwnedElement(BYTE_TYPE);
+//    javastandards.addOwnedElement(LONG_TYPE);
+//    javastandards.addOwnedElement(FLOAT_TYPE);
+//    javastandards.addOwnedElement(DOUBLE_TYPE);
+
+//    UUIDManager.SINGLETON.createModelUUIDS(javastandards);
+//    javastandards.setName("Javastandards");
+   //try {XMIWriter writer = new XMIWriter(javastandards, "java.xmi");writer.gen();} catch (Exception e) {}
+
+  }
 
   
 } /* end class JavaUML */

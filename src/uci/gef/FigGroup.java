@@ -33,6 +33,7 @@
 package uci.gef;
 
 import java.util.*;
+import java.util.Enumeration;
 import java.awt.*;
 
 /** This class implements a group of Figs. */

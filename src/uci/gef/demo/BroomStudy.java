@@ -27,6 +27,8 @@ package uci.gef.demo;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 import javax.swing.*;
 import uci.ui.*;
 import uci.gef.*;

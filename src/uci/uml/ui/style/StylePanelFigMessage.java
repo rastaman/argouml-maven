@@ -53,7 +53,7 @@ public class StylePanelFigMessage extends StylePanelFig {
   ////////////////////////////////////////////////////////////////
   // instance vars
   JLabel _arrowLabel = new JLabel("Arrow: ");
-  JComboBox _arrowField = new JComboBox(((FigMessage) _target).ARROW_DIRECTIONS);
+  JComboBox _arrowField = new JComboBox(Converter.convert(((FigMessage) _target).ARROW_DIRECTIONS));
 
   ////////////////////////////////////////////////////////////////
   // contructors

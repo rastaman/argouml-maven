@@ -33,7 +33,8 @@ package uci.uml.critics;
 import java.util.*;
 import uci.argo.kernel.*;
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
+import uci.uml.util.*;
+import ru.novosoft.uml.foundation.core.*;
 
 /** Well-formedness rules [1] and [3] for Class. See page 29 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -56,13 +57,14 @@ public class CrClassMustBeAbstract extends CrUML {
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MMClass)) return NO_PROBLEM;
-    MMClass cls = (MMClass) dm;
-    if (!cls.getIsAbstract()) return NO_PROBLEM;
-    Vector beh = cls.getInheritedBehavioralFeatures();
-    java.util.Enumeration enum = beh.elements();
-    while (enum.hasMoreElements()) {
-      BehavioralFeature bf = (BehavioralFeature) enum.nextElement();
+    if (!(dm instanceof MClass)) return NO_PROBLEM;
+    MClass cls = (MClass) dm;
+    if (!cls.isAbstract()) return NO_PROBLEM;
+    //    Collection beh = getInheritedBehavioralFeatures(cls);
+    Collection beh = MMUtil.SINGLETON.getOperationsInh(cls);
+    Iterator enum = beh.iterator();
+    while (enum.hasNext()) {
+      MBehavioralFeature bf = (MBehavioralFeature) enum.next();
       //needs-more-work: abstract methods are not part of UML, only java
       //if (bf.getIsAbstract()) return PROBLEM_FOUND;
     }

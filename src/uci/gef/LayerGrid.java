@@ -32,6 +32,7 @@
 package uci.gef;
 
 import java.util.*;
+import java.util.Enumeration;
 import java.awt.*;
 
 /** Paint a background drawing guide consisting of horizontal and

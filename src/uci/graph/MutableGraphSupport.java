@@ -32,6 +32,7 @@
 package uci.graph;
 
 import java.util.*;
+import java.util.Enumeration;
 import uci.gef.NetList;
 import uci.gef.NetNode;
 import uci.gef.NetPort;

@@ -31,6 +31,7 @@
 package uci.graph;
 
 import java.util.*;
+import java.util.Enumeration;
 
 /** This interface provides a facade to a net-level
  *  representation. Similiar in concept to the Swing class
@@ -44,6 +45,9 @@ import java.util.*;
  * @see uci.graph.demo.WordTransforms */
 
 public interface MutableGraphModel extends GraphModel {
+  /** Return true if the given object is present as a node in the graph */
+  boolean containsNode(Object node);
+
   /** Return true if the given object is a valid node in this graph */
   boolean canAddNode(Object node);
 
@@ -56,8 +60,14 @@ public interface MutableGraphModel extends GraphModel {
   /** Add the given node to the graph, if valid. Sends a notification. */
   void addNode(Object node);
 
+  /** Return true if the given object is present as a edge in the graph */
+  boolean containsEdge(Object edge);
+
   /** Add the given edge to the graph, if valid. Sends a notification. */
   void addEdge(Object edge);
+
+  /** Add existing edges that are related to the node. */
+  void addNodeRelatedEdges(Object node);
 
   /** Remove the given edge from the graph. Sends a notification. */
   void removeEdge(Object edge);

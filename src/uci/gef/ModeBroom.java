@@ -33,6 +33,7 @@ package uci.gef;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Enumeration;
 
 public class ModeBroom extends Mode {
 

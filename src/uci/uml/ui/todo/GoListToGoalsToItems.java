@@ -51,7 +51,7 @@ public class GoListToGoalsToItems implements TreeModelPrereqs {
       // found and index == 0
       Vector candidates = new Vector();
       Goal g = (Goal) parent;
-      Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+      java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
       while (itemEnum.hasMoreElements()) {
 	ToDoItem item = (ToDoItem) itemEnum.nextElement();
 	if (item.getPoster().supports(g)) candidates.addElement(item);
@@ -71,7 +71,7 @@ public class GoListToGoalsToItems implements TreeModelPrereqs {
       // found and index == 0
       Vector candidates = new Vector();
       Goal g = (Goal) parent;
-      Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+      java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
       while (itemEnum.hasMoreElements()) {
 	ToDoItem item = (ToDoItem) itemEnum.nextElement();
 	if (item.getPoster().supports(g)) candidates.addElement(item);
@@ -90,7 +90,7 @@ public class GoListToGoalsToItems implements TreeModelPrereqs {
       // found and index == 0
       Vector candidates = new Vector();
       Goal g = (Goal) parent;
-      Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+      java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
       while (itemEnum.hasMoreElements()) {
 	ToDoItem item = (ToDoItem) itemEnum.nextElement();
 	if (item.getPoster().supports(g)) candidates.addElement(item);

@@ -35,6 +35,7 @@ import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Draws a triangluar arrow head at the end of a FigEdge */
 

@@ -34,6 +34,7 @@ package uci.gef.demo;
 import java.applet.*;
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 import javax.swing.*;
 
 import uci.util.*;

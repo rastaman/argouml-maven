@@ -29,8 +29,8 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import uci.gef.Diagram;
-import uci.uml.Model_Management.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.foundation.core.*;
 
 public class GoDiagramToEdge implements TreeModelPrereqs {
 
@@ -81,7 +81,7 @@ public class GoDiagramToEdge implements TreeModelPrereqs {
   }
   public Vector getProvidedTypes() {
     Vector pros = new Vector();
-    pros.addElement(ModelElement.class);
+    pros.addElement(MModelElement.class);
     return pros;
   }
 

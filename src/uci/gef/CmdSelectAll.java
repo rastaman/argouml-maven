@@ -33,6 +33,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Cmd to select all the Figs in the editor's current view. */
 

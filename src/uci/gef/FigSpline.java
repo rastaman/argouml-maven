@@ -28,6 +28,8 @@ import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
+import java.util.BitSet;
 import uci.ui.*;
 import uci.util.*;
 

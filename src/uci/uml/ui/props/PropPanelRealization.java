@@ -38,10 +38,10 @@ import javax.swing.text.*;
 //import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Foundation.Extension_Mechanisms.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.foundation.extension_mechanisms.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.*;
 
 public class PropPanelRealization extends PropPanelTwoEnds {
@@ -56,28 +56,38 @@ public class PropPanelRealization extends PropPanelTwoEnds {
     remove(_nameLabel);    
   }
 
+	//nsuml take care!
 
   public String getSourceLabel() {
-    if (!(_target instanceof Realization)) return "non real";
-    return "Interface:";
+	  //if (!(_target instanceof Realization)) return "non real";
+	  //return "Interface:";
+	  return "non real";
   }
   public String getSourceValue() {
-    if (!(_target instanceof Realization)) return "non real";
-    Realization g = (Realization) _target;
-    GeneralizableElement sup = g.getSupertype();
-    if (sup == null) return "null";
-    return sup.getName().getBody();
+	  /* if (!(_target instanceof Realization)) return "non real";
+		 Realization g = (Realization) _target;
+		 MGeneralizableElement sup = g.getSupertype();
+		 if (sup == null) return "null";
+		 return sup.getName();
+	  */
+	  return "non real";
   }
   public String getDestLabel() {
-    if (!(_target instanceof Realization)) return "non real";
-    return "Class:";
+	  /*
+		if (!(_target instanceof Realization)) return "non real";
+		return "Class:";
+	  */
+	return "non real";
   }
   public String getDestValue() {
-    if (!(_target instanceof Realization)) return "non real";
-    Realization g = (Realization) _target;
-    GeneralizableElement sub = g.getSubtype();
-    if (sub == null) return "null";
-    return sub.getName().getBody();
+	  /*
+		if (!(_target instanceof Realization)) return "non real";
+		Realization g = (Realization) _target;
+		MGeneralizableElement sub = g.getSubtype();
+		if (sub == null) return "null";
+		return sub.getName();
+	  */
+	return "non real";
   }
   
 

@@ -171,7 +171,7 @@ implements ItemListener, DocumentListener {
     String bboxStr = _bboxField.getText();
     if (bboxStr.length() == 0) return;
     _target.startTrans();
-    StringTokenizer st = new StringTokenizer(bboxStr, ", ");
+    java.util.StringTokenizer st = new java.util.StringTokenizer(bboxStr, ", ");
     try {
       int x = Integer.parseInt(st.nextToken());
       int y = Integer.parseInt(st.nextToken());

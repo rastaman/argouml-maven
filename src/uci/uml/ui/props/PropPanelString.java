@@ -39,10 +39,10 @@ import javax.swing.text.*;
 
 import uci.util.*;
 import uci.gef.Diagram;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Foundation.Extension_Mechanisms.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.foundation.extension_mechanisms.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.*;
 
 public class PropPanelString extends TabSpawnable

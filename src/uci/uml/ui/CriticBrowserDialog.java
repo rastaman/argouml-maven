@@ -398,7 +398,7 @@ implements ActionListener, ListSelectionListener, ItemListener, DocumentListener
       setTargetPriority();
     }
     else if (src == _useClar) {
-      //System.out.println("class VisibilityKind now is " +
+      //System.out.println("class MVisibilityKind now is " +
       //_visField.getSelectedItem());
       setTargetUseClarifiers();
     }

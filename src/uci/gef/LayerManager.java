@@ -32,6 +32,7 @@
 package uci.gef;
 
 import java.util.*;
+import java.util.Enumeration;
 import java.awt.*;
 
 /** This class implements a kind of Layer that contains other
@@ -129,10 +130,17 @@ public class LayerManager implements java.io.Serializable  {
   // painting methods
 
   /** Paint the contents of this LayerManager by painting all layers. */
-  public void paint(Graphics g) {
-    Enumeration layers = _layers.elements();
-    while (layers.hasMoreElements()) ((Layer) layers.nextElement()).paint(g);
+  public void paint(Graphics g) { // kept for backwards compatibility
+      paint(g,null);
   }
+
+  /** Paint the contents of this LayerManager using a given painter by painting
+   *  all layers. */   
+     public void paint(Graphics g, FigPainter painter) {
+       Enumeration layers = _layers.elements();
+       while (layers.hasMoreElements())
+	   ((Layer) layers.nextElement()).paint(g, painter);
+     }
 
   ////////////////////////////////////////////////////////////////
   // Layer API

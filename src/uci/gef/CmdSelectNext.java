@@ -33,6 +33,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Cmd to select the next (or previous) Fig in the
  *  editor's current view.  This is very convienent for moving among

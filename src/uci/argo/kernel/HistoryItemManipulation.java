@@ -26,6 +26,7 @@ package uci.argo.kernel;
 
 
 import java.util.*;
+import java.util.Enumeration;
 
 // needs-more-work: how can this possibly be persistent?
 // needs-more-work: provide accessors

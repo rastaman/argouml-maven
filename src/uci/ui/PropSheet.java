@@ -36,6 +36,7 @@ import java.lang.reflect.*;
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+// import ru.novosoft.uml.foundation.core.*;
 
 import uci.gef.Fig;
 
@@ -125,7 +126,7 @@ implements PropertyChangeListener {
       if (_sel instanceof Fig)
 	((Fig)_sel).startTrans();
       if (_sel != null) {
-	Enumeration pending = _pendingStores.keys();
+	java.util.Enumeration pending = _pendingStores.keys();
 	while (pending.hasMoreElements()) {
 	  PropertyDescriptor pd = (PropertyDescriptor) pending.nextElement();
 	  applyProperty(pd, _pendingStores.get(pd));

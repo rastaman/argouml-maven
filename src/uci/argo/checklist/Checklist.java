@@ -31,6 +31,7 @@
 package uci.argo.checklist;
 
 import java.util.*;
+import java.util.Enumeration;
 
 import uci.util.*;
 

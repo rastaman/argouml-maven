@@ -26,7 +26,9 @@
 
 package uci.uml.ui;
 
+import java.io.*;
 import java.util.*;
+import java.util.StringTokenizer;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -37,7 +39,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import uci.util.*;
 import uci.argo.kernel.*;
 import uci.uml.visual.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.foundation.core.*;
 import uci.uml.generate.*;
 
 public class ClassGenerationDialog extends JFrame implements ActionListener {
@@ -52,7 +54,9 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
   // instance variables
   TableModelClassChecks _tableModel = new TableModelClassChecks();
   protected JTable _table = new JTable(15, 2);
-  protected JTextField _dir = new JTextField();
+//  protected JTextField _dir = new JTextField();
+  protected JComboBox _dir;
+  protected JCheckBox _compile;
   protected JButton _generateButton = new JButton("Generate");
   protected JButton _cancelButton = new JButton("Cancel");
 
@@ -61,6 +65,18 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
 
   public ClassGenerationDialog(Vector nodes) {
     super("Generate Classes");
+
+    Vector dirs = getClasspathEntries();
+    if (dirs.size() == 0) { 
+	dispose();
+	return;
+    }
+    _dir = new JComboBox(Converter.convert(getClasspathEntries()));
+    _dir.setEditable(true);
+
+    _compile = new JCheckBox("compile generated source");
+    
+
     JLabel promptLabel = new JLabel("Generate Classes:");
     JLabel dirLabel = new JLabel("Output Directory:");
 
@@ -128,6 +144,10 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
     gb.setConstraints(_dir, c);
     top.add(_dir);
 
+    c.gridy = 4;
+    gb.setConstraints(_compile, c);
+    top.add(_compile);
+
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
     JPanel buttonInner = new JPanel(new GridLayout(1, 2));
@@ -137,7 +157,8 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
 
     ProjectBrowser pb = ProjectBrowser.TheInstance;
     Project p = pb.getProject();
-    _dir.setText(p.getGenerationPrefs().getOutputDir());
+    //_dir.setText(p.getGenerationPrefs().getOutputDir());
+    _dir.getModel().setSelectedItem(p.getGenerationPrefs().getOutputDir());
 
     Rectangle pbBox = pb.getBounds();
     setLocation(pbBox.x + (pbBox.width - WIDTH)/2,
@@ -150,6 +171,26 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
     _cancelButton.addActionListener(this);
   }
 
+  public final static String pathSep=System.getProperty("path.separator");
+
+  private static Vector getClasspathEntries() {
+      String classpath=System.getProperty("java.class.path");
+      Vector entries=new Vector();
+      StringTokenizer allEntries=new StringTokenizer(classpath,pathSep);
+      while (allEntries.hasMoreElements()) {
+	  String entry=allEntries.nextToken();
+	  if (!entry.toLowerCase().endsWith(".jar")
+	      && !entry.toLowerCase().endsWith(".zip")) {
+	      entries.addElement(entry);
+	  }
+      }
+      // if (entries.size() == 0) {
+// 	  JOptionPane.showMessageDialog(null, "In order to generate Java files, you need to have\nat least one directory in your CLASSPATH environment variable,\nwhere ArgoUML can store and compile the files.", "Code generation", JOptionPane.ERROR_MESSAGE);
+// 	  return null;
+//       }
+      return entries;
+  }
+
   public Dimension getMaximumSize() { return new Dimension(WIDTH, HEIGHT); }
 
 
@@ -157,27 +198,41 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
   // event handlers
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == _generateButton) {
-      String path = _dir.getText().trim();
-      String newPath = "";
-      // convert back slashes to forward slashes
-      StringTokenizer st = new StringTokenizer(path, "\\", true);
-      while (st.hasMoreTokens()) {
-	String t = st.nextToken();
-	if ("\\".equals(t)) newPath += "/";
-	else newPath += t;
-      }
-      path = newPath;
+      // String path = _dir.getText().trim();
+      String path = ((String)_dir.getModel().getSelectedItem()).trim();
 
       ProjectBrowser pb = ProjectBrowser.TheInstance;
       Project p = pb.getProject();
       p.getGenerationPrefs().setOutputDir(path);
       Vector nodes = _tableModel.getChecked();
       int size = nodes.size();
+      String[] compileCmd=new String[size+1];
+
       for (int i = 0; i <size; i++) {
 	Object node = nodes.elementAt(i);
-	if (node instanceof Classifier)
-	  GeneratorJava.GenerateFile((Classifier) node, path);
+	if (node instanceof MClassifier)
+	  compileCmd[i+1] = GeneratorJava.GenerateFile((MClassifier) node, path);
       }
+      if (_compile.isSelected()) {
+	  String compiler=System.getProperty("argo.compiler");
+	  if (compiler==null || compiler.length()==0)
+	      compiler="javac";
+	  compileCmd[0]=compiler;
+	  //compileCmd[0] += " -d "+path+" -classpath "+System.getProperty("java.class.path");
+	  
+	  String compilerOutput=compile(compileCmd);
+	  if (compilerOutput==null) {
+	      System.out.println("Compilation done.");
+	      JOptionPane.showMessageDialog(this, "Compilation done.","Code Generation", JOptionPane.INFORMATION_MESSAGE);
+	  } else {
+	      // todo: should display errors in a window!
+	      System.out.println("Compiler errors -> System.err");
+	      System.err.println(compilerOutput);
+	      JOptionPane.showMessageDialog(this, "Compiler errors -> System.err\n"+compilerOutput, "Code Generation", JOptionPane.ERROR_MESSAGE);
+	      
+	  }
+      }
+
       setVisible(false);
       dispose();
     }
@@ -186,6 +241,52 @@ public class ClassGenerationDialog extends JFrame implements ActionListener {
       setVisible(false);
       dispose();
     }
+  }
+
+  private String compile(String[] compileCmd) {
+      for (int i=0; i<compileCmd.length; ++i)
+	  System.out.print(compileCmd[i]+" ");
+      System.out.println();
+      StringBuffer allOut=new StringBuffer();
+      int exitState=-1;
+      boolean goon=true;
+      try {
+	  Process compileProc=Runtime.getRuntime().exec(compileCmd);
+	  BufferedReader coutRB=new BufferedReader(new InputStreamReader(compileProc.getInputStream()));;
+	  BufferedReader cerrRB=new BufferedReader(new InputStreamReader(compileProc.getErrorStream()));
+	  int co,ce;
+  	  do {
+	      co=coutRB.read();
+  	      if (co != -1) {
+  		  allOut.append((char)co);
+	      }
+	      ce=cerrRB.read();
+  	      if (ce != -1) {
+  		  allOut.append((char)ce);
+	      }
+	      if (co==-1 && ce==-1){
+		  try {
+		      exitState=compileProc.exitValue();
+		      goon=false;
+		  } catch (IllegalThreadStateException e1) {
+		      // wait until next polling:
+		      try {
+			  Thread.yield();
+			  Thread.sleep(500);
+		      } catch (InterruptedException irr) { }
+		  }
+	      }
+  	  } while (goon || co!=-1 || ce!=-1);
+      } catch (IOException e2) {
+	  System.out.println("Exception while reading compiler output:");
+	  e2.printStackTrace();
+      }
+      String outStr=null;
+      if (exitState!=0) {
+	  // Compiler reported errors, messages are suppressed:
+	  outStr=allOut.toString();
+      }
+      return outStr;
   }
 
 } /* end class ClassGenerationDialog */
@@ -211,8 +312,8 @@ class TableModelClassChecks extends AbstractTableModel {
     _checked.removeAllElements();
     int size = _classes.size();
     for (int i = 0; i < size; i++) {
-      Classifier cls = (Classifier) _classes.elementAt(i);
-      String name = cls.getName().getBody();
+      MClassifier cls = (MClassifier) _classes.elementAt(i);
+      String name = cls.getName();
       if (name.length() > 0) _checked.addElement(cls);
     }
     fireTableStructureChanged();
@@ -237,8 +338,8 @@ class TableModelClassChecks extends AbstractTableModel {
   }
 
   public boolean isCellEditable(int row, int col) {
-    Classifier cls = (Classifier) _classes.elementAt(row);
-    return col == 0 && cls.getName().getBody().length() > 0;
+    MClassifier cls = (MClassifier) _classes.elementAt(row);
+    return col == 0 && cls.getName().length() > 0;
   }
 
   public int getRowCount() {
@@ -247,12 +348,12 @@ class TableModelClassChecks extends AbstractTableModel {
   }
 
   public Object getValueAt(int row, int col) {
-    Classifier cls = (Classifier) _classes.elementAt(row);
+    MClassifier cls = (MClassifier) _classes.elementAt(row);
     if (col == 0) {
       return (_checked.contains(cls)) ? Boolean.TRUE : Boolean.FALSE;
     }
     else if (col == 1) {
-      String name = cls.getName().getBody();
+      String name = cls.getName();
       return (name.length() > 0) ? name : "(anon)";
     }
     else

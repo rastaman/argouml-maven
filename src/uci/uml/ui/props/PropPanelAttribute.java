@@ -42,9 +42,9 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.generate.*;
 import uci.uml.ui.*;
 
@@ -53,15 +53,17 @@ import uci.uml.ui.*;
  *  element. */
 
 public class PropPanelAttribute extends PropPanel
-implements DocumentListener, ItemListener {
+implements ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  public static final VisibilityKind VISIBILITIES[] = {
-    VisibilityKind.PUBLIC, VisibilityKind.PRIVATE,
-    VisibilityKind.PROTECTED, VisibilityKind.PACKAGE };
+  public static final String VISIBILITIES[] = {
+    MVisibilityKind.PUBLIC.getName(), MVisibilityKind.PRIVATE.getName(),
+    MVisibilityKind.PROTECTED.getName() };
+	// what about PACKAGE in nsuml?
+
   public static final String ATTRKEYWORDS[] = {
-    "None", "transient", "static", "final", "static final"};
+    "none", "transient", "static", "final", "static final"};
 
 
   public static Vector OFFERED_TYPES = null;
@@ -140,16 +142,16 @@ implements DocumentListener, ItemListener {
     gb.setConstraints(initScroll, c);
     add(initScroll);
 
-    Component ed = _typeField.getEditor().getEditorComponent();
-    Document typeDoc = ((JTextField)ed).getDocument();
-    typeDoc.addDocumentListener(this);
+    _initText.addKeyListener(this);
+    _initText.addFocusListener(this);
 
-    _initText.getDocument().addDocumentListener(this);
 
     _visField.addItemListener(this);
     _keywordsField.addItemListener(this);
     _typeField.addItemListener(this);
 
+    remove(_namespaceLabel);
+    remove(_namespaceField);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -157,33 +159,35 @@ implements DocumentListener, ItemListener {
 
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    Attribute attr = (Attribute) t;
+    MAttribute attr = (MAttribute) t;
 
     Vector offeredTypes = getOfferedTypes();
     if (offeredTypes != null)
-      _typeField.setModel(new DefaultComboBoxModel(offeredTypes));
+      _typeField.setModel(new DefaultComboBoxModel(Converter.convert(offeredTypes)));
 
-    VisibilityKind vk = attr.getVisibility();
-    _visField.setSelectedItem(vk);
+    MVisibilityKind vk = attr.getVisibility();
+	if (vk != null)
+		_visField.setSelectedItem(vk.getName());
 
-    ScopeKind sk = attr.getOwnerScope();
-    ChangeableKind ck = attr.getChangeable();
+    MScopeKind sk = attr.getOwnerScope();
+    MChangeableKind ck = attr.getChangeability();
 
-    if (ScopeKind.CLASSIFIER.equals(sk) && ChangeableKind.FROZEN.equals(ck))
+    if (MScopeKind.CLASSIFIER.equals(sk) && MChangeableKind.FROZEN.equals(ck))
       _keywordsField.setSelectedItem("static final");
-    else if (ScopeKind.CLASSIFIER.equals(sk))
+    else if (MScopeKind.CLASSIFIER.equals(sk))
       _keywordsField.setSelectedItem("static");
-    else if (ChangeableKind.FROZEN.equals(ck))
+    else if (MChangeableKind.FROZEN.equals(ck))
       _keywordsField.setSelectedItem("final");
     else
       _keywordsField.setSelectedItem("None");
 
-    Classifier type = attr.getType();
-    _typeField.setSelectedItem(type);
+    MClassifier type = attr.getType();
+    if (type.getName() != null)
+	_typeField.setSelectedItem(type.getName());
 
-    Expression expr = attr.getInitialValue();
+    MExpression expr = attr.getInitialValue();
     if (expr == null) _initText.setText("");
-    else _initText.setText(expr.getBody().getBody());
+    else _initText.setText(expr.getBody());
 
   }
 
@@ -192,12 +196,9 @@ implements DocumentListener, ItemListener {
   public void setTargetVisibility() {
     if (_target == null) return;
     if (_inChange) return;
-    VisibilityKind vk = (VisibilityKind) _visField.getSelectedItem();
-    Attribute attr = (Attribute) _target;
-    try {
-        attr.setVisibility(vk);
-    }
-    catch (PropertyVetoException ignore) { }
+    MVisibilityKind vk = MVisibilityKind.forName((String)_visField.getSelectedItem());
+    MAttribute attr = (MAttribute) _target;
+	attr.setVisibility(vk);
   }
 
   public void setTargetKeywords() {
@@ -208,64 +209,55 @@ implements DocumentListener, ItemListener {
       //System.out.println("keywords are null");
       return;
     }
-    Attribute attr = (Attribute) _target;
-    try { 
-      if (keys.equals("None")) {
-	attr.setOwnerScope(ScopeKind.INSTANCE);
-	attr.setChangeable(ChangeableKind.NONE);
-      }
-      else if (keys.equals("transient")) {
-	System.out.println("needs-more-work: setting to transient...");
-	attr.setOwnerScope(ScopeKind.INSTANCE);
-	attr.setChangeable(ChangeableKind.NONE);
-      }
-      else if (keys.equals("static")) {
-	attr.setOwnerScope(ScopeKind.CLASSIFIER);
-	attr.setChangeable(ChangeableKind.NONE);
-      }
-      else if (keys.equals("final")) {
-	attr.setOwnerScope(ScopeKind.INSTANCE);
-	attr.setChangeable(ChangeableKind.FROZEN);
-      }
-      else if (keys.equals("static final")) {
-	attr.setOwnerScope(ScopeKind.CLASSIFIER);
-	attr.setChangeable(ChangeableKind.FROZEN);
-      }
-      }
-      catch (PropertyVetoException pve) {
-        System.out.println("could not set keywords!");
-       }
+    MAttribute attr = (MAttribute) _target;
+	if (keys.equals("None")) {
+		attr.setOwnerScope(MScopeKind.INSTANCE);
+		attr.setChangeability(null);
+	}
+	else if (keys.equals("transient")) {
+		System.out.println("needs-more-work: setting to transient...");
+		attr.setOwnerScope(MScopeKind.INSTANCE);
+		attr.setChangeability(null);
+	}
+	else if (keys.equals("static")) {
+		attr.setOwnerScope(MScopeKind.CLASSIFIER);
+		attr.setChangeability(null);
+	}
+	else if (keys.equals("final")) {
+		attr.setOwnerScope(MScopeKind.INSTANCE);
+		attr.setChangeability(MChangeableKind.FROZEN);
+	}
+	else if (keys.equals("static final")) {
+		attr.setOwnerScope(MScopeKind.CLASSIFIER);
+		attr.setChangeability(MChangeableKind.FROZEN);
+	}
   }
 
   public void setTargetType() {
-    if (!(_target instanceof Attribute)) return;
+    if (!(_target instanceof MAttribute)) return;
     if (_inChange) return;
-    Attribute attr = (Attribute) _target;
+    MAttribute attr = (MAttribute) _target;
     Object sel = _typeField.getSelectedItem();
-    Classifier cls;
     if (sel == null) return;
-    //System.out.println("set target type: " + sel);
+    // System.out.println("set target type: " + sel);
+    Project p = ProjectBrowser.TheInstance.getProject();
+    MClassifier type = p.findType((String)sel);
 
-    if (sel instanceof Classifier)
-      cls = (Classifier) sel;
-    else
-      cls = new MMClass(sel.toString());
-
-    try { attr.setType(cls); }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not set type");
+    if (type == null) {
+	System.out.println("should not be here!");
+	type = new MClassifierImpl();
+	type.setName(sel.toString());
     }
+    attr.setType(type);
   }
 
 
   public void setTargetInit() {
     if (_target == null) return;
     String initStr = _initText.getText();
-    Attribute attr = (Attribute) _target;
-    try {
-        attr.setInitialValue(new Expression(initStr));
-    }
-    catch (PropertyVetoException pve) { }
+    MAttribute attr = (MAttribute) _target;
+	MExpression exp = new MExpression("", initStr);
+	attr.setInitialValue(exp);
   }
 
 
@@ -274,51 +266,39 @@ implements DocumentListener, ItemListener {
   ////////////////////////////////////////////////////////////////
   // event handlers
 
-
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    Component ed = _typeField.getEditor().getEditorComponent();
-    Document typeDoc = ((JTextField)ed).getDocument();
-
-    Document initDoc = _initText.getDocument();
-
-    if (e.getDocument() == typeDoc) setTargetType();
-    else if (e.getDocument() == initDoc) setTargetInit();
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
+    public void focusLost(FocusEvent e){
+	super.focusLost(e);
+	if (e.getComponent() == _initText)
+	    setTargetInit();
+    }
 
   public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    if (src == _keywordsField) {
-      //System.out.println("attr keywords now is " +
-      //_keywordsField.getSelectedItem());
-      setTargetKeywords();
-    }
-    else if (src == _visField) {
-      //System.out.println("attr VisibilityKind now is " +
-      //_visField.getSelectedItem());
-      setTargetVisibility();
-    }
-    else if (src == _typeField) {
-//       System.out.println("attr type now is " +
-// 			 _typeField.getSelectedItem());
-      setTargetType();
-    }
-    else if (src == _initText) {
-      // needs-more-work: I might want to have an expression builder
-      // or a history of useful expressions 
-      //System.out.println("attr init now is " +
-      //_initText.getText());
-      setTargetInit();
-    }
+	  if (e.getStateChange() == ItemEvent.SELECTED) {
+		  Object src = e.getSource();
+		  if (src == _keywordsField) {
+			  //System.out.println("attr keywords now is " +
+			  //_keywordsField.getSelectedItem());
+			  setTargetKeywords();
+		  }
+		  else if (src == _visField) {
+			  //System.out.println("attr MVisibilityKind now is " +
+			  //_visField.getSelectedItem());
+			  setTargetVisibility();
+		  }
+		  else if (src == _typeField) {
+			  //System.out.println(getClass().getName() + " itemStateChanged " +e);
+			  //       System.out.println("attr type now is " +
+			  // 			 _typeField.getSelectedItem());
+			  setTargetType();
+		  }
+		  else if (src == _initText) {
+			  // needs-more-work: I might want to have an expression builder
+			  // or a history of useful expressions 
+			  //System.out.println("attr init now is " +
+			  //_initText.getText());
+			  setTargetInit();
+		  }
+	  }
   }
 
 
@@ -328,7 +308,12 @@ implements DocumentListener, ItemListener {
   public static Vector getOfferedTypes() {
     // needs-more-work: should update when project changes
     Project p = ProjectBrowser.TheInstance.getProject();
-    return p.getDefinedTypesVector();
+    Vector types = p.getDefinedTypesVector();
+    Vector res = new Vector();
+    for (int i = 0; i<types.size();i++) {
+	res.add(((MClassifier)types.get(i)).getName());
+    }
+    return res;
   }
 
 } /* end class PropPanelAttribute */

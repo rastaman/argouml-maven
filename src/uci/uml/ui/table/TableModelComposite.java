@@ -34,10 +34,10 @@ import javax.swing.table.*;
 
 import uci.util.*;
 import uci.uml.ui.*;
-// import uci.uml.Foundation.Core.*;
-// import uci.uml.Foundation.Data_Types.*;
-// import uci.uml.Model_Management.*;
-// import uci.uml.Behavioral_Elements.Use_Cases.*;
+// import ru.novosoft.uml.foundation.core.*;
+// import ru.novosoft.uml.foundation.data_types.*;
+// import ru.novosoft.uml.model_management.*;
+// import ru.novosoft.uml.behavior.use_cases.*;
 
 class TableModelComposite extends AbstractTableModel
 implements TableModelTarget {

@@ -33,6 +33,7 @@ package uci.gef.demo;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 import javax.swing.Action;
 
 import uci.gef.*;

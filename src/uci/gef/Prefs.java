@@ -32,6 +32,7 @@
 package uci.gef;
 
 import java.util.*;
+import java.util.Enumeration;
 import java.awt.*;
 
 /** This class contains preferences that control the behavior of the

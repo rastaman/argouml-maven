@@ -31,6 +31,7 @@
 package uci.graph;
 
 import java.util.*;
+import java.util.Enumeration;
 import uci.gef.NetList;
 import uci.gef.NetNode;
 import uci.gef.NetPort;
@@ -160,6 +161,9 @@ implements java.io.Serializable {
     fireEdgeAdded(e);
   }
 
+    public void addNodeRelatedEdges(Object node) { }
+
+
   /** Remove the given edge from the graph. */
   public void removeEdge(Object edge) {
     NetEdge e = (NetEdge) edge;
@@ -191,7 +195,7 @@ implements java.io.Serializable {
     if (srcPort instanceof NetPort && destPort instanceof NetPort) {
       NetPort s = (NetPort) srcPort;
       NetPort d = (NetPort) destPort;
-      System.out.println("calling makeEdgeFor:" + s.getClass().getName());
+      //System.out.println("calling makeEdgeFor:" + s.getClass().getName());
       NetEdge e = s.makeEdgeFor(d);
       return connectInternal(s, d, e);
     }

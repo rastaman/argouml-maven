@@ -24,80 +24,44 @@
 
 package uci.uml.ui;
 
-import java.io.File;
-import javax.swing.*;
+//import java.io.File;
+//import javax.swing.*;
 //import javax.swing.preview.*;
-import javax.swing.filechooser.*;
+//import javax.swing.filechooser.*;
 
 public class FileFilters {
 
   ////////////////////////////////////////////////////////////////
   // constants
 
-  public static final FileFilter ArgoFilter = new
+  public static final SuffixFilter ArgoFilter = new
   SuffixFilter("argo", "Argo project file");
 
-  public static final FileFilter XMIFilter = new
+  public static final SuffixFilter XMIFilter = new
   SuffixFilter("xmi", "Argo model file");
 
-  public static final FileFilter PGMLFilter = new
+  public static final SuffixFilter PGMLFilter = new
   SuffixFilter("pgml", "Argo diagram");
 
-  public static final FileFilter ConfigFilter = new
+  public static final SuffixFilter ConfigFilter = new
   SuffixFilter("config", "Argo configutation file");
 
-  public static final FileFilter HistFilter = new
+  public static final SuffixFilter HistFilter = new
   SuffixFilter("hist", "Argo history file");
 
-  public static final FileFilter LogFilter = new
+  public static final SuffixFilter LogFilter = new
   SuffixFilter("log", "Argo usage log");
 
-  public static final FileFilter GIFFilter = new
+  public static final SuffixFilter GIFFilter = new
   SuffixFilter("gif", "GIF image");
 
+  public static final SuffixFilter PSFilter = new
+  SuffixFilter("ps", "PostScript file");
+
+  public static final SuffixFilter EPSFilter = new
+  SuffixFilter("eps", "Encapsulated PostScript file");
+
+  public static final SuffixFilter SVGFilter = new
+  SuffixFilter("svg", "Scalable Vector Graphics file");
+
 } /* end class FileFilters */
-
-
-
-class SuffixFilter extends FileFilter {
-
-  ////////////////////////////////////////////////////////////////
-  // instance varaibles
-
-  protected String _suffix = "";
-  protected String _desc = "";
-
-  ////////////////////////////////////////////////////////////////
-  // constructor
-
-  public SuffixFilter(String s, String d) {
-    _suffix = s;
-    _desc = d;
-  }
-
-  ////////////////////////////////////////////////////////////////
-  // FileFilter API
-
-  public boolean accept(File f) {
-    if (f == null) return false;
-    if (f.isDirectory()) return true;
-    String extension = getExtension(f);
-    if (_suffix.equalsIgnoreCase(extension)) return true;
-    return false;
-  }
-
-  public String getExtension(File f) {
-    if (f == null) return null;
-    String filename = f.getName();
-    int i = filename.lastIndexOf('.');
-    if (i>0 && i<filename.length()-1) {
-      return filename.substring(i+1).toLowerCase();
-    }
-    return null;
-  }
-
-  public String getDescription() {
-    return _desc + " (*." + _suffix + ")";
-  }
-
-} /* end class SuffixFilter */

@@ -34,9 +34,10 @@ import java.util.*;
 
 import uci.graph.*;
 import uci.gef.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.behavior.activity_graphs.*;
 
 // could be singleton
 
@@ -47,17 +48,18 @@ import uci.uml.Behavioral_Elements.State_Machines.*;
  * <pre>
  *  UML Object      ---  Fig
  *  ---------------------------------------
- *  State           ---  FigState
- *  CompositeState  ---  FigCompositeState
- *  ActionState     ---  FigActionState
- *  Pseudostate     ---  FigPseudostate
- *    Final         ---  FigFinalState
+ *  MState           ---  FigState
+ *  MCompositeState  ---  FigCompositeState
+ *  MActionState     ---  FigActionState
+ *  MFinalState      ---  FigFinalState
+ *  MPseudostate     ---  FigPseudostate
  *    Inititial     ---  FigInitialState
  *    Branch        ---  FigBranchState
  *    Fork          ---  FigForkState
  *    Join          ---  FigJoinState
- *    History       ---  FigHistoryState
- *  Transition      ---  FigTransition
+ *    DeepHistory       ---  FigDeepHistoryState
+ *    ShallowHistory       ---  FigShallowistoryState
+ *  MTransition      ---  FigTransition
  *  more...
  *  </pre>
  */
@@ -67,25 +69,25 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
 
   /** Return a Fig that can be used to represent the given node */
   public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
-    if (node instanceof ActionState) return new FigActionState(gm, node);
-    else if (node instanceof CompositeState) return new FigCompositeState(gm, node);
-    else if (node instanceof State) return new FigState(gm, node);
-    else if (node instanceof Pseudostate) {
-      Pseudostate pState = (Pseudostate) node;
+    if (node instanceof MActionState) return new FigActionState(gm, node);
+	else if (node instanceof MFinalState) return new FigFinalState(gm, node);
+    else if (node instanceof MCompositeState) return new FigCompositeState(gm, node);
+    else if (node instanceof MState) return new FigState(gm, node);
+    else if (node instanceof MPseudostate) {
+      MPseudostate pState = (MPseudostate) node;
       if (pState.getKind() == null) return null;
-      if (pState.getKind().equals(PseudostateKind.INITIAL))
+      if (pState.getKind().equals(MPseudostateKind.INITIAL))
 	return new FigInitialState(gm, node);
-      else if (pState.getKind().equals(PseudostateKind.FINAL))
-	return new FigFinalState(gm, node);
-      else if (pState.getKind().equals(PseudostateKind.BRANCH))
+      else if (pState.getKind().equals(MPseudostateKind.BRANCH))
 	return new FigBranchState(gm, node);
-      else if (pState.getKind().equals(PseudostateKind.FORK))
+      else if (pState.getKind().equals(MPseudostateKind.FORK))
 	return new FigForkState(gm, node);
-      else if (pState.getKind().equals(PseudostateKind.JOIN))
+      else if (pState.getKind().equals(MPseudostateKind.JOIN))
 	return new FigJoinState(gm, node);
-      else if (pState.getKind().equals(PseudostateKind.SHALLOW_HISTORY))
-	return new FigHistoryState(gm, node);
-      else
+      else if (pState.getKind().equals(MPseudostateKind.SHALLOW_HISTORY))
+	return new FigShallowHistoryState(gm, node);
+      else if (pState.getKind().equals(MPseudostateKind.DEEP_HISTORY))
+	return new FigDeepHistoryState(gm, node);      else
 	System.out.println("found a type not known");
     }
     System.out.println("needs-more-work StateDiagramRenderer getFigNodeFor");
@@ -95,13 +97,13 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
   /** Return a Fig that can be used to represent the given edge */
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
     //System.out.println("making figedge for " + edge);
-    if (edge instanceof Transition) {
-      Transition tr = (Transition) edge;
+    if (edge instanceof MTransition) {
+      MTransition tr = (MTransition) edge;
       FigTransition trFig = new FigTransition(tr);
       // set source and dest
       // set any arrowheads, labels, or colors
-      StateVertex sourceSV = tr.getSource();
-      StateVertex destSV = tr.getTarget();
+      MStateVertex sourceSV = tr.getSource();
+      MStateVertex destSV = tr.getTarget();
       FigNode sourceFN = (FigNode) lay.presentationFor(sourceSV);
       FigNode destFN = (FigNode) lay.presentationFor(destSV);
       trFig.setSourcePortFig(sourceFN);

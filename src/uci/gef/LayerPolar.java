@@ -32,6 +32,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** This class is an example of the power of the Layer-based
  *  approach.  This is a kind of background drawing guide (like

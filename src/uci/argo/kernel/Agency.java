@@ -390,5 +390,3 @@ public class Agency extends Observable { //implements java.io.Serialization
 //     Agency.applyAllCritics(_dm, _dsgr);
 //   }
 // } /* end class Trigger */
-
-

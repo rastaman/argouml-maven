@@ -27,22 +27,17 @@
 package uci.uml.ui;
 
 import uci.util.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
-import uci.uml.Foundation.Data_Types.*;
+import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.foundation.data_types.*;
 
 public class PredInstanceOf implements Predicate {
-  protected Class _class = null;
+	protected Class _class = null;
 
-  public PredInstanceOf(Class cls) { _class = cls; }
+	public PredInstanceOf(Class cls) { _class = cls; }
 
-  public boolean predicate(Object obj) {
-    Class c = obj.getClass();
-    while (c != null) {
-      if (c == _class) return true;
-      c = c.getSuperclass();
-    }
-    return false;
-  }
+	public boolean predicate(Object obj) {
+		return _class.isInstance(obj);
+	}
 
 } /* end class PredIsStartState */
 

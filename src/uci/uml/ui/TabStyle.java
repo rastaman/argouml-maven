@@ -40,11 +40,11 @@ import javax.swing.tree.*;
 import uci.gef.Diagram;
 import uci.gef.Fig;
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Behavioral_Elements.Common_Behavior.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
-import uci.uml.Behavioral_Elements.Use_Cases.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.behavior.common_behavior.*;
+import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.behavior.use_cases.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.style.*;
 import uci.uml.visual.*;
 

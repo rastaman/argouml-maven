@@ -26,6 +26,7 @@ package uci.argo.kernel;
 
 
 import java.util.*;
+import java.util.Enumeration;
 import javax.swing.event.EventListenerList;
 
 public class History {

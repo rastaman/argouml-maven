@@ -40,8 +40,8 @@ import javax.swing.Icon;
 import uci.gef.*;
 import uci.graph.*;
 import uci.util.Util;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
 
 
 public class SelectionClass extends SelectionWButtons {
@@ -119,8 +119,16 @@ public class SelectionClass extends SelectionWButtons {
     int cy = _content.getY();
     int cw = _content.getWidth();
     int ch = _content.getHeight();
-    paintButtonAbove(inherit, g, cx + cw/2, cy, 10);
-    paintButtonBelow(inherit, g, cx + cw/2, cy + ch, 11);
+
+    // The next two lines are necessary to get the GraphModel,
+    // in the DeploymentDiagram there are no Generalizations
+    Editor ce = Globals.curEditor();
+    GraphModel gm = ce.getGraphModel();
+
+    if (!(gm instanceof DeploymentDiagramGraphModel)) {
+      paintButtonAbove(inherit, g, cx + cw/2, cy, 10);
+      paintButtonBelow(inherit, g, cx + cw/2, cy + ch, 11);
+    }
     if (_useComposite) {
       paintButtonLeft(compos, g, cx + cw, cy + ch/2, 12);
       paintButtonRight(compos, g, cx, cy + ch/2, 13);
@@ -144,28 +152,28 @@ public class SelectionClass extends SelectionWButtons {
     Dimension minSize = _content.getMinimumSize();
     int minWidth = minSize.width, minHeight = minSize.height;
     Class edgeClass = null;
-    Class nodeClass = uci.uml.Foundation.Core.MMClass.class;
+    Class nodeClass = ru.novosoft.uml.foundation.core.MClass.class;
     int bx = mX, by = mY;
     boolean reverse = false;
     switch (hand.index) {
     case 10: //add superclass
-      edgeClass = uci.uml.Foundation.Core.Generalization.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MGeneralizationImpl.class;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add subclass
-      edgeClass = uci.uml.Foundation.Core.Generalization.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MGeneralizationImpl.class;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add assoc
-      edgeClass = uci.uml.Foundation.Core.Association.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MAssociationImpl.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add assoc
-      edgeClass = uci.uml.Foundation.Core.Association.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MAssociationImpl.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;
@@ -187,9 +195,9 @@ public class SelectionClass extends SelectionWButtons {
 
   public void buttonClicked(int buttonCode) {
     super.buttonClicked(buttonCode);
-    MMClass newNode = new MMClass();
+    MClass newNode = new MClassImpl();
     FigClass fc = (FigClass) _content;
-    MMClass cls = (MMClass) fc.getOwner();
+    MClass cls = (MClass) fc.getOwner();
 
     Editor ce = Globals.curEditor();
     GraphModel gm = ce.getGraphModel();
@@ -251,24 +259,24 @@ public class SelectionClass extends SelectionWButtons {
     ce.getSelectionManager().select(fc);
   }
 
-  public Object addSuperClass(MutableGraphModel mgm, MMClass cls,
-			    MMClass newCls) {
-    return mgm.connect(cls, newCls, Generalization.class);
+  public Object addSuperClass(MutableGraphModel mgm, MClass cls,
+			    MClass newCls) {
+    return mgm.connect(cls, newCls, MGeneralizationImpl.class);
   }
 
-  public Object addSubClass(MutableGraphModel mgm, MMClass cls,
-			    MMClass newCls) {
-    return mgm.connect(newCls, cls, Generalization.class);
+  public Object addSubClass(MutableGraphModel mgm, MClass cls,
+			    MClass newCls) {
+    return mgm.connect(newCls, cls, MGeneralizationImpl.class);
   }
 
-  public Object addAssocClassRight(MutableGraphModel mgm, MMClass cls,
-			    MMClass newCls) {
-    return mgm.connect(cls, newCls, Association.class);
+  public Object addAssocClassRight(MutableGraphModel mgm, MClass cls,
+			    MClass newCls) {
+    return mgm.connect(cls, newCls, MAssociationImpl.class);
   }
 
-  public Object addAssocClassLeft(MutableGraphModel mgm, MMClass cls,
-			    MMClass newCls) {
-    return mgm.connect(newCls, cls, Association.class);
+  public Object addAssocClassLeft(MutableGraphModel mgm, MClass cls,
+			    MClass newCls) {
+    return mgm.connect(newCls, cls, MAssociationImpl.class);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -281,4 +289,3 @@ public class SelectionClass extends SelectionWButtons {
   }
 
 } /* end class SelectionClass */
-

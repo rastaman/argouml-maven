@@ -32,6 +32,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 import uci.util.*;
 
 /** A Layer is like a drawing layer in high-end drawing applications
@@ -54,7 +55,7 @@ import uci.util.*;
  *  map. <p>
  *
  *  This approach to implementing drawing editors is similar to that
- *  described in a published paper: "Using the Multi-Layer Model for
+ *  described in a published paper: "Using the Multi-Layer MModel for
  *  Building Interactive Graphical Applications" Fekete, et al.
  *  UIST'96. pp. 109-117.  GEF might be improved by making it more
  *  like the system described in that paper: basically by moving some
@@ -136,7 +137,10 @@ public abstract class Layer implements java.io.Serializable {
   }
 
   /** Get and set methods */
-  public String getName() { return _name; }
+  public String getName() {
+	if (_name==null) return "";
+	else return _name;
+  }
   public void setName(String n) { _name = n; }
 
   public void setHidden(boolean b) { _hidden = b; }
@@ -235,12 +239,32 @@ public abstract class Layer implements java.io.Serializable {
   /** Paint this Layer on the given Graphics. Sublasses should define
    *  methods for paintContents, which is called from here if the Layer
    *  is not hidden. */
-  public void paint(Graphics g) {
-    if (_hidden) return;
-    if (! _grayed) paintContents(g); else paintGrayContents(g);
+//---BEGIN uni-hh changes
+//    public void paint(Graphics g) {
+//      if (_hidden) return;
+//      if (! _grayed) paintContents(g); else paintGrayContents(g);
+//    }
+  public void paint(Graphics g) {  // kept for backwards compatibility
+      paint(g,null);
   }
 
-  /** Abactract method to paint the contents of this layer, subclasses
+  /** Paint this Layer on the given Graphics using the given FigPainter.
+   *  Sublasses should define
+   *  methods for paintContents, which is called from here if the Layer
+   *  is not hidden. */
+  public void paint(Graphics g, FigPainter painter) {
+    if (_hidden) return;
+    if (! _grayed) paintContents(g,painter); else paintGrayContents(g);
+  }
+  /** Method to paint the contents of this layer using a given painter.
+   *  The default implementation ignores the painter.
+   */
+  public void paintContents(Graphics g, FigPainter painter) {
+      paintContents(g);
+  }
+//---END uni-hh changes
+  
+  /** Abstract method to paint the contents of this layer, subclasses
    *  must define this.  For example, LayerDiagram paints itself by
    *  painting a list of Figs and LayerGrid paints itself by painting
    *  a lot lines. */

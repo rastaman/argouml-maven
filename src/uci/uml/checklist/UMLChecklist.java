@@ -27,6 +27,7 @@
 package uci.uml.checklist;
 
 import java.util.*;
+import java.util.Enumeration;
 
 import uci.util.*;
 import uci.argo.checklist.*;

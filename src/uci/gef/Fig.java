@@ -32,7 +32,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.util.*;
+import java.util.Enumeration;
 import javax.swing.JMenu;
+
+import ru.novosoft.uml.*;
 
 import uci.util.*;
 import uci.ui.*;
@@ -331,7 +334,7 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
   /** Draw the Fig on a PrintGraphics. This just calls paint. */
   public void print(Graphics g) { paint(g); }
 
-  /** Method to paint this Fig.  By default it paints an "empty"
+  /** MMethod to paint this Fig.  By default it paints an "empty"
    *  space, subclasses should override this method. */
   public void paint(Graphics g) {
     g.setColor(Color.pink);
@@ -415,6 +418,23 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
     firePropChange("bounds", oldBounds, getBounds());
   }
 
+    /** Get the rectangle on whose corners the dragging handles are to be drawn.
+    * Should be overwritten by Figures with Bounds larger than the HandleBox.
+    * Normally these should be identical.
+  	 */
+  public Rectangle getHandleBox() {
+  	return getBounds();
+  }
+
+  /** Set the HandleBox.
+  * Normally this should not be used. It is intended for figures where the
+  * Handlebox is different from the Bounds.
+  * Overwrite this method if HandleBox and bounds differ
+  */
+  public void setHandleBox( int x, int y, int w, int h ) {
+  	setBounds( x, y, w, h );
+  }
+
 
   ////////////////////////////////////////////////////////////////
   // Editor API
@@ -424,7 +444,7 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
    *  given editor. */
   public void delete() {
     if (_layer != null) { _layer.deleted(this); }
-    setOwner(null);
+    // setOwner(null);
   }
 
   /** Delete whatever application object this Fig is representing, the
@@ -854,7 +874,8 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
   // property change handling
 
   /** By default just pass it up to enclosing groups.  Subclasses of
-   *  FigNode may want to override this method. */
+   *  FigNode may want to override this method. 
+  */
   public void propertyChange(PropertyChangeEvent pce) {
     if (_group != null) _group.propertyChange(pce);
   }

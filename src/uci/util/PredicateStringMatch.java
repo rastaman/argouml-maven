@@ -24,6 +24,7 @@
 package uci.util;
 
 import java.util.*;
+import java.util.StringTokenizer;
 
 public class PredicateStringMatch implements Predicate {
 

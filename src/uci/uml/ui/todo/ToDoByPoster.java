@@ -28,8 +28,8 @@ package uci.uml.ui.todo;
 
 import java.util.*;
 
-import uci.uml.Model_Management.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.foundation.core.*;
 import uci.util.*;
 import uci.argo.kernel.*;
 import uci.uml.ui.nav.*;

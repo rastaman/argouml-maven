@@ -31,6 +31,8 @@
 package uci.argo.kernel;
 
 import java.util.*;
+import java.util.Enumeration;
+import java.util.Observable;
 import java.awt.*;
 import uci.util.*;
 //import uci.ui.*;

@@ -26,6 +26,10 @@ package uci.argo.kernel;
 
 
 import java.util.*;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Date;
 
 // needs-more-work: how can this possibly be persistent?
 // needs-more-work: provide accessors

@@ -30,8 +30,8 @@ import javax.swing.tree.*;
 
 import uci.gef.Diagram;
 import uci.graph.GraphModel;
-import uci.uml.Model_Management.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.foundation.core.*;
 
 public class GoDiagramToNode implements TreeModelPrereqs {
 
@@ -82,7 +82,7 @@ public class GoDiagramToNode implements TreeModelPrereqs {
   }
   public Vector getProvidedTypes() {
     Vector pros = new Vector();
-    pros.addElement(ModelElement.class);
+    pros.addElement(MModelElement.class);
     return pros;
   }
 

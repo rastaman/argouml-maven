@@ -42,18 +42,17 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
-import uci.uml.Behavioral_Elements.State_Machines.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.state_machines.*;
 import uci.uml.ui.*;
 
 /** User interface panel shown at the bottom of the screen that allows
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelPseudostate extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelPseudostate extends PropPanel {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -90,27 +89,5 @@ implements DocumentListener, ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // event handlers
-
-
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
-  }
-
 
 } /* end class PropPanelPseudostate */

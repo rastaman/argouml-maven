@@ -32,6 +32,7 @@ import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Class to display lines in diagrams. */
 

@@ -33,24 +33,28 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.*;
 import javax.swing.tree.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.ui.*;
+import uci.uml.util.MMUtil;
 
 public class PropPanelOperation extends PropPanel
 implements ItemListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  public static final VisibilityKind VISIBILITIES[] = {
-    VisibilityKind.PUBLIC, VisibilityKind.PRIVATE,
-    VisibilityKind.PROTECTED, VisibilityKind.PACKAGE };
+  public static final String VISIBILITIES[] = {
+    MVisibilityKind.PUBLIC.getName(), MVisibilityKind.PRIVATE.getName(),
+    MVisibilityKind.PROTECTED.getName() };
+
+	//PACKAGE in nsuml???
   public static final String ATTRKEYWORDS[] = {
     "None", "static", "final", "static final", "synchronized",
     "static synchronized", "final synchronized", "static final synchronized"
@@ -66,7 +70,7 @@ implements ItemListener {
   JLabel _typeLabel = new JLabel("Return Type: ");
   JComboBox _typeField = new JComboBox();
   JLabel _argsLabel = new JLabel("Arguments: ");
-  JTable _argsTable = new JTable(4, 2);
+  JTable _argsTable = new JTable();
   SpacerPanel _spacer = new SpacerPanel();
 
   ////////////////////////////////////////////////////////////////
@@ -134,6 +138,8 @@ implements ItemListener {
     _keywordsField.addItemListener(this);
     _typeField.addItemListener(this);
 
+    remove(_namespaceLabel);
+    remove(_namespaceField);
   }
 
 
@@ -143,34 +149,48 @@ implements ItemListener {
 
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    Operation oper = (Operation) _target;
+    MOperation oper = (MOperation) _target;
 
-    VisibilityKind vk = oper.getVisibility();
-    _visField.setSelectedItem(vk);
+    Vector offeredTypes = getOfferedTypes();
+    if (offeredTypes != null)
+      _typeField.setModel(new DefaultComboBoxModel(Converter.convert(offeredTypes)));
 
-    ScopeKind sk = oper.getOwnerScope();
-    CallConcurrencyKind ck = oper.getConcurrency();
+    MVisibilityKind vk = oper.getVisibility();
+	if (vk != null)
+		_visField.setSelectedItem(vk.getName());
+
+    MScopeKind sk = oper.getOwnerScope();
+    MCallConcurrencyKind ck = oper.getConcurrency();
     // needs-more-work: concurrency
     // needs-more-work: final methods?
-    if (ScopeKind.CLASSIFIER.equals(sk)) {
-      if (CallConcurrencyKind.GUARDED.equals(ck))
+    if (MScopeKind.CLASSIFIER.equals(sk)) {
+      if (MCallConcurrencyKind.GUARDED.equals(ck))
 	_keywordsField.setSelectedItem("static synchronized");
       else
 	_keywordsField.setSelectedItem("static");
     }
     else {
-      if (CallConcurrencyKind.GUARDED.equals(ck))
+      if (MCallConcurrencyKind.GUARDED.equals(ck))
 	_keywordsField.setSelectedItem("synchronized");
       else
 	_keywordsField.setSelectedItem("None");
     }
 
-    Vector params = oper.getParameter();
-    if (params != null && params.size() > 0) {
-      Classifier rt = oper.getReturnType();
-      if (rt != null) _typeField.setSelectedItem(rt);
-      else _typeField.setSelectedItem(null);
-    }
+	Vector parameters = new Vector(oper.getParameters());
+
+	MParameter returnParameter = MMUtil.SINGLETON.getReturnParameter(oper);
+	if (returnParameter != null && returnParameter.getType() != null && returnParameter.getType().getName() != null)
+		_typeField.setSelectedItem(returnParameter.getType().getName());
+
+	DefaultTableModel _argsModel = new DefaultTableModel(0,2);
+	parameters.remove(returnParameter);
+
+	for (int i = 0; i<parameters.size();i++) {
+		MParameter p = (MParameter)parameters.elementAt(i);
+		String[] row = {p.getName(), p.getType().getName()};
+		_argsModel.addRow(row);
+	}
+	_argsTable.setModel(_argsModel);
   }
 
 
@@ -178,12 +198,9 @@ implements ItemListener {
   public void setTargetVisibility() {
     if (_target == null) return;
     if (_inChange) return;
-    VisibilityKind vk = (VisibilityKind) _visField.getSelectedItem();
-    Operation oper = (Operation) _target;
-    try {
-        oper.setVisibility(vk);
-    }
-    catch (PropertyVetoException ignore) { }
+    MVisibilityKind vk = MVisibilityKind.forName((String)_visField.getSelectedItem());
+    MOperation oper = (MOperation) _target;
+	oper.setVisibility(vk);
   }
 
   // needs-more-work: how to model abstract methods?
@@ -197,60 +214,55 @@ implements ItemListener {
       //System.out.println("keywords are null");
       return;
     }
-    Operation oper = (Operation) _target;
-    try {
-      if (keys.equals("None")) {
-	oper.setOwnerScope(ScopeKind.INSTANCE);
-	oper.setConcurrency(CallConcurrencyKind.CONCURRENT);
-      }
-      else if (keys.equals("static")) {
-	oper.setOwnerScope(ScopeKind.CLASSIFIER);
-	oper.setConcurrency(CallConcurrencyKind.CONCURRENT);
-      }
-      else if (keys.equals("final")) {
-	oper.setOwnerScope(ScopeKind.INSTANCE);
-	oper.setConcurrency(CallConcurrencyKind.CONCURRENT);
-      }
-      else if (keys.equals("static final")) {
-	oper.setOwnerScope(ScopeKind.INSTANCE);
-	oper.setConcurrency(CallConcurrencyKind.CONCURRENT);
-      }
-      else if (keys.equals("synchronized")) {
-	oper.setOwnerScope(ScopeKind.INSTANCE);
-	oper.setConcurrency(CallConcurrencyKind.GUARDED);
-      }
-      else if (keys.equals("static synchronized")) {
-	oper.setOwnerScope(ScopeKind.CLASSIFIER);
-	oper.setConcurrency(CallConcurrencyKind.GUARDED);
-      }
-      else if (keys.equals("final synchronized")) {
-	oper.setOwnerScope(ScopeKind.INSTANCE);
-	oper.setConcurrency(CallConcurrencyKind.GUARDED);
-      }
-      else if (keys.equals("static final synchronized")) {
-	oper.setOwnerScope(ScopeKind.CLASSIFIER);
-	oper.setConcurrency(CallConcurrencyKind.GUARDED);
-      }
-    }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not set keywords!");
-    }
+    MOperation oper = (MOperation) _target;
+	if (keys.equals("None")) {
+		oper.setOwnerScope(MScopeKind.INSTANCE);
+		oper.setConcurrency(MCallConcurrencyKind.CONCURRENT);
+	}
+	else if (keys.equals("static")) {
+		oper.setOwnerScope(MScopeKind.CLASSIFIER);
+		oper.setConcurrency(MCallConcurrencyKind.CONCURRENT);
+	}
+	else if (keys.equals("final")) {
+		oper.setOwnerScope(MScopeKind.INSTANCE);
+		oper.setConcurrency(MCallConcurrencyKind.CONCURRENT);
+	}
+	else if (keys.equals("static final")) {
+		oper.setOwnerScope(MScopeKind.INSTANCE);
+		oper.setConcurrency(MCallConcurrencyKind.CONCURRENT);
+	}
+	else if (keys.equals("synchronized")) {
+		oper.setOwnerScope(MScopeKind.INSTANCE);
+		oper.setConcurrency(MCallConcurrencyKind.GUARDED);
+	}
+	else if (keys.equals("static synchronized")) {
+		oper.setOwnerScope(MScopeKind.CLASSIFIER);
+		oper.setConcurrency(MCallConcurrencyKind.GUARDED);
+	}
+	else if (keys.equals("final synchronized")) {
+		oper.setOwnerScope(MScopeKind.INSTANCE);
+		oper.setConcurrency(MCallConcurrencyKind.GUARDED);
+	}
+	else if (keys.equals("static final synchronized")) {
+		oper.setOwnerScope(MScopeKind.CLASSIFIER);
+		oper.setConcurrency(MCallConcurrencyKind.GUARDED);
+	}
   }
 
   public void setTargetType() {
     if (_target == null) return;
     if (_inChange) return;
-    Operation op = (Operation) _target;
+    MOperation op = (MOperation) _target;
     Object rtObj = _typeField.getSelectedItem();
-    Classifier rt = null;
+    MClassifier rt = null;
     if (rtObj instanceof String) {
       String rtStr = (String) _typeField.getSelectedItem();
       ProjectBrowser pb = ProjectBrowser.TheInstance;
       Project p = pb.getProject();
       rt = p.findType(rtStr);
     }
-    else if (rtObj instanceof Classifier) {
-      rt = (Classifier) rtObj;
+    else if (rtObj instanceof MClassifier) {
+      rt = (MClassifier) rtObj;
     }
     else {
       // watch out for null rtObj
@@ -259,54 +271,48 @@ implements ItemListener {
       // needs-more-work: selected predefined class
     }
     if (rt != null) {
-      try {
 	//System.out.println("Props setting return type: " + rt);
-	op.setReturnType(rt);
-      }
-      catch (PropertyVetoException pve) { }
+		MParameter p = new MParameterImpl();
+		p.setType(rt);
+		MMUtil.SINGLETON.setReturnParameter(op,p);
     }
   }
 
+
+  public static Vector getOfferedTypes() {
+    // needs-more-work: should update when project changes
+    Project p = ProjectBrowser.TheInstance.getProject();
+    Vector types = p.getDefinedTypesVector();
+    Vector res = new Vector();
+    for (int i = 0; i<types.size();i++) {
+	res.add(((MClassifier)types.get(i)).getName());
+    }
+    return res;
+  }
 
   ////////////////////////////////////////////////////////////////
   // event handlers
 
-
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    Component ed = _typeField.getEditor().getEditorComponent();
-    Document typeDoc = ((JTextField)ed).getDocument();
-
-    if (e.getDocument() == typeDoc) setTargetType();
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-  
   public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    if (src == _keywordsField) {
-//       System.out.println("attr keywords now is " +
-// 			 _keywordsField.getSelectedItem());
-      setTargetKeywords();
-    }
-    else if (src == _visField) {
-//       System.out.println("attr VisibilityKind now is " +
-// 			 _visField.getSelectedItem());
-      setTargetVisibility();
-    }
-    else if (src == _typeField) {
-//       System.out.println("attr type now is " +
-// 			 _typeField.getSelectedItem());
-      setTargetType();
-    }
+	  if (e.getStateChange() == ItemEvent.SELECTED) {
+		  Object src = e.getSource();
+		  if (src == _keywordsField) {
+			  //       System.out.println("attr keywords now is " +
+			  // 			 _keywordsField.getSelectedItem());
+			  setTargetKeywords();
+		  }
+		  else if (src == _visField) {
+			  //       System.out.println("attr MVisibilityKind now is " +
+			  // 			 _visField.getSelectedItem());
+			  setTargetVisibility();
+		  }
+		  else if (src == _typeField) {
+			  //       System.out.println("attr type now is " +
+			  // 			 _typeField.getSelectedItem());
+			  setTargetType();
+		  }
+	  }
   }
-
 
   
 } /* end class PropPanelOperation */

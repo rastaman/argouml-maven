@@ -37,8 +37,8 @@ import java.util.*;
 
 import uci.gef.*;
 import uci.uml.ui.*;
-import uci.uml.Foundation.Core.*;
-//import uci.uml.Foundation.Extension_Mechanisms.*;
+import ru.novosoft.uml.foundation.core.*;
+//import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 public class FigGeneralization extends FigEdgeModelElement {
 
@@ -63,7 +63,7 @@ public class FigGeneralization extends FigEdgeModelElement {
   ////////////////////////////////////////////////////////////////
   // event handlers
 
-  /** This is called aftern any part of the UML ModelElement has
+  /** This is called aftern any part of the UML MModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
   protected void modelChanged() {

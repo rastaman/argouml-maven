@@ -34,6 +34,7 @@ import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** Primitive Fig for displaying circles and ovals. */
 

@@ -38,28 +38,36 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
-import uci.uml.Foundation.Data_Types.*;
-import uci.uml.Model_Management.*;
+import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.model_management.*;
 import uci.uml.generate.ParserDisplay;
 import uci.uml.ui.*;
 
 public class PropPanelAssociation extends PropPanelTwoEnds
-implements DocumentListener, ItemListener, ChangeListener {
+implements ItemListener, ChangeListener {
 
   ////////////////////////////////////////////////////////////////
   // constants
-//   public static final VisibilityKind VISIBILITIES[] = {
-//     VisibilityKind.PUBLIC, VisibilityKind.PRIVATE,
-//     VisibilityKind.PROTECTED, VisibilityKind.PACKAGE };
+//   public static final MVisibilityKind VISIBILITIES[] = {
+//     MVisibilityKind.PUBLIC, MVisibilityKind.PRIVATE,
+//     MVisibilityKind.PROTECTED, MVisibilityKind.PACKAGE };
 
-  public static final Multiplicity MULTS[] = {
-    Multiplicity.ONE, Multiplicity.ONE_OR_ZERO,
-    Multiplicity.ONE_OR_MORE, Multiplicity.ZERO_OR_MORE };
+//   public static final MMultiplicity MULTS[] = {
+//     MMultiplicity.M1_1, MMultiplicity.M0_1,
+//     MMultiplicity.M1_N, MMultiplicity.M0_N };
 
-  public static final AggregationKind AGGS[] = {
-    AggregationKind.NONE, AggregationKind.AGG,
-    AggregationKind.COMPOSITE };
+  public static final String MULTS[] = {
+    MMultiplicity.M1_1.toString(), MMultiplicity.M0_1.toString(),
+    MMultiplicity.M1_N.toString(), MMultiplicity.M0_N.toString() };
+
+//   public static final MAggregationKind AGGREGATES[] = {
+//     MAggregationKind.NONE, MAggregationKind.AGGREGATE,
+//     MAggregationKind.COMPOSITE };
+  
+  public static final String AGGREGATES[] = {
+    MAggregationKind.NONE.getName(), MAggregationKind.AGGREGATE.getName(),
+    MAggregationKind.COMPOSITE.getName() };
   
   
   ////////////////////////////////////////////////////////////////
@@ -69,7 +77,7 @@ implements DocumentListener, ItemListener, ChangeListener {
   JLabel _multALabel = new JLabel("Multiplicity: ");
   JComboBox _multAField = new JComboBox(MULTS);
   JLabel _aggALabel = new JLabel("Aggregation: ");
-  JComboBox _aggAField = new JComboBox(AGGS);
+  JComboBox _aggAField = new JComboBox(AGGREGATES);
   JLabel _navALabel = new JLabel("Navigable: ");
   JCheckBox _navAField = new JCheckBox("");
 //   JLabel _visALabel = new JLabel("Visibility: ");
@@ -80,7 +88,7 @@ implements DocumentListener, ItemListener, ChangeListener {
   JLabel _multBLabel = new JLabel("Multiplicity: ");
   JComboBox _multBField = new JComboBox(MULTS);
   JLabel _aggBLabel = new JLabel("Aggregation: ");
-  JComboBox _aggBField = new JComboBox(AGGS);
+  JComboBox _aggBField = new JComboBox(AGGREGATES);
 //   JLabel _visBLabel = new JLabel("Visibility: ");
 //   JComboBox _visBField = new JComboBox(VISIBILITIES);
   JLabel _navBLabel = new JLabel("Navigable: ");
@@ -197,69 +205,88 @@ implements DocumentListener, ItemListener, ChangeListener {
 
   protected void setTargetInternal(Object t) {
     super.setTargetInternal(t);
-    Association asc = (Association) t;
-    Vector conns = asc.getConnection();
+    MAssociation asc = (MAssociation) t;
+    Vector conns = new Vector(asc.getConnections());
     if (conns == null) return; //set fields to blanks?
     if (conns.size() != 2) return; //set fields to blanks?
-    AssociationEnd endA = (AssociationEnd) conns.elementAt(0);
-    AssociationEnd endB = (AssociationEnd) conns.elementAt(1);
+    MAssociationEnd endA = (MAssociationEnd) conns.elementAt(0);
+    MAssociationEnd endB = (MAssociationEnd) conns.elementAt(1);
 
-    Name roleA = endA.getName();
-    String roleAStr = "(anon)";
-    if (roleA != null) roleAStr = roleA.getBody();
-    Name roleB = endB.getName();
-    String roleBStr = "(anon)";
-    if (roleB != null) roleBStr = roleB.getBody();
+    String roleAStr = endA.getName();
+    if (roleAStr ==null) roleAStr = "";
+    String roleBStr = endB.getName();
+    if (roleBStr == null) roleBStr = "";
     
-//     VisibilityKind vkA = endA.getVisibility();
+//     MVisibilityKind vkA = endA.getVisibility();
 //     _visAField.setSelectedItem(vkA);
-//     VisibilityKind vkB = endB.getVisibility();
+//     MVisibilityKind vkB = endB.getVisibility();
 //     _visBField.setSelectedItem(vkB);
 
-    Multiplicity mA = endA.getMultiplicity();
-    Multiplicity mB = endB.getMultiplicity();
+    MMultiplicity mA = endA.getMultiplicity();
+    MMultiplicity mB = endB.getMultiplicity();
 
-    AggregationKind akA = endA.getAggregation();
-    AggregationKind akB = endB.getAggregation();
+    MAggregationKind akA = endA.getAggregation();
+    MAggregationKind akB = endB.getAggregation();
 
-    boolean navA = endA.getIsNavigable();
-    boolean navB = endB.getIsNavigable();
+    boolean navA = endA.isNavigable();
+    boolean navB = endB.isNavigable();
 
     _roleAField.setText(roleAStr);
     _roleBField.setText(roleBStr);
-    _multAField.setSelectedItem(mA);
-    _multBField.setSelectedItem(mB);
-    _aggAField.setSelectedItem(akA);
-    _aggBField.setSelectedItem(akB);
+    if (mA != null)
+	_multAField.setSelectedItem(mA.toString());
+
+    else
+	_multAField.setSelectedItem(null);
+
+    if (mB != null)
+	_multBField.setSelectedItem(mB.toString());
+
+    else
+	_multBField.setSelectedItem(null);
+
+    if (akA != null)
+	_aggAField.setSelectedItem(akA.getName());
+
+    else
+	_aggAField.setSelectedItem(MAggregationKind.NONE.getName());
+
+    if (akB != null)
+	_aggBField.setSelectedItem(akB.getName());
+
+    else
+	_aggBField.setSelectedItem(MAggregationKind.NONE.getName());
+
     _navAField.getModel().setSelected(navA);
+
     _navBField.getModel().setSelected(navB);
   }
 
   public String getSourceLabel() {
-    if (!(_target instanceof Association)) return "non Association";
+    if (!(_target instanceof MAssociation)) return "non Association";
     return "Classifier:";
   }
   public String getSourceValue() {
-    if (!(_target instanceof Association)) return "non Association";
-    Association a = (Association) _target;
-    AssociationEnd ae = (AssociationEnd) a.getConnection().elementAt(0);
+    if (!(_target instanceof MAssociation)) return "non Association";
+    MAssociation a = (MAssociation) _target;
+    MAssociationEnd ae = (MAssociationEnd)((Object[])a.getConnections().toArray())[0];
     if (ae == null) return "null ae";
-    Classifier type = ae.getType();
+    MClassifier type = ae.getType();
     if (type == null) return "null type";
-    return type.getName().getBody();
+    return type.getName();
   }
   public String getDestLabel() {
-    if (!(_target instanceof Association)) return "non AssociationEnd";
+    if (!(_target instanceof MAssociation)) return "non Association";
     return "Classifier:";
   }
   public String getDestValue() {
-    if (!(_target instanceof Association)) return "non Association";
-    Association a = (Association) _target;
-    AssociationEnd ae = (AssociationEnd) a.getConnection().elementAt(1);
+    if (!(_target instanceof MAssociation)) return "non Association";
+    MAssociation a = (MAssociation) _target;
+    MAssociationEnd ae = (MAssociationEnd)((Object[])a.getConnections().toArray())[1];
     if (ae == null) return "null ae";
-    Classifier type = ae.getType();
+    MClassifier type = ae.getType();
     if (type == null) return "null type";
-    return type.getName().getBody();
+    return type.getName();
   }
   
 
@@ -269,59 +296,56 @@ implements DocumentListener, ItemListener, ChangeListener {
   public void setTargetVisibility() {
     if (_target == null) return;
     if (_inChange) return;
-//     VisibilityKind vk = (VisibilityKind) _visField.getSelectedItem();
-//     Attribute attr = (Attribute) _target;
+//     MVisibilityKind vk = (MVisibilityKind) _visField.getSelectedItem();
+//     MAttribute attr = (MAttribute) _target;
 //     attr.setVisibility(vk);
   }
 
-  public void setMult() {
-    if (_target == null) return;
-    Multiplicity mA, mB;
-    Object mAs = _multAField.getSelectedItem();
-    Object mBs = _multBField.getSelectedItem();
+    public void setMult() {
+	if (_target == null) return;
+	MMultiplicity mA = null;
+	MMultiplicity mB = null;
+	Object mAs = _multAField.getSelectedItem();
+	Object mBs = _multBField.getSelectedItem();
 
-    if (mAs == null || mBs == null) return;
+	MAssociation asc = (MAssociation) _target;
+	Vector conns = new Vector(asc.getConnections());
+	if (conns == null || conns.size() != 2) return;
 
-    // will be a String if I allow editing, needs-more-work: implement
-    // parsing of multiplicities
-    if (mAs instanceof String)
-      mAs = ParserDisplay.SINGLETON.parseMultiplicity((String)mAs);
-    if (mBs instanceof String)
-      mBs = ParserDisplay.SINGLETON.parseMultiplicity((String)mBs);
+	if (mAs != null) {
+	    // will be a String if I allow editing, needs-more-work: implement
+	    // parsing of multiplicities
+	    if (mAs instanceof String)
+		mAs = ParserDisplay.SINGLETON.parseMultiplicity((String)mAs);
 
-    if (mAs instanceof Multiplicity) mA = (Multiplicity) mAs;
-    else mA = Multiplicity.ONE; // needs-more-work: parse
+	    if (mAs instanceof MMultiplicity) mA = (MMultiplicity) mAs;
+	    else mA = MMultiplicity.M1_1; // needs-more-work: parse
+	    MAssociationEnd endA = (MAssociationEnd) conns.elementAt(0);
+	    endA.setMultiplicity(mA);
+	}
 
-    if (mBs instanceof Multiplicity) mB = (Multiplicity) mBs;
-    else mB = Multiplicity.ONE; // needs-more-work: parse
-
-    Association asc = (Association) _target;
-    Vector conns = asc.getConnection();
-    if (conns == null || conns.size() != 2) return;
-    AssociationEnd endA = (AssociationEnd) conns.elementAt(0);
-    AssociationEnd endB = (AssociationEnd) conns.elementAt(1);
-    try {
-      endA.setMultiplicity(mA);
-      endB.setMultiplicity(mB);
+	if (mBs != null) {
+	    if (mBs instanceof String)
+		mBs = ParserDisplay.SINGLETON.parseMultiplicity((String)mBs);
+	    if (mBs instanceof MMultiplicity) mB = (MMultiplicity) mBs;
+	    else mB = MMultiplicity.M1_1; // needs-more-work: parse
+	    MAssociationEnd endB = (MAssociationEnd) conns.elementAt(1);
+	    endB.setMultiplicity(mB);
+	}
     }
-    catch (PropertyVetoException pve) { }
-  }
 
   public void setAgg() {
     if (_target == null) return;
-    AggregationKind aggA = (AggregationKind) _aggAField.getSelectedItem();
-    AggregationKind aggB = (AggregationKind) _aggBField.getSelectedItem();
+    MAggregationKind aggA = MAggregationKind.forName( (String)_aggAField.getSelectedItem());
+    MAggregationKind aggB = MAggregationKind.forName( (String)_aggBField.getSelectedItem());
     //if (aggA == null || aggB == null) return;
-    Association asc = (Association) _target;
-    Vector conns = asc.getConnection();
+    MAssociation asc = (MAssociation) _target;
+    Vector conns = new Vector(asc.getConnections());
     if (conns == null || conns.size() != 2) return;
-    AssociationEnd endA = (AssociationEnd) conns.elementAt(0);
-    AssociationEnd endB = (AssociationEnd) conns.elementAt(1);
-    try {
+    MAssociationEnd endA = (MAssociationEnd) conns.elementAt(0);
+    MAssociationEnd endB = (MAssociationEnd) conns.elementAt(1);
       endA.setAggregation(aggA);
       endB.setAggregation(aggB);
-    }
-    catch (PropertyVetoException pve) { }
   }
 
   public void setNav() {
@@ -329,16 +353,17 @@ implements DocumentListener, ItemListener, ChangeListener {
     boolean navA = _navAField.getModel().isSelected();
     boolean navB = _navBField.getModel().isSelected();
     //System.out.println("navA=" + navA + " navB=" + navB);
-    Association asc = (Association) _target;
-    Vector conns = asc.getConnection();
+    MAssociation asc = (MAssociation) _target;
+    Vector conns = new Vector(asc.getConnections());
     if (conns == null || conns.size() != 2) return;
-    AssociationEnd endA = (AssociationEnd) conns.elementAt(0);
-    AssociationEnd endB = (AssociationEnd) conns.elementAt(1);
-    try {
-      endA.setIsNavigable(navA);
-      endB.setIsNavigable(navB);
-    }
-    catch (PropertyVetoException pve) { }
+    MAssociationEnd endA = (MAssociationEnd) conns.elementAt(0);
+    MAssociationEnd endB = (MAssociationEnd) conns.elementAt(1);
+      endA.setNavigable(navA);
+      endB.setNavigable(navB);
+	
+	//very dirty patch: navigation change is not visible until aggregation-kind has been changed!!
+	setAgg();
+
   }
   
   public void setRoleNames() {
@@ -347,16 +372,13 @@ implements DocumentListener, ItemListener, ChangeListener {
     String roleBStr = _roleBField.getText();
     if (roleBStr == null || roleBStr == null) return;
     //System.out.println("roleA=" + roleAStr + " roleB=" + roleBStr);
-    Association asc = (Association) _target;
-    Vector conns = asc.getConnection();
+    MAssociation asc = (MAssociation) _target;
+    Vector conns = new Vector(asc.getConnections());
     if (conns == null || conns.size() != 2) return;
-    AssociationEnd endA = (AssociationEnd) conns.elementAt(0);
-    AssociationEnd endB = (AssociationEnd) conns.elementAt(1);
-    try {
-      endA.setName(new Name(roleAStr));
-      endB.setName(new Name(roleBStr));
-    }
-    catch (PropertyVetoException pve) { }
+    MAssociationEnd endA = (MAssociationEnd) conns.elementAt(0);
+    MAssociationEnd endB = (MAssociationEnd) conns.elementAt(1);
+	endA.setName(roleAStr);
+	endB.setName(roleBStr);
   }
 
   

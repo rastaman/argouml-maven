@@ -41,8 +41,8 @@ import uci.uml.ui.nav.*;
 import uci.uml.ui.todo.*;
 import uci.uml.visual.*;
 import uci.uml.critics.*;
-import uci.uml.Model_Management.Model;
-import uci.uml.test.omg.*;
+import ru.novosoft.uml.model_management.MModel;
+import ru.novosoft.uml.*;
 
 import uci.argo.kernel.*;
 
@@ -145,6 +145,7 @@ public class Main {
     phase0 = System.currentTimeMillis();
 
 
+	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
     ProjectBrowser pb = new ProjectBrowser("Argo/UML", splash.getStatusBar());
     phase1 = System.currentTimeMillis();
 
@@ -231,8 +232,8 @@ public class Main {
     c = uci.util.EnumerationEmpty.class;
     c = uci.util.EnumerationSingle.class;
 
-    c = uci.uml.Foundation.Data_Types.ScopeKind.class;
-    c = uci.uml.Foundation.Data_Types.ChangeableKind.class;
+    c = ru.novosoft.uml.foundation.data_types.MScopeKind.class;
+    c = ru.novosoft.uml.foundation.data_types.MChangeableKind.class;
 
     c = uci.uml.visual.FigClass.class;
     c = uci.uml.visual.SelectionNodeClarifiers.class;
@@ -319,9 +320,14 @@ class StartCritics implements Runnable {
     uci.uml.critics.Init.init();
     uci.uml.checklist.Init.init();
     ProjectBrowser pb = ProjectBrowser.TheInstance;
-    dsgr.spawnCritiquer(pb.getProject());
+	Project p = pb.getProject();
+    dsgr.spawnCritiquer(p);
     dsgr.setChildGenerator(new ChildGenUML());
-    uci.uml.Foundation.Core.ElementImpl.setStaticChangeListener(dsgr);
+	java.util.Enumeration models = (p.getModels()).elements();
+	while (models.hasMoreElements())
+	{
+		((ru.novosoft.uml.model_management.MModel)models.nextElement()).addMElementListener(dsgr);
+	}
     System.out.println("spawned critiquing thread");
 
     // should be in logon wizard?

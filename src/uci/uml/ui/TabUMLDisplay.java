@@ -37,7 +37,7 @@ import javax.swing.text.*;
 //import javax.swing.border.*;
 
 import uci.util.*;
-import uci.uml.Foundation.Core.ModelElement;
+import ru.novosoft.uml.foundation.core.MModelElement;
 import uci.uml.generate.*;
 
 
@@ -52,7 +52,7 @@ public class TabUMLDisplay extends TabText {
   // accessors
 
   protected String genText() {
-    if (!(_target instanceof ModelElement)) return "nothing selected";
+    if (!(_target instanceof MModelElement)) return "nothing selected";
     return "This feature is not yet implemented";
     //return GeneratorExplanation.Generate(_target);
   }
@@ -65,7 +65,7 @@ public class TabUMLDisplay extends TabText {
 
   public void setTarget(Object t) {
     super.setTarget(t);
-    _shouldBeEnabled = (t instanceof ModelElement);
+    _shouldBeEnabled = (t instanceof MModelElement);
   }
 
 

@@ -32,6 +32,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 import java.awt.event.*;
 
 import uci.graph.*;
@@ -58,6 +59,8 @@ public class ModePlace extends Mode {
 
   protected GraphFactory _factory;
 
+  protected boolean _addRelatedEdges = false;
+
   ////////////////////////////////////////////////////////////////
   // constructor
 
@@ -83,6 +86,11 @@ public class ModePlace extends Mode {
   public Cursor getInitialCursor() {
     return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
   }
+
+  public void setAddRelatedEdges(boolean b) {
+    _addRelatedEdges = b;
+  }
+
 
   ////////////////////////////////////////////////////////////////
   // event handlers
@@ -144,6 +152,11 @@ public class ModePlace extends Mode {
     if (mgm.canAddNode(_node)) {
       _editor.add(_pers);
       mgm.addNode(_node);
+	  //if (_node instanceof MBase)
+		 // ((MBase)_node).addMElementListener(_pers);
+      if(_addRelatedEdges)                 
+        mgm.addNodeRelatedEdges(_node);
+     
       Fig encloser = null;
       Rectangle bbox = _pers.getBounds();
       Layer lay = _editor.getLayerManager().getActiveLayer();

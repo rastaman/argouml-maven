@@ -54,7 +54,7 @@ public class AboutBox extends JFrame {
   ////////////////////////////////////////////////////////////////
   // constructor
   public AboutBox() {
-    super("About Argo/UML");
+    super("About ArgoUML");
     String iconName = "Splash";
     ImageIcon splashImage = loadIconResource(iconName, iconName);
     int imgWidth = splashImage.getIconWidth();
@@ -75,31 +75,57 @@ public class AboutBox extends JFrame {
 //     _legal.setFont(ctrlFont);
 //     _contact.setFont(ctrlFont);
 
-    _version.setText("Argo/UML Version 0.7.0\n"+
-		     "Built on April 28, 1999\n"+
+    _version.setText("ArgoUML Version 0.8.1\n"+
+		     "Built on October 13th 2000\n"+
 		     "\n"+
 		     "Includes:\n"+
-		     "  GEF v0.6.3\n"+
-		     "  Argo v0.8.1\n"+
-		     "  uci.uml v0.5.1\n"+
+		     "  GEF (Graph Editing Framework, soon to be standalone!)\n"+
 		     "  GIF generation code from www.acme.com\n"+
 		     "\n"+
 		     "Intended for use with:\n"+
-		     "  JDK 1.1 and\n"+
-		     "    Sun's Swing 1.1.1 beta 2\n"+
-		     "    IBM's XML4J 2.0.6\n"+
-		     "  or\n"+
-		     "  JDK 1.2 and\n"+
-		     "    IBM's XML4J 2.0.6\n"
+		     "  JDK 1.2 only plus\n"+
+		     "    IBM's XML4J 2.0.15 or higher\n"+
+		     "    Novosoft's NSUML 0.4.8 or higher (nsuml.sourceforge.net)\n"+
+		     "    recommended  NSUML Version is 0.4.11\n"+
+		     "    Frank Finger's (TU-Dresden) OCL-Compiler (dresden-ocl.sourceforge.net)\n"
 		     );
 
-    _credits.setText("Argo/UML was developed by the following:\n"+
+    _credits.setText("ArgoUML was developed by the following:\n"+
+		     "Project Lead:\n"+
+		     "  Jason Robbins (Collab.net)\n"+
+		     "  \n"+
+		     "Version 0.8 release manager:\n"+
+		     "  Toby Baier (University of Hamburg, Germany)\n"+
+		     "  Marko Boger (GentleWare)\n"+
+		     "  \n"+
+		     "Module Owners (contact these people for contributions):\n"+
+		     "  GEF: Edwin Park (esp@parkplace.dhs.org)\n"+
+		     "  UML Diagrams: Marko Boger (boger@informatik.uni-hamburg.de)\n"+
+		     "  UML Metamodel, XMI: Toby Baier (Toby.Baier@gmx.net)\n"+
+		     "  Plugin-support: Sean Chen (schen@bw.webex.net)\n"+
+		     "  Java RE: Andreas Rückert (a_rueckert@gmx.net)\n"+
+		     "  Knowledge support: Jason Robbins (jrobbins@collab.net)\n"+
+		     "  User manual: Philippe Vanpeperstraete (Philippe.Vanpeperstraete@skynet.be)\n"+
+		     "  \n"+
+		     "Contributing Developers (in no special order):\n"+
+		     "  Jim Holt\n"+
+		     "  Thomas Schaumburg\n"+
+		     "  David Glaser\n"+
+		     "  Toby Baier\n"+
+		     "  Eugenio Alvarez\n"+
+		     "  Clemens Eichler\n"+
+		     "  Curt Arnolds\n"+
+		     "  Andreas Rückert\n"+
+		     "  Frank Finger\n"+
+		     "  Stuart Zakon\n"+
+		     "  Frank Wienberg\n"+
+
+		     "\n"+
+		     "Credits for previous versions:\n"+
 		     "\nResearchers:  \n"+
 		     "  Jason Robbins\n"+
 		     "  David Redmiles\n"+
 		     "  David Hilbert\n"+
-		     "\nProject Lead:  \n"+
-		     "  Jason Robbins\n"+
 		     "\nDevelopers and Testers:  \n"+
 		     "  Jason Robbins\n"+
 		     "  Adam Gauthier\n"+
@@ -119,9 +145,9 @@ public class AboutBox extends JFrame {
 
     _contact.setText("For more information on the Argo project:\n"+
 		     " + Visit our web site:\n"+
-		     "   http://www.ics.uci.edu/pub/arch/uml\n"+
+		     "   http://www.ArgoUML.org\n"+
 		     " + Send email to Jason Robbins at:\n"+
-		     "   jrobbins@ics.uci.edu\n"+
+		     "   jrobbins@collab.net\n"+
 		     " + Read our conference and journal papers:\n"+
 		     "   (list of publications: KBSE'96, IUI'98, ICSE'98, etc.)"
 		     );

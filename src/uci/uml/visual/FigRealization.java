@@ -36,7 +36,7 @@ import java.beans.*;
 
 import uci.gef.*;
 import uci.uml.ui.*;
-import uci.uml.Foundation.Core.*;
+import ru.novosoft.uml.foundation.core.*;
 
 public class FigRealization extends FigEdgeModelElement {
 
@@ -49,6 +49,7 @@ public class FigRealization extends FigEdgeModelElement {
     endArrow.setFillColor(Color.white);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+    _stereo.setText("");
   }
 
   public FigRealization(Object edge) {
@@ -67,12 +68,12 @@ public class FigRealization extends FigEdgeModelElement {
 
   protected boolean canEdit(Fig f) { return false; }
 
-  /** This is called aftern any part of the UML ModelElement has
+  /** This is called aftern any part of the UML MModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
   protected void modelChanged() {
     // do not set _name
-    updateStereotypeText();
+      //updateStereotypeText();
   }
 
 } /* end class FigRealization */

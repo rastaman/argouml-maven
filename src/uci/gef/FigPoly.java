@@ -32,6 +32,7 @@ package uci.gef;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Enumeration;
 import uci.ui.*;
 import uci.util.*;
 

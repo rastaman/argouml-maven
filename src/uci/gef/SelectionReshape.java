@@ -34,6 +34,7 @@ package uci.gef;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Enumeration;
 
 /** A Selection that allows the user to reshape the selected Fig.
  *  This is used with FigPoly, FigLine, and FigInk.  One handle is
