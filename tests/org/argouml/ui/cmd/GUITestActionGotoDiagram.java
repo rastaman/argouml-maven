@@ -25,10 +25,11 @@
 package org.argouml.ui.cmd;
 
 import java.io.File;
-
-import junit.framework.TestCase;
+import java.net.URL;
 
 import org.argouml.util.CheckMain;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the change of diagram from the command line.

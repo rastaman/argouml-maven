@@ -83,8 +83,6 @@ public class Decision {
     /**
      * Two decisions are considered to be equal if their names are equal. The
      * priority is not considered.
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object d2) {
         if (!(d2 instanceof Decision)) {

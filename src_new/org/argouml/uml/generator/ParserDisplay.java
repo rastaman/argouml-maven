@@ -40,6 +40,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileException;
+import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
 
 
@@ -200,7 +201,8 @@ public class ParserDisplay extends Parser {
      */
     private ParserDisplay() {
         attributeSpecialStrings = new PropertySpecialString[2];
-        attributeSpecialStrings[0] = new PropertySpecialString("frozen",
+        attributeSpecialStrings[0] =
+            new PropertySpecialString("frozen",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAStructuralFeature(element)) {
@@ -214,7 +216,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        attributeSpecialStrings[1] = new PropertySpecialString("addonly",
+        attributeSpecialStrings[1] =
+            new PropertySpecialString("addonly",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAStructuralFeature(element)) {
@@ -234,7 +237,8 @@ public class ParserDisplay extends Parser {
         attributeCustomSep.add(MyTokenizer.PAREN_EXPR_STRING_SEPARATOR);
 
         operationSpecialStrings = new PropertySpecialString[8];
-        operationSpecialStrings[0] = new PropertySpecialString("sequential",
+        operationSpecialStrings[0] =
+            new PropertySpecialString("sequential",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAOperation(element)) {
@@ -243,7 +247,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[1] = new PropertySpecialString("guarded",
+        operationSpecialStrings[1] =
+            new PropertySpecialString("guarded",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind = Model.getConcurrencyKind().getGuarded();
@@ -255,7 +260,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[2] = new PropertySpecialString("concurrent",
+        operationSpecialStrings[2] =
+            new PropertySpecialString("concurrent",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind =
@@ -268,7 +274,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[3] = new PropertySpecialString("concurrency",
+        operationSpecialStrings[3] =
+            new PropertySpecialString("concurrency",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind =
@@ -283,7 +290,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[4] = new PropertySpecialString("abstract",
+        operationSpecialStrings[4] =
+            new PropertySpecialString("abstract",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isAbstract = true;
@@ -295,7 +303,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[5] = new PropertySpecialString("leaf",
+        operationSpecialStrings[5] =
+            new PropertySpecialString("leaf",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isLeaf = true;
@@ -307,7 +316,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[6] = new PropertySpecialString("query",
+        operationSpecialStrings[6] =
+            new PropertySpecialString("query",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isQuery = true;
@@ -319,7 +329,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[7] = new PropertySpecialString("root",
+        operationSpecialStrings[7] =
+            new PropertySpecialString("root",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isRoot = true;

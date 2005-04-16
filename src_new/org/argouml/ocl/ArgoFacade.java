@@ -74,18 +74,23 @@ public class ArgoFacade implements tudresden.ocl.check.types.ModelFacade {
 
 	if (target != null && Model.getFacade().getName(target).equals(name)) {
 	    return new ArgoAny(target);
-	} 
-        Object classifier = p.findTypeInModel(name, p.getModel());
-        if (classifier == null) {
-            /**
-             * Added search in defined types 2001-10-18 STEFFEN ZSCHALER.
-             */
-            classifier = p.findType(name, false);
-            if (classifier == null) {
-                throw new OclTypeException("cannot find classifier: " + name);
-            }
-        }
-        return new ArgoAny(classifier);
+	} else {
+	    Object classifier = p.findTypeInModel(name, p.getModel());
+
+	    if (classifier == null) {
+		/**
+		 * Added search in defined types 2001-10-18 STEFFEN ZSCHALER.
+		 */
+		classifier = p.findType(name, false);
+
+		if (classifier == null) {
+		    throw new OclTypeException("cannot find classifier: "
+					       + name);
+		}
+	    }
+
+	    return new ArgoAny(classifier);
+	}
     }
 }
 
@@ -180,8 +185,8 @@ class ArgoAny implements Any, Type2 {
 		    // ordered association end -> Sequence; otherwise -> Set
                     Object stereotype = null;
                     if (Model.getFacade().getStereotypes(ae).size() > 0) {
-                        stereotype = Model.getFacade().getStereotypes(ae)
-                                .iterator().next();
+                        stereotype =
+                            Model.getFacade().getStereotypes(ae).iterator().next();
                     }
 		    if (stereotype != null
 			    && stereotype.toString() != null
@@ -265,8 +270,7 @@ class ArgoAny implements Any, Type2 {
 	}
 
 	Object foundOp = null; //MOperation
-	java.util.Collection operations = 
-                Model.getFacade().getOperations(classifier);
+	java.util.Collection operations = Model.getFacade().getOperations(classifier);
 	Iterator iter = operations.iterator();
 	while (iter.hasNext() && foundOp == null) {
 	    Object op = iter.next();
@@ -310,8 +314,9 @@ class ArgoAny implements Any, Type2 {
 	    return equals(type)
 		|| Model.getCoreHelper()
 		    .getAllSupertypes(classifier).contains(other.classifier);
-	} 
-        return false;
+	} else {
+	    return false;
+	}
     }
 
     /**
@@ -399,10 +404,8 @@ class ArgoAny implements Any, Type2 {
 	    return false;
 	}
 
-        Collection operationParameters = 
-                Model.getFacade().getParameters(operation);
-	if (!Model.getFacade().isReturn(
-                        operationParameters.iterator().next())) {
+        Collection operationParameters = Model.getFacade().getParameters(operation);
+	if (!Model.getFacade().isReturn(operationParameters.iterator().next())) {
 	    LOG.warn(
                 "ArgoFacade$ArgoAny expects the first operation parameter "
 		+ "to be the return type; this isn't the case"
@@ -417,8 +420,7 @@ class ArgoAny implements Any, Type2 {
 	int index = 0;
 	while (paramIter.hasNext()) {
 	    Object nextParam = paramIter.next();
-	    Object paramType = 
-                    Model.getFacade().getType(nextParam); //MClassifier
+	    Object paramType = Model.getFacade().getType(nextParam); //MClassifier
 	    Type operationParam = getOclRepresentation(paramType);
 	    if (!callParams[index].conformsTo(operationParam)) {
 		return false;

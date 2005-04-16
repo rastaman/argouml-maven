@@ -287,7 +287,6 @@ public class XmlInputStream extends BufferedInputStream {
                     // back to that child tag.
                     mark(1000);
                     while (realRead() != '<') {
-                            /* do nothing */ ;
 		    }
                     tagName = "";
                     char ch;

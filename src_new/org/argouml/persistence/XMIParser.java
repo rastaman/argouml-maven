@@ -105,8 +105,7 @@ public class XMIParser {
      * @param url the URL
      * @throws OpenException when there is an IO error
      */
-    public synchronized void readModels(Project p, URL url) 
-        throws OpenException {
+    public synchronized void readModels(Project p, URL url) throws OpenException {
 
         proj = p;
 
