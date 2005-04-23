@@ -207,7 +207,7 @@ public class GeneratorCpp extends Generator2
      */
     private String getFileExtension() {
         if (generatorPass == HEADER_PASS) return ".h";
-        return ".cpp";
+        else return ".cpp";
     }
 
     /**
@@ -857,15 +857,17 @@ public class GeneratorCpp extends Generator2
         int targetPkgNameLen = targetPkgName.length();
         if (localPkgName.equals(targetPkgName)) {
             return generateName(Model.getFacade().getName(item));
-        }
-        if (targetPkgName.indexOf(localPkgName) != -1) {
-            if (targetPkgName.substring(localPkgNameLen, localPkgNameLen + 2)
-                .equals("::")) {
-                // target is in Sub-Package of local class
-                return (targetPkgName.substring(localPkgNameLen + 2,
-                                targetPkgNameLen)
-                    + "::"
-                    + generateName(Model.getFacade().getName(item)));
+        } else {
+            if (targetPkgName.indexOf(localPkgName) != -1) {
+                if (targetPkgName.substring(localPkgNameLen,
+                                localPkgNameLen + 2)
+                    .equals("::")) {
+                    // target is in Sub-Package of local class
+                    return (targetPkgName.substring(localPkgNameLen + 2,
+                                    targetPkgNameLen)
+                        + "::"
+                        + generateName(Model.getFacade().getName(item)));
+                }
             }
         }
         return (targetPkgName + "::" 
@@ -894,8 +896,10 @@ public class GeneratorCpp extends Generator2
                     sb.append(contPath.toString());
                     break;
                 }
-                // close one namespace
-                sb.append(generateHeaderPackageEndSingle(fromSearch));
+                else {
+                    // close one namespace
+                    sb.append(generateHeaderPackageEndSingle(fromSearch));
+                }
             }
         }
         else { // initial start
@@ -1306,8 +1310,7 @@ public class GeneratorCpp extends Generator2
      */
     public String generatePackage(Object p) {
         StringBuffer sb = new StringBuffer();
-        String packName = 
-                generateName(Model.getDataTypesHelper().getLanguage(p));
+        String packName = generateName(Model.getFacade().getLanguage(p));
         sb.append("// package ").append(packName).append(" {")
             .append(LINE_SEPARATOR);
         Collection ownedElements = Model.getFacade().getOwnedElements(p);
@@ -2096,10 +2099,10 @@ public class GeneratorCpp extends Generator2
         else if (clsName.equals("float")) res = "return 0.0;";
         else if (clsName.equals("double")) res = "return 0.0;";
 
-        if (res == null) {
+        if (res == null)
             return INDENT + "return 0;" + LINE_SEPARATOR;
-        }
-        return INDENT + res + LINE_SEPARATOR;
+        else
+            return INDENT + res + LINE_SEPARATOR;
     }
 
     private String generateTaggedValues(Object e, int tagSelection) {
@@ -2346,7 +2349,9 @@ public class GeneratorCpp extends Generator2
                 .append(" */").append(LINE_SEPARATOR);
             return sDocComment.toString();
         }
-        return (s != null) ? s : "";
+        else {
+            return (s != null) ? s : "";
+        }
     }
 
     /**
@@ -2557,8 +2562,9 @@ public class GeneratorCpp extends Generator2
                     if (tagged.trim().equals("")
                             || tagged.trim().toLowerCase().equals("default")) {
                         return "";
-                    } 
-                    return tagged + ": ";
+                    } else {
+                        return tagged + ": ";
+                    }
                 }
             }
         }
@@ -2614,7 +2620,9 @@ public class GeneratorCpp extends Generator2
                 || Model.getFacade().isAInterface(opOwner)) {
             return " = 0";
         }
-        return "";
+        else {
+            return "";
+        }
     }
 
     /**
@@ -2623,8 +2631,9 @@ public class GeneratorCpp extends Generator2
     private String generateOperationChangeability(Object op) {
         if (Model.getFacade().isQuery(op)) {
             return "const ";
+        } else {
+            return "";
         }
-        return "";
     }
 
     /**
@@ -2636,8 +2645,9 @@ public class GeneratorCpp extends Generator2
                 && (Model.getFacade().getKind(par)).equals(
                         Model.getDirectionKind().getInParameter())) {
             return "const ";
+        } else {
+            return "";
         }
-        return "";
     }
 
     private String generateStructuralFeatureChangeability(Object sf) {

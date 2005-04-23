@@ -231,11 +231,6 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
         }
     }
 
-    /**
-     * Update Activations.
-     * First removes all current activation boxes, then adds new ones
-     * to all figobject depending on the state of the nodes.
-     */
     public void updateActivations() {
         Iterator it = getContentsNoEdges().iterator();
         while (it.hasNext()) {

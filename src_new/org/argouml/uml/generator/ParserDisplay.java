@@ -37,10 +37,10 @@ import org.argouml.application.api.Notation;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.StateMachinesFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileException;
+import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
 
 
@@ -201,7 +201,8 @@ public class ParserDisplay extends Parser {
      */
     private ParserDisplay() {
         attributeSpecialStrings = new PropertySpecialString[2];
-        attributeSpecialStrings[0] = new PropertySpecialString("frozen",
+        attributeSpecialStrings[0] =
+            new PropertySpecialString("frozen",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAStructuralFeature(element)) {
@@ -215,7 +216,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        attributeSpecialStrings[1] = new PropertySpecialString("addonly",
+        attributeSpecialStrings[1] =
+            new PropertySpecialString("addonly",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAStructuralFeature(element)) {
@@ -235,7 +237,8 @@ public class ParserDisplay extends Parser {
         attributeCustomSep.add(MyTokenizer.PAREN_EXPR_STRING_SEPARATOR);
 
         operationSpecialStrings = new PropertySpecialString[8];
-        operationSpecialStrings[0] = new PropertySpecialString("sequential",
+        operationSpecialStrings[0] =
+            new PropertySpecialString("sequential",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     if (Model.getFacade().isAOperation(element)) {
@@ -244,7 +247,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[1] = new PropertySpecialString("guarded",
+        operationSpecialStrings[1] =
+            new PropertySpecialString("guarded",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind = Model.getConcurrencyKind().getGuarded();
@@ -256,7 +260,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[2] = new PropertySpecialString("concurrent",
+        operationSpecialStrings[2] =
+            new PropertySpecialString("concurrent",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind =
@@ -269,7 +274,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[3] = new PropertySpecialString("concurrency",
+        operationSpecialStrings[3] =
+            new PropertySpecialString("concurrency",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     Object kind =
@@ -284,7 +290,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[4] = new PropertySpecialString("abstract",
+        operationSpecialStrings[4] =
+            new PropertySpecialString("abstract",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isAbstract = true;
@@ -296,7 +303,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[5] = new PropertySpecialString("leaf",
+        operationSpecialStrings[5] =
+            new PropertySpecialString("leaf",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isLeaf = true;
@@ -308,7 +316,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[6] = new PropertySpecialString("query",
+        operationSpecialStrings[6] =
+            new PropertySpecialString("query",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isQuery = true;
@@ -320,7 +329,8 @@ public class ParserDisplay extends Parser {
                     }
                 }
             });
-        operationSpecialStrings[7] = new PropertySpecialString("root",
+        operationSpecialStrings[7] =
+            new PropertySpecialString("root",
                 new PropertyOperation() {
                 public void found(Object element, String value) {
                     boolean isRoot = true;
@@ -1651,9 +1661,10 @@ public class ParserDisplay extends Parser {
             if (Model.getExtensionMechanismsHelper().isValidStereoType(obj,
             /* (MStereotype) */root)) {
                 return root;
+            } else {
+                LOG.debug("Missed stereotype "
+                                + Model.getFacade().getBaseClass(root));
             }
-            LOG.debug("Missed stereotype " 
-                    + Model.getFacade().getBaseClass(root));
         }
 
         if (!Model.getFacade().isANamespace(root)) {
@@ -2111,8 +2122,14 @@ public class ParserDisplay extends Parser {
         String name = tokenizer.nextToken().trim();
         if (name.equalsIgnoreCase("after")) {
             timeEvent = true;
+            if (tokenizer.hasMoreTokens()) {
+                s = tokenizer.nextToken().trim();
+            }
         } else if (name.equalsIgnoreCase("when")) {
             changeEvent = true;
+            if (tokenizer.hasMoreTokens()) {
+                s = tokenizer.nextToken().trim();
+            }
         } else {
             // the part after the || is for when there's nothing between the ()
             if (tokenizer.hasMoreTokens()
@@ -2123,14 +2140,13 @@ public class ParserDisplay extends Parser {
                     throw new ParseException(
                             "No matching brackets () found.", 0);
                 }
+                if (tokenizer.hasMoreTokens()) {
+                    s = tokenizer.nextToken().trim();
+                } // else the empty s will do
             } else {
                 signalEvent = true;
             }
         }
-        if (timeEvent || changeEvent || callEvent)
-            if (tokenizer.hasMoreTokens()) {
-                s = tokenizer.nextToken().trim();
-            } // else the empty s will do
 
         /*
          * We can distinct between 4 cases:
@@ -2146,30 +2162,39 @@ public class ParserDisplay extends Parser {
          * 4. Unhook and erase the existing trigger.
          */
         Object evt = Model.getFacade().getTrigger(trans);
-        Object model = 
-                ProjectManager.getManager().getCurrentProject().getModel();
-        StateMachinesFactory sMFactory = Model.getStateMachinesFactory();
         boolean createdEvent = false;
         if (trigger.length() > 0) {
             // case 1 and 2
             if (evt == null) {
                 // case 1
                 if (timeEvent) { // after(...)
-                    evt = sMFactory.buildTimeEvent(s, model);
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
+                    evt = Model.getStateMachinesFactory()
+                        .buildTimeEvent(s, model);
                 }
                 if (changeEvent) { // when(...)
-                    evt = sMFactory.buildChangeEvent(s, model);
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
+                    evt = Model.getStateMachinesFactory()
+                        .buildChangeEvent(s, model);
                 }
                 if (callEvent) { // operation(paramlist)
                     String triggerName = trigger.indexOf("(") > 0
                         ? trigger.substring(0, trigger.indexOf("(")).trim()
                         : trigger;
-                    evt = sMFactory.buildCallEvent(trans, triggerName, model);
+                    Object model = ProjectManager.getManager()
+                             .getCurrentProject().getModel();
+                    evt = Model.getStateMachinesFactory()
+                        .buildCallEvent(trans, triggerName, model);
                     // and parse the parameter list
                     parseParamList(evt, s, 0);
                 }
                 if (signalEvent) { // signalname
-                    evt = sMFactory.buildSignalEvent(trigger, model);
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
+                    evt = Model.getStateMachinesFactory()
+                        .buildSignalEvent(trigger, model);
                 }
                 createdEvent = true;
             } else {
@@ -2177,26 +2202,38 @@ public class ParserDisplay extends Parser {
                 if (!Model.getFacade().getName(evt).equals(trigger)) {
                     Model.getCoreHelper().setName(evt, trigger);
                     if (timeEvent && !Model.getFacade().isATimeEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         delete(evt);
-                        evt = sMFactory.buildTimeEvent(s, model);
+                        evt = Model.getStateMachinesFactory()
+                            .buildTimeEvent(s, model);
                         createdEvent = true;
                     }
                     if (changeEvent && !Model.getFacade().isAChangeEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         delete(evt);
-                        evt = sMFactory.buildChangeEvent(s, model);
+                        evt = Model.getStateMachinesFactory()
+                            .buildChangeEvent(s, model);
                         createdEvent = true;
                     }
                     if (callEvent && !Model.getFacade().isACallEvent(evt)) {
                         delete(evt);
-                        evt = sMFactory.buildCallEvent(trans, trigger, model);
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
+                        evt = Model.getStateMachinesFactory()
+                            .buildCallEvent(trans, trigger, model);
                         // and parse the parameter list
                         parseParamList(evt, s, 0);
                         createdEvent = true;
                     }
                     if (signalEvent
                             && !Model.getFacade().isASignalEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         delete(evt);
-                        evt = sMFactory.buildSignalEvent(trigger, model);
+                        evt = Model.getStateMachinesFactory()
+                            .buildSignalEvent(trigger, model);
                         createdEvent = true;
                     }
                 }
@@ -2280,19 +2317,20 @@ public class ParserDisplay extends Parser {
                 Object expr = Model.getFacade().getExpression(g);
                 String language = "";
 
-                /* TODO: This does not work! (MVW)
+                /* TODO: This does not work! Why not? (MVW)
                  Model.getFacade().setBody(expr,guard);
                  Model.getFacade().setExpression(g,expr); */
 
                 //hence a less elegant workaround that works:
                 if (expr != null) {
-                    language = Model.getDataTypesHelper().getLanguage(expr);
+                    language = Model.getFacade().getLanguage(expr);
                 }
                 Model.getStateMachinesHelper().setExpression(g,
                         Model.getDataTypesFactory()
                         	.createBooleanExpression(language, guard));
                 /* TODO: In this case, the properties panel
-                 is not updated with the changed expression! */
+                 is not updated
+                 with the changed expression! */
             }
         } else {
             if (g == null) {
@@ -2340,7 +2378,7 @@ public class ParserDisplay extends Parser {
                 Model.getStateMachinesHelper().setEffect(trans, effect);
             } else { // case 2
                 String language =
-                    Model.getDataTypesHelper().getLanguage(
+                    Model.getFacade().getLanguage(
                             Model.getFacade().getScript(effect));
                 Model.getCommonBehaviorHelper().setScript(effect,
                         Model.getDataTypesFactory()
@@ -2514,9 +2552,8 @@ public class ParserDisplay extends Parser {
     /**
      * Parse a Message textual description.<p>
      *
-     * TODO: - This method is too complex, lets break it up. <p>
-     * 
-     * Parses a message line of the form:
+     * TODO: - This method is too complex, lets break it up. Parses a message
+     * line on the form:
      *
      * <pre>
      * intno := integer|name
@@ -3527,13 +3564,15 @@ public class ParserDisplay extends Parser {
 
             if (i < len && n1.charAt(i) != '.') {
                 return false;
-            } 
-            i++;
+            } else {
+                i++;
+            }
 
             if (j < jlen && n2.charAt(j) != '.') {
                 return false;
+            } else {
+                j++;
             }
-            j++;
         }
         return true;
     }
@@ -3900,7 +3939,7 @@ public class ParserDisplay extends Parser {
         Object ae = Model.getFacade().getScript(old); // the ActionExpression
         String language = "Java";
         if (ae != null) {
-            language = Model.getDataTypesHelper().getLanguage(ae);
+            language = Model.getFacade().getLanguage(ae);
             String body = (String) Model.getFacade().getBody(ae);
             if (body.equals(s)) {
                 return;
@@ -3938,7 +3977,8 @@ public class ParserDisplay extends Parser {
                 Model.getCommonBehaviorFactory()
                 	.buildUninterpretedAction(actionState);
         } else {
-            language = Model.getDataTypesHelper().getLanguage(
+            language =
+                Model.getFacade().getLanguage(
                         Model.getFacade().getScript(entry));
         }
         Object actionExpression =

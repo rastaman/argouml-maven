@@ -105,8 +105,9 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
             if (state instanceof MState
 		&& ((MState) state).getStateMachine() != null) {
                 return ((MState) state).getStateMachine();
-            } 
-            return getStateMachine(state.getContainer());
+            } else {
+                return getStateMachine(state.getContainer());
+            }
         }
         if (handle instanceof MTransition) {
             Object sm = ((MTransition) handle).getStateMachine();
@@ -318,8 +319,10 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
                 retList.add(subState);
             }
             return retList;
+        } else {
+            throw new IllegalArgumentException(
+                    "Argument is not a composite state");
         }
-        throw new IllegalArgumentException("Argument is not a composite state");
     }
 
     /**

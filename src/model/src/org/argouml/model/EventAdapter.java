@@ -33,14 +33,6 @@ import java.beans.PropertyChangeListener;
  * @author Bob Tarling
  */
 public interface EventAdapter {
-        
-    /**
-     * @param pcl the property change listener to be added
-     */
     void addPropertyChangeListener(PropertyChangeListener pcl);
-    
-    /**
-     * @param pcl the property change listener to be removed
-     */
     void removePropertyChangeListener(PropertyChangeListener pcl);
 }

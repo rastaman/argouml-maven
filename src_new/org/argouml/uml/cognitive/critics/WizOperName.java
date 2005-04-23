@@ -85,8 +85,9 @@ public class WizOperName extends WizMEName {
     public int getNumSteps() {
         if (possibleConstructor) {
             return 2;
+        } else {
+            return 1;
         }
-        return 1;
     }
 
     private Vector getOptions() {
@@ -138,8 +139,9 @@ public class WizOperName extends WizMEName {
                     step2.setTarget(getToDoItem());
                 }
                 return step2;
+            } else {
+                return super.makePanel(1);
             }
-            return super.makePanel(1);
         }
         return null;
     }
@@ -233,7 +235,7 @@ public class WizOperName extends WizMEName {
                 if (theStereotype == null) {
                     theStereotype =
                         Model.getExtensionMechanismsFactory()
-                        	.buildStereotype("create", m);
+                        	.buildStereotype("create");
                     Model.getCoreHelper().setName(theStereotype, "create");
                     // theStereotype.setStereotype(???);
                     Model.getExtensionMechanismsHelper()
@@ -283,33 +285,34 @@ public class WizOperName extends WizMEName {
         Object parentNS = Model.getFacade().getNamespace(phantomNS);
         if (parentNS == null) {
             return targetModel;
-        }
-        targetParentNS = findNamespace(parentNS, targetModel);
-        //
-        //   see if there is already an element with the same name
-        //
-        Collection ownedElements =
-            Model.getFacade().getOwnedElements(targetParentNS);
-        String phantomName = Model.getFacade().getName(phantomNS);
-        String targetName;
-        if (ownedElements != null) {
-            Object ownedElement;
-            Iterator iter = ownedElements.iterator();
-            while (iter.hasNext()) {
-                ownedElement = iter.next();
-                targetName = Model.getFacade().getName(ownedElement);
-                if (targetName != null && phantomName.equals(targetName)) {
-                    if (Model.getFacade().isAPackage(ownedElement)) {
-                        ns = ownedElement;
-                        break;
+        } else {
+            targetParentNS = findNamespace(parentNS, targetModel);
+            //
+            //   see if there is already an element with the same name
+            //
+            Collection ownedElements =
+                Model.getFacade().getOwnedElements(targetParentNS);
+            String phantomName = Model.getFacade().getName(phantomNS);
+            String targetName;
+            if (ownedElements != null) {
+                Object ownedElement;
+                Iterator iter = ownedElements.iterator();
+                while (iter.hasNext()) {
+                    ownedElement = iter.next();
+                    targetName = Model.getFacade().getName(ownedElement);
+                    if (targetName != null && phantomName.equals(targetName)) {
+                        if (Model.getFacade().isAPackage(ownedElement)) {
+                            ns = ownedElement;
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (ns == null) {
-            ns = Model.getCoreFactory().createNamespace();
-            Model.getCoreHelper().setName(ns, phantomName);
-            Model.getCoreHelper().addOwnedElement(targetParentNS, ns);
+            if (ns == null) {
+                ns = Model.getCoreFactory().createNamespace();
+                Model.getCoreHelper().setName(ns, phantomName);
+                Model.getCoreHelper().addOwnedElement(targetParentNS, ns);
+            }
         }
         return ns;
     }
