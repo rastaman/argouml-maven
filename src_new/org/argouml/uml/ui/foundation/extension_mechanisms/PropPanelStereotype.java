@@ -77,7 +77,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         addField(Translator.localize("label.base-class"), baseClass);
 
         addField(Translator.localize("label.namespace"),
-                 getNamespaceSelector());
+                 getNamespaceComboBox());
 
 
         JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3,

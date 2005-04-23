@@ -26,7 +26,9 @@ package org.argouml.language.java.ui;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
+import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
 import org.argouml.kernel.ProjectManager;
@@ -40,6 +42,10 @@ import org.argouml.uml.generator.Generator2;
  * @author  thn
  */
 public class ModelTableModel extends DefaultTableModel implements Runnable {
+
+    private Object root = null;
+    private JSplitPane mainPane;
+    private Vector results = new Vector();
 
     /**
      * Creates a new instance of ModelTableModel.
@@ -137,7 +143,8 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
                 packagePath,
                 codePath,
             };
+        } else {
+            return null;
         }
-        return null;
     }
 }

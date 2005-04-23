@@ -435,8 +435,9 @@ class ArgoJGraph extends JGraph {
     public int hashCode() {
         if (getCurrentDiagramId() == null) {
             return 0;
+        } else {
+            return getCurrentDiagramId().hashCode();
         }
-        return getCurrentDiagramId().hashCode();
     }
 
     /**

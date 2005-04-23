@@ -413,13 +413,11 @@ public final class Model {
     /**
      * Getter for the XmiWriter object
      * 
-     * @param model the project member model
-     * @param writer the writer
      * @return the object implementing the XmiWriter interface
      * @throws UmlException on any error while writing
      */
     public static XmiWriter getXmiWriter(Object model, Writer writer)
-        throws UmlException {
+            throws UmlException {
         return impl.getXmiWriter(model, writer);
     }
     

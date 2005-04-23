@@ -47,7 +47,7 @@ public class FigJoinState extends FigStateVertex {
     private static final int X = 10;
     private static final int Y = 10;
     private static final int WIDTH = 80;
-    private static final int HEIGHT = 7;
+    private static final int HEIGHT = 9;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -102,9 +102,9 @@ public class FigJoinState extends FigStateVertex {
     public void setBounds(int x, int y, int w, int h) {
         Rectangle oldBounds = getBounds();
         if (w > h)
-            h = HEIGHT;
+            h = 9;
         else
-            w = HEIGHT;
+            w = 9;
         getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);
 

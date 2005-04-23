@@ -48,7 +48,7 @@ public class PropPanelSynchState extends PropPanelStateVertex {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+                getStereotypeBox());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         addField(Translator.localize("label.bound"),

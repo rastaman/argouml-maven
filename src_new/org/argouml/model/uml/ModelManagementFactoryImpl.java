@@ -50,13 +50,12 @@ public class ModelManagementFactoryImpl
     /**
      * Logger.
      */
-    private static final Logger LOG = 
-            Logger.getLogger(ModelManagementFactoryImpl.class);
+    private static final Logger LOG = Logger.getLogger(ModelManagementFactoryImpl.class);
 
     /**
      * The root model.
      */
-    private MModel rootModel;
+    MModel rootModel;
     
     /**
      * The model implementation.
@@ -85,13 +84,11 @@ public class ModelManagementFactoryImpl
 
     /**
      * Sets the root model of the project
-     * @param theRootModel the new root model.
-     *
-     * @see org.argouml.model.ModelManagementFactory#setRootModel(java.lang.Object)
+     * @param rootModel the new root model.
      */
-    public void setRootModel(Object theRootModel) {
-        LOG.info("Setting the root model to " + theRootModel);
-        this.rootModel = (MModel) theRootModel;
+    public void setRootModel(Object rootModel) {
+        LOG.info("Setting the root model to " + rootModel);
+        this.rootModel = (MModel)rootModel;
     }
     
     /**

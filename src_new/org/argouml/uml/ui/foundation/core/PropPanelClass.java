@@ -63,9 +63,9 @@ public class PropPanelClass extends PropPanelClassifier {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+                getStereotypeBox());
         addField(Translator.localize("label.namespace"),
-                getNamespaceSelector());
+                getNamespaceComboBox());
         getModifiersPanel().add(new UMLClassActiveCheckBox());
         add(getModifiersPanel());
         add(getNamespaceVisibilityPanel());

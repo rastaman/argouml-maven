@@ -62,7 +62,7 @@ public class PropPanelComment extends PropPanelModelElement {
         uptd.putProperty("filterNewlines", Boolean.FALSE);
 
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+                getStereotypeBox());
 
         addField(Translator.localize("label.annotated-elements"),
             new JScrollPane(new UMLLinkedList(

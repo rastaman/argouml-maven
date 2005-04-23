@@ -79,6 +79,24 @@ public class UMLActivityDiagram extends UMLDiagram {
     }
 
     /**
+     * @param m the namespace for the diagram
+     */
+    public UMLActivityDiagram(Object m) {
+        this();
+        setNamespace(m);
+        Object context = Model.getFacade().getContext(getStateMachine());
+        String name = null;
+        if (context != null
+            && Model.getFacade().getName(context) != null
+            && Model.getFacade().getName(context).length() > 0) {
+            name = Model.getFacade().getName(context);
+            try {
+                setName(name);
+            } catch (PropertyVetoException pve) { }
+        }
+    }
+
+    /**
      * Constructor.
      *
      * @param namespace the namespace for the diagram
@@ -154,11 +172,9 @@ public class UMLActivityDiagram extends UMLDiagram {
 
         super.setNamespace(m);
         ActivityDiagramGraphModel gm = new ActivityDiagramGraphModel();
-//        setGraphModel(gm); //MVW
         gm.setNamespace(m);
         if (agraph != null) {
             gm.setMachine(agraph);
-//            setStateMachine(agraph); // MVW
         }
         LayerPerspective lay =
             new LayerPerspectiveMutable(Model.getFacade().getName(m), gm);
@@ -176,7 +192,11 @@ public class UMLActivityDiagram extends UMLDiagram {
     public Object getOwner() {
         ActivityDiagramGraphModel gm =
             (ActivityDiagramGraphModel) getGraphModel();
-        return gm.getMachine();
+        Object sm = gm.getMachine();
+        if (sm != null) {
+            return sm;
+        }
+        return gm.getNamespace();
     }
 
     /**

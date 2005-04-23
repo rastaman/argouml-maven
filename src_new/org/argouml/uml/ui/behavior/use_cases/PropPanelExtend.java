@@ -74,7 +74,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         addField(Translator.localize("label.name"),
 		 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+                getStereotypeBox());
         addField(Translator.localize("label.namespace"),
 		 getNamespaceScroll());
 

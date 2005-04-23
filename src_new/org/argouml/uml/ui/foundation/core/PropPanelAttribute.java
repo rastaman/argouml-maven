@@ -56,7 +56,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeSelector());
+                getStereotypeBox());
         addField(Translator.localize("label.owner"),
                 getOwnerScroll());
         addField(Translator.localize("label.multiplicity"),

@@ -73,8 +73,7 @@ public class TestUMLMessagePredecessorListModel
      */
     protected void removeHalfModel(Object[] elements) {
 	for (int i = 0; i < 5; i++) {
-	    Model.getCollaborationsHelper().removePredecessor(getElem(), 
-                            elements[i]);
+	    Model.getCollaborationsHelper().removePredecessor(getElem(), elements[i]);
         }
     }
 

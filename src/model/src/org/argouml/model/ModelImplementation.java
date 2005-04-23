@@ -277,8 +277,6 @@ public interface ModelImplementation {
     /**
      * Getter for the XmiWriter object
      * 
-     * @param model the project member model
-     * @param writer the writer
      * @return the object implementing the XmiWriter interface
      * @throws UmlException on any error while writing
      */

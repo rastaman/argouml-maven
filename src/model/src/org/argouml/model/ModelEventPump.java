@@ -200,8 +200,7 @@ public interface ModelEventPump {
     void setSaveAction(Action saveAction);
     
     /**
-     * Get the action that is registered with the pump 
-     * that is used to perform saving.
+     * Get the action that is registered with the pump that is used to perform saving.
      * @return the relevant Action or null.
      */
     Action getSaveAction();
