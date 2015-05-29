@@ -207,7 +207,7 @@ that contains the common parts of all ArgoUML projects.
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -280,7 +280,7 @@ that contains the common parts of all ArgoUML projects.
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0-beta-2</version>
+				<version>2.0</version>
 			</plugin>
 
 			<plugin>
