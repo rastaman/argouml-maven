@@ -9,3 +9,6 @@
 /.classpath.full
 /.fbwarnings
 /.fbprefs
+**/.classpath
+**/.project
+**/.settings
