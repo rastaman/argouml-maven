@@ -207,7 +207,7 @@ that contains the common parts of all ArgoUML projects.
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.0.1</version>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
