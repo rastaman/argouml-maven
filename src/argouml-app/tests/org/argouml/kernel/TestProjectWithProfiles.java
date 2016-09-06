@@ -49,8 +49,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.argouml.FileHelper;
 import org.argouml.application.helpers.ApplicationVersion;
 import org.argouml.model.InitializeModel;
@@ -68,6 +66,9 @@ import org.argouml.profile.ProfileManager;
 import org.argouml.profile.ProfileMother;
 import org.argouml.profile.UserDefinedProfile;
 import org.argouml.profile.init.InitProfileSubsystem;
+import org.junit.Ignore;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the {@link ProjectImpl} with profiles, specifically this enables the 

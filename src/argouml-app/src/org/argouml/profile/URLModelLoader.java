@@ -40,8 +40,10 @@
 package org.argouml.profile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -57,6 +59,8 @@ import org.xml.sax.InputSource;
  * @author Tom Morris, Thomas Neustupny
  */
 public class URLModelLoader implements ProfileModelLoader {
+
+    private static final int URLCONNECTION_TIMEOUT = 1500;
 
     /**
      * Load a profile from a URL.  If a profile with the same public ID has 
@@ -94,7 +98,15 @@ public class URLModelLoader implements ProfileModelLoader {
                     }
                     zis.close();
                 }
-                InputSource inputSource = new InputSource(url.toExternalForm());
+                URLConnection urlConn = url.openConnection();
+                urlConn.setConnectTimeout(URLCONNECTION_TIMEOUT);
+                urlConn.setReadTimeout(URLCONNECTION_TIMEOUT);
+                urlConn.setAllowUserInteraction(false);
+                urlConn.setDoOutput(true);
+
+                InputStream inStream = urlConn.getInputStream();
+                InputSource inputSource = new InputSource(inStream);
+                inputSource.setSystemId(url.toExternalForm());
                 inputSource.setPublicId(publicId.toString());
                 elements = xmiReader.parse(inputSource, true);
             } catch (UmlException e) {

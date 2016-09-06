@@ -474,7 +474,7 @@ class LineSeparator extends CustomSeparator {
  * @since 0.11.2
  * @see CustomSeparator
  */
-public class MyTokenizer implements Enumeration {
+public class MyTokenizer implements Enumeration<String> {
     /** A custom separator for quoted strings enclosed in single quotes
      *  and using \ as escape character. There may not be an end quote
      *  if the tokenizer reaches the end of the String. */
@@ -516,7 +516,7 @@ public class MyTokenizer implements Enumeration {
     private final TokenSep delims;
     private String savedToken;
     private int savedIdx;
-    private List customSeps;
+    private List<CustomSeparator> customSeps;
     private String putToken;
 
     /**
@@ -552,7 +552,7 @@ public class MyTokenizer implements Enumeration {
 	tokIdx = 0;
 	eIdx = string.length();
 	savedToken = null;
-	customSeps = new ArrayList();
+	customSeps = new ArrayList<CustomSeparator>();
 	customSeps.add(sep);
     }
 
@@ -564,14 +564,14 @@ public class MyTokenizer implements Enumeration {
      * @param delim	The String of delimiters.
      * @param seps	Some container with custom separators to use.
      */
-    public MyTokenizer(String string, String delim, Collection seps) {
+    public MyTokenizer(String string, String delim, Collection<CustomSeparator> seps) {
 	source = string;
 	delims = parseDelimString(delim);
 	sIdx = 0;
 	tokIdx = 0;
 	eIdx = string.length();
 	savedToken = null;
-	customSeps = new ArrayList(seps);
+	customSeps = new ArrayList<CustomSeparator>(seps);
     }
 
     /**
@@ -697,7 +697,7 @@ public class MyTokenizer implements Enumeration {
      * @return nextToken();
      * @see	#nextToken() nextToken
      */
-    public Object nextElement() {
+    public String nextElement() {
 	return nextToken();
     }
 

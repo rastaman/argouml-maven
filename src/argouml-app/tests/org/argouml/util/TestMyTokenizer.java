@@ -491,7 +491,7 @@ public class TestMyTokenizer extends TestCase {
 			     String str,
 			     String delim,
 			     String res[],
-			     Collection seps) {
+			     Collection<CustomSeparator> seps) {
 	MyTokenizer tokenizer = new MyTokenizer(str, delim, seps);
 	String tok;
 	int i;

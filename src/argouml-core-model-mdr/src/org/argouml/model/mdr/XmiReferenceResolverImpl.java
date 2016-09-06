@@ -46,6 +46,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,21 +71,20 @@ import org.xml.sax.InputSource;
  *
  * This provides two functions:
  * <nl>
- * <li>Records the mapping of <code>xmi.id</code>'s to MDR objects as they
- * are resolved so that the map can be used to lookup objects by xmi.id later
- * (used by diagram subsystem to associate GEF/PGML objects with model
- * elements).  This map is also used to resolve cross references (HREFs) to
- * other files when reading multiple files linked together.
+ * <li>Records the mapping of <code>xmi.id</code>'s to MDR objects as they are
+ * resolved so that the map can be used to lookup objects by xmi.id later (used
+ * by diagram subsystem to associate GEF/PGML objects with model elements). This
+ * map is also used to resolve cross references (HREFs) to other files when
+ * reading multiple files linked together.
  * <li>Keeps an inverse map of objects to the xmi.id that they were read in from
  * which can be used to maintain stable xmi.id values on output.
  * <li>Handles search special processing for profiles including the search list
  * of directories which an be used to look them up.
- * <li>Resolves a System ID to a fully specified URL which can be used by MDR
- * to open and read the referenced content. The standard MDR resolver is
- * extended to support that "jar:" protocol for URLs, allowing it to handle
- * multi-file Zip/jar archives contained a set of models. The method
- * <code>toUrl</code> and supporting methods and fields was copied from the
- * AndroMDA 3.1 implementation
+ * <li>Resolves a System ID to a fully specified URL which can be used by MDR to
+ * open and read the referenced content. The standard MDR resolver is extended
+ * to support that "jar:" protocol for URLs, allowing it to handle multi-file
+ * Zip/jar archives contained a set of models. The method <code>toUrl</code> and
+ * supporting methods and fields was copied from the AndroMDA 3.1 implementation
  * (org.andromda.repositories.mdr.MDRXmiReferenceResolverContext) by Ludo
  * (rastaman).
  * </nl>
@@ -95,17 +95,18 @@ import org.xml.sax.InputSource;
  * @author Tom Morris
  *
  */
-class XmiReferenceResolverImpl extends XmiContext {
+class XmiReferenceResolverImpl extends XmiContext implements ArgoUMLMDRXmiReferencesResolver {
 
-    private static final Logger LOG =
-        Logger.getLogger(XmiReferenceResolverImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(XmiReferenceResolverImpl.class.getName());
+
+    private static final int URLCONNECTION_TIMEOUT = 1500;
 
     /**
-     * Map of href/id to object.  IDs for top level document will have no
-     * leading URL piece while others will be in <url>#<id> form
+     * Map of href/id to object. IDs for top level document will have no leading
+     * URL piece while others will be in <url>#<id> form
      */
-    private Map<String, Map<String, Object>> idToObject =
-        Collections.synchronizedMap(new HashMap<String, Map<String, Object>>());
+    private Map<String, Map<String, Object>> idToObject = Collections
+            .synchronizedMap(new HashMap<String, Map<String, Object>>());
 
     /**
      * Map indexed by MOF ID containing XmiReference objects.
@@ -129,24 +130,23 @@ class XmiReferenceResolverImpl extends XmiContext {
 
     /**
      * The array of paths in which the models references in other models will be
-     * searched.
-     * Copied from AndroMDA 3.1 by Ludo (rastaman).
-     * see org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
+     * searched. Copied from AndroMDA 3.1 by Ludo (rastaman). see
+     * org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
      */
     private List<String> modulesPath = new ArrayList<String>();
 
     /**
-     * Module to URL map to cache things we've already found.
-     * Copied from AndroMDA 3.1 by Ludo (rastaman).
+     * Module to URL map to cache things we've already found. Copied from
+     * AndroMDA 3.1 by Ludo (rastaman).
      *
      * see org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
      */
     private Map<String, URL> urlMap = new HashMap<String, URL>();
 
     /**
-     * Mapping from absolute resolved URL to the original SystemID
-     * that was read from the input file.  We'll preserve this mapping when
-     * we write things back out again.
+     * Mapping from absolute resolved URL to the original SystemID that was read
+     * from the input file. We'll preserve this mapping when we write things
+     * back out again.
      */
     private Map<String, String> reverseUrlMap = new HashMap<String, String>();
 
@@ -166,19 +166,17 @@ class XmiReferenceResolverImpl extends XmiContext {
 
     /**
      * Constructor.
+     * 
      * @param systemId
-     * @see org.netbeans.lib.jmi.xmi.XmiContext#XmiContext(javax.jmi.reflect.RefPackage[], org.netbeans.api.xmi.XMIInputConfig)
-     * (see also {link org.netbeans.api.xmi.XMIReferenceResolver})
+     * @see org.netbeans.lib.jmi.xmi.XmiContext#XmiContext(javax.jmi.reflect.RefPackage[],
+     *      org.netbeans.api.xmi.XMIInputConfig) (see also {link
+     *      org.netbeans.api.xmi.XMIReferenceResolver})
      */
     // CHECKSTYLE:OFF - ignore too many parameters since API is fixed by MDR
-    XmiReferenceResolverImpl(RefPackage[] extents, XMIInputConfig config,
-            Map<String, XmiReference> objectToXmiref,
-            Map<String, String> publicIds,
-            Map<String, Map<String, Object>> idToObject,
-            List<String> searchDirs,
-            boolean isProfile, String publicId, String systemId,
-            MDRModelImplementation modelImplementation) {
-    // CHECKSTYLE:ON
+    XmiReferenceResolverImpl(RefPackage[] extents, XMIInputConfig config, Map<String, XmiReference> objectToXmiref,
+            Map<String, String> publicIds, Map<String, Map<String, Object>> idToObject, List<String> searchDirs,
+            boolean isProfile, String publicId, String systemId, MDRModelImplementation modelImplementation) {
+        // CHECKSTYLE:ON
         super(extents, config);
         modelImpl = modelImplementation;
         mofidToXmiref = objectToXmiref;
@@ -189,21 +187,18 @@ class XmiReferenceResolverImpl extends XmiContext {
         modelPublicId = publicId;
         if (isProfile) {
             if (publicId == null) {
-                LOG.log(Level.WARNING, "Profile load with null public ID.  Using system ID - "
-                        + systemId);
+                LOG.log(Level.WARNING, "Profile load with null public ID.  Using system ID - " + systemId);
                 modelPublicId = publicId = systemId;
             }
             if (public2SystemIds.containsKey(modelPublicId)) {
                 if (systemId.equals(public2SystemIds.get(publicId))) {
-                    LOG.log(Level.WARNING, "Loaded profile is being re-read "
-                            + "publicId = \"" + publicId + "\";  systemId = \""
-                            + systemId + "\".");
+                    LOG.log(Level.WARNING, "(2) Loaded profile is being re-read " + "publicId = \"" + publicId
+                            + "\";  systemId = \"" + systemId + "\".");
                 } else {
-                    LOG.log(Level.WARNING, "Profile with the duplicate publicId "
-                            + "is being loaded! publicId = \"" + publicId
-                            + "\"; existing systemId = \""
-                            + public2SystemIds.get(publicId)
-                            + "\"; new systemId = \"" + systemId + "\".");
+                    LOG.log(Level.WARNING,
+                            "(2) Profile with the duplicate publicId " + "is being loaded! publicId = \"" + publicId
+                                    + "\"; existing systemId = \"" + public2SystemIds.get(publicId)
+                                    + "\"; new systemId = \"" + systemId + "\".");
                 }
             }
             public2SystemIds.put(publicId, systemId);
@@ -221,21 +216,17 @@ class XmiReferenceResolverImpl extends XmiContext {
      *            referenced object
      */
     @Override
-    public void register(final String systemId, final String xmiId,
-            final RefObject object) {
+    public void register(final String systemId, final String xmiId, final RefObject object) {
 
-        LOG.log(Level.FINE,
-                "Registering XMI ID {0} in system ID {1} to object with MOF ID {2}",
-                new Object[]{xmiId, systemId, object.refMofId()});
+        LOG.log(Level.FINE, "Registering XMI ID {0} in system ID {1} to object with MOF ID {2}",
+                new Object[] { xmiId, systemId, object.refMofId() });
 
         if (topSystemId == null) {
             topSystemId = systemId;
             try {
-                baseUri = new URI(
-                        systemId.substring(0, systemId.lastIndexOf('/') + 1));
+                baseUri = new URI(systemId.substring(0, systemId.lastIndexOf('/') + 1));
             } catch (URISyntaxException e) {
-                LOG.log(Level.WARNING, "Bad URI syntax for base URI from XMI document "
-                        + systemId, e);
+                LOG.log(Level.WARNING, "Bad URI syntax for base URI from XMI document " + systemId, e);
                 baseUri = null;
             }
             LOG.log(Level.FINE, "Top system ID set to {0}", topSystemId);
@@ -258,11 +249,10 @@ class XmiReferenceResolverImpl extends XmiContext {
                 // but the real issue is that MagicDraw serializes the same
                 // object in two different composition associations, first in
                 // the referencing file and second in the referenced file
-                LOG.log(Level.FINE, "register called twice for the same object "
-                        + "- ignoring second");
-                LOG.log(Level.FINE, " - first reference = {0}#{1}", new Object[]{ref.getSystemId(), ref.getXmiId()});
-                LOG.log(Level.FINE, " - 2nd reference   = {0}#{1}", new Object[]{systemId, xmiId});
-                LOG.log(Level.FINE, " -   resolved system id = {0}", resolvedSystemId );
+                LOG.log(Level.FINE, "register called twice for the same object " + "- ignoring second");
+                LOG.log(Level.FINE, " - first reference = {0}#{1}", new Object[] { ref.getSystemId(), ref.getXmiId() });
+                LOG.log(Level.FINE, " - 2nd reference   = {0}#{1}", new Object[] { systemId, xmiId });
+                LOG.log(Level.FINE, " -   resolved system id = {0}", resolvedSystemId);
             } else {
                 registerInt(resolvedSystemId, xmiId, object);
                 super.register(resolvedSystemId, xmiId, object);
@@ -273,20 +263,18 @@ class XmiReferenceResolverImpl extends XmiContext {
                 // can resolve all references
                 super.register(resolvedSystemId, xmiId, object);
             } else {
-               LOG.log(Level.SEVERE, "Collision - multiple elements with same xmi.id : "
-                        + xmiId);
-                throw new IllegalStateException(
-                        "Multiple elements with same xmi.id");
+                LOG.log(Level.SEVERE, "Collision - multiple elements with same xmi.id : " + xmiId);
+                throw new IllegalStateException("Multiple elements with same xmi.id");
             }
         }
     }
 
-    private RefObject getReferenceInt(String docId, String xmiId)  {
+    private RefObject getReferenceInt(String docId, String xmiId) {
         Map<String, Object> map = idToObject.get(docId);
         if (map != null) {
             RefObject result = (RefObject) map.get(xmiId);
-            if (result == null ) {
-                LOG.log(Level.FINE, "No internal reference for - {0}#{1}", new Object[]{docId, xmiId});
+            if (result == null) {
+                LOG.log(Level.FINE, "No internal reference for - {0}#{1}", new Object[] { docId, xmiId });
             }
             return result;
         }
@@ -297,24 +285,28 @@ class XmiReferenceResolverImpl extends XmiContext {
         Map<String, Object> map = idToObject.get(docId);
         if (map == null) {
             map = new HashMap<String, Object>();
-            idToObject.put(docId,map);
+            idToObject.put(docId, map);
         }
         map.put(xmiId, object);
         mofidToXmiref.put(object.refMofId(), new XmiReference(docId, xmiId));
     }
 
     /*
-     * @see org.netbeans.lib.jmi.xmi.XmiContext#getReference(java.lang.String, java.lang.String)
+     * @see org.netbeans.lib.jmi.xmi.XmiContext#getReference(java.lang.String,
+     * java.lang.String)
      */
-    public RefObject getReference (String docId, String xmiId) {
+    public RefObject getReference(String docId, String xmiId) {
         RefObject ro = getReferenceInt(docId, xmiId);
         if (ro == null && !idToObject.containsKey(docId)) {
+            // TODO: Explain why there was this check : &&
+            // !idToObject.containsKey(docId)
+            // Is there any recursive behavior on certain documents ?
             ro = super.getReference(docId, xmiId);
         }
         if (ro == null) {
             // TODO: Distinguish between deferred resolution and things which
             // are unresolved at end of load and should be reported to user.
-            LOG.log(Level.SEVERE, "Failed to resolve " + docId + "#" + xmiId );
+            LOG.log(Level.SEVERE, "Failed to resolve " + docId + "#" + xmiId);
         }
         // TODO: Count/report unresolved references
         return ro;
@@ -325,26 +317,25 @@ class XmiReferenceResolverImpl extends XmiContext {
      *
      * @return map of xmi.id to RefObject correspondences
      */
-    Map<String, Object> getIdToObjectMap() {
+    public Map<String, Object> getIdToObjectMap() {
         return getIdToObjectMaps().get(topSystemId);
     }
 
     /**
      * @return map of maps from xmi ID to object
      */
-    Map<String, Map<String, Object>> getIdToObjectMaps() {
+    public Map<String, Map<String, Object>> getIdToObjectMaps() {
         return idToObject;
     }
 
     /**
      * Reinitialize the object id maps to the empty state.
      */
-    void clearIdMaps() {
+    public void clearIdMaps() {
         getIdToObjectMap().clear();
         mofidToXmiref.clear();
         topSystemId = null;
     }
-
 
     /////////////////////////////////////////////////////
     ////////// Begin AndroMDA Code //////////////////////
@@ -354,14 +345,14 @@ class XmiReferenceResolverImpl extends XmiContext {
      * Convert a System ID from an HREF which may be relative or otherwise in
      * need of resolution to an absolute URL.
      *
-     * Copied from AndroMDA 3.1 by Ludo (rastaman)
-     * see @link org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
+     * Copied from AndroMDA 3.1 by Ludo (rastaman) see @link
+     * org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
+     * 
      * @see org.netbeans.lib.jmi.xmi.XmiContext#toURL(java.lang.String)
      */
     @Override
     public URL toURL(String systemId) {
-        LOG.log(Level.FINE,
-                "attempting to resolve Xmi Href --> {0}", systemId);
+        LOG.log(Level.FINE, "attempting to resolve Xmi Href --> {0}", systemId);
 
         // TODO: Using just the last piece of the ID leaves the potential for
         // name collisions if two linked files have the same name in different
@@ -389,8 +380,7 @@ class XmiReferenceResolverImpl extends XmiContext {
             if (modelUrl == null) {
                 // Try to find suffix in module list.
                 String modelUrlAsString = findModuleURL(suffix);
-                if (!(modelUrlAsString == null
-                        || "".equals(modelUrlAsString))) {
+                if (!(modelUrlAsString == null || "".equals(modelUrlAsString))) {
                     modelUrl = getValidURL(modelUrlAsString);
                 }
                 if (modelUrl == null) {
@@ -413,10 +403,9 @@ class XmiReferenceResolverImpl extends XmiContext {
                 String relativeUri = systemId;
                 try {
                     if (baseUri != null) {
-                        relativeUri = baseUri.relativize(modelUrl.toURI())
-                                .toString();
+                        relativeUri = baseUri.relativize(modelUrl.toURI()).toString();
                         LOG.log(Level.FINE, "  system ID {0} modelUrl {1}\n  relativized as {2}",
-                                new Object[]{systemId, modelUrl, relativeUri});
+                                new Object[] { systemId, modelUrl, relativeUri });
                     } else {
                         relativeUri = systemId;
                     }
@@ -424,7 +413,7 @@ class XmiReferenceResolverImpl extends XmiContext {
                     LOG.log(Level.SEVERE, "Error relativizing system ID " + systemId, e);
                     relativeUri = systemId;
                 }
-                // TODO: Check whether this is really needed.  I think it's
+                // TODO: Check whether this is really needed. I think it's
                 // left over from an incomplete understanding of the MagicDraw
                 // composition error problem - tfm
                 reverseUrlMap.put(modelUrl.toString(), relativeUri);
@@ -442,6 +431,7 @@ class XmiReferenceResolverImpl extends XmiContext {
      * Copied from AndroMDA 3.1 by Ludo (rastaman).
      *
      * see org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
+     * 
      * @param moduleName
      *            the name of the module without any path
      * @return the complete URL string of the module if found (null if not
@@ -457,9 +447,7 @@ class XmiReferenceResolverImpl extends XmiContext {
         for (String moduleDirectory : modulesPath) {
             File candidate = new File(moduleDirectory, moduleName);
 
-            LOG.log(Level.FINE,
-                    "candidate {0} exists={1}",
-                    new Object[]{candidate, candidate.exists()});
+            LOG.log(Level.FINE, "candidate {0} exists={1}", new Object[] { candidate, candidate.exists() });
 
             if (candidate.exists()) {
                 String urlString;
@@ -482,14 +470,14 @@ class XmiReferenceResolverImpl extends XmiContext {
         return null;
     }
 
-
     /**
      * Gets the suffix of the <code>systemId</code>.
      * <p>
      * Copied from AndroMDA 3.1 by Ludo (rastaman). see
      * org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
      *
-     * @param systemId the system identifier.
+     * @param systemId
+     *            the system identifier.
      * @return the suffix as a String.
      */
     private String getSuffix(String systemId) {
@@ -505,11 +493,10 @@ class XmiReferenceResolverImpl extends XmiContext {
      * The suffixes to use when searching for referenced models on the
      * classpath.
      * <p>
-     * Copied from AndroMDA 3.1 by Ludo (rastaman).
-     * see org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
+     * Copied from AndroMDA 3.1 by Ludo (rastaman). see
+     * org.andromda.repositories.mdr.MDRXmiReferenceResolverContext
      */
-    protected static final String[] CLASSPATH_MODEL_SUFFIXES =
-        new String[] {"xml", "xmi", };
+    protected static final String[] CLASSPATH_MODEL_SUFFIXES = new String[] { "xml", "xmi", };
 
     /**
      * Searches for the model URL on the classpath.
@@ -530,12 +517,10 @@ class XmiReferenceResolverImpl extends XmiContext {
         } else {
             int filenameIndex = systemId.lastIndexOf("/");
             if (filenameIndex > 0) {
-                modelName = systemId.substring(filenameIndex + 1, systemId
-                        .length());
+                modelName = systemId.substring(filenameIndex + 1, systemId.length());
             } else {
                 LOG.log(Level.WARNING, "Received systemId with no '/'" + systemId);
             }
-
 
             // remove the first prefix because it may be an archive
             // (like magicdraw)
@@ -544,25 +529,26 @@ class XmiReferenceResolverImpl extends XmiContext {
             }
         }
 
-        URL modelUrl = Thread.currentThread().getContextClassLoader()
-                .getResource(modelName);
+        if (modelName == null) {
+            LOG.log(Level.SEVERE, "No model name for systemId " + systemId);
+            return null;
+        }
+        URL modelUrl = Thread.currentThread().getContextClassLoader().getResource(modelName);
         // TODO: Not sure whether the above is better in some cases, but
         // the code below is better for both Java Web Start and Eclipse.
         if (modelUrl == null) {
             modelUrl = this.getClass().getResource(modelName);
         }
+
         // TODO: Is this adequate for finding profiles in Java WebStart jars?
-        //       - tfm
+        // - tfm
         if (modelUrl == null) {
-            if (CLASSPATH_MODEL_SUFFIXES != null
-                    && CLASSPATH_MODEL_SUFFIXES.length > 0) {
+            if (CLASSPATH_MODEL_SUFFIXES != null && CLASSPATH_MODEL_SUFFIXES.length > 0) {
                 for (String suffix : CLASSPATH_MODEL_SUFFIXES) {
 
-                    LOG.log(Level.FINE,
-                            "searching for model reference --> {0}", modelUrl);
+                    LOG.log(Level.FINE, "searching for model reference --> {0}", modelUrl);
 
-                    modelUrl = Thread.currentThread().getContextClassLoader()
-                            .getResource(modelName + dot + suffix);
+                    modelUrl = Thread.currentThread().getContextClassLoader().getResource(modelName + dot + suffix);
                     if (modelUrl != null) {
                         break;
                     }
@@ -592,7 +578,12 @@ class XmiReferenceResolverImpl extends XmiContext {
         URL url = null;
         try {
             url = new URL(systemId);
-            stream = url.openStream();
+            URLConnection urlConn = url.openConnection();
+            urlConn.setConnectTimeout(URLCONNECTION_TIMEOUT);
+            urlConn.setReadTimeout(URLCONNECTION_TIMEOUT);
+            urlConn.setAllowUserInteraction(false);
+            urlConn.setDoOutput(true);
+            stream = urlConn.getInputStream();
             stream.close();
         } catch (MalformedURLException e) {
             url = null;
@@ -609,17 +600,15 @@ class XmiReferenceResolverImpl extends XmiContext {
     /////////////////////////////////////////////////////
 
     /**
-     * Fix up a file URL for a Zip file or Jar.  Assume it is a single
-     * file archive with the entry name the same as the base name.
+     * Fix up a file URL for a Zip file or Jar. Assume it is a single file
+     * archive with the entry name the same as the base name.
      */
     private String fixupURL(String url) {
         final String suffix = getSuffix(url);
         if (suffix.endsWith(".zargo")) {
-            url = "jar:" + url + "!/"
-                    + suffix.substring(0, suffix.length() - 6) + ".xmi";
+            url = "jar:" + url + "!/" + suffix.substring(0, suffix.length() - 6) + ".xmi";
         } else if (suffix.endsWith(".zip") || suffix.endsWith(".jar")) {
-            url = "jar:" + url + "!/"
-                    + suffix.substring(0, suffix.length() - 4);
+            url = "jar:" + url + "!/" + suffix.substring(0, suffix.length() - 4);
         }
         return url;
     }

@@ -125,7 +125,7 @@ public class TestDependencies extends TestCase {
             "org.argouml.configuration",
             "org.argouml.i18n",
             "org.argouml.gefext",
-            "org.argouml.language.ui",
+            //"org.argouml.language.ui",
             "org.argouml.moduleloader",
             //"org.argouml.notation.providers",//fails because sub-packages fail (?)
             //"org.argouml.notation.providers.java",
@@ -135,7 +135,7 @@ public class TestDependencies extends TestCase {
             "org.argouml.swingext",
             "org.argouml.taskmgmt",
             "org.argouml.uml.diagram.layout",
-            "org.argouml.uml.generator",
+            //"org.argouml.uml.generator",
             "org.argouml.uml.util.namespace",
             "org.argouml.util.logging",
             "org.argouml.util.osdep",

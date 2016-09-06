@@ -103,6 +103,17 @@ class XmiReaderImpl implements XmiReader, UnknownElementsListener,
 
     static final String TEMP_XMI_FILE_PREFIX = "zargo_model_";
 
+    static final int CONNECTION_TIMEOUT = 3000;
+
+    /**
+     * Set the connection timeout for all connections else the
+     * requests are really long if an URL cannot be resolved.
+     */
+    static {
+        System.setProperty("sun.net.client.defaultConnectTimeout", Integer.toString(CONNECTION_TIMEOUT));
+        System.setProperty("sun.net.client.defaultReadTimeout", Integer.toString(CONNECTION_TIMEOUT));
+    }
+
     /**
      * Logger.
      */
@@ -113,7 +124,7 @@ class XmiReaderImpl implements XmiReader, UnknownElementsListener,
 
     private MDRModelImplementation modelImpl;
 
-    private XmiReferenceResolverImpl resolver;
+    private ArgoUMLMDRXmiReferencesResolver resolver;
 
     /**
      * Flag indicating unknown element was found in XMI file.
@@ -193,22 +204,22 @@ class XmiReaderImpl implements XmiReader, UnknownElementsListener,
             config.setUnknownElementsIgnored(true);
 
             String pId = inputSource.getPublicId();
-            String sId = modelImpl.getPublic2SystemIds().get(pId);
+            String sId = modelImpl.getSystemId(pId);
             if (sId != null) {
                 if (sId.equals(inputSource.getSystemId())) {
-                    LOG.log(Level.INFO, "Attempt to reread profile - ignoring - "
+                    LOG.log(Level.INFO, "(1) Attempt to reread profile - ignoring - "
                             + "publicId = \"" + pId + "\";  systemId = \""
                             + sId + "\".");
                     return Collections.emptySet();
                 } else {
-                    throw new UmlException("Profile with the duplicate publicId "
+                    throw new UmlException("(1) Profile with the duplicate publicId "
                             + "is being loaded! publicId = \"" + pId
                             + "\"; existing systemId = \""
-                            + modelImpl.getPublic2SystemIds().get(pId)
+                            + modelImpl.getSystemId(pId)
                             + "\"; new systemId = \"" + sId + "\".");
                 }
             }
-            resolver = new XmiReferenceResolverImpl(new RefPackage[] {extent},
+            resolver = getNewResolver(new RefPackage[] {extent},
                     config, modelImpl.getObjectToId(),
                     modelImpl.getPublic2SystemIds(), modelImpl.getIdToObject(),
                     modelImpl.getSearchPath(),
@@ -372,6 +383,17 @@ class XmiReaderImpl implements XmiReader, UnknownElementsListener,
         return newElements;
     }
 
+    private ArgoUMLMDRXmiReferencesResolver getNewResolver(RefPackage[] refPackages, InputConfig config, Map<String, XmiReference> objectToId,
+            Map<String, String> public2SystemIds, Map<String, Map<String, Object>> idToObject, List<String> searchPath,
+            boolean readOnly, String publicId, String systemId, MDRModelImplementation modelImpl) {
+        return new XmiReferenceResolverImpl(refPackages,
+                config, modelImpl.getObjectToId(),
+                modelImpl.getPublic2SystemIds(), modelImpl.getIdToObject(),
+                modelImpl.getSearchPath(),
+                readOnly,
+                publicId, systemId,
+                modelImpl);
+    }
 
     private Collection<RefObject> convertAndLoadUml13(String systemId,
             RefPackage extent, XMIReader xmiReader, InputSource input)

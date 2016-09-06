@@ -322,14 +322,14 @@ public class MDRModelImplementation implements ModelImplementation {
 
                     String name = extents.remove(extent).name;
                     if (public2SystemIds.remove(name) == null) {
-                        if (!"model extent".equals(name)) {
+                        if (!MODEL_EXTENT_NAME.equals(name)) {
                             LOG.log(Level.WARNING, "No system id found for extent "
                                     + (name == null ? "" : name) + " : "
                                     + extent);
                         }
                     }
                     if (idToObject.remove(name) == null) {
-                        if (!"model extent".equals(name)) {
+                        if (!MODEL_EXTENT_NAME.equals(name)) {
                             LOG.log(Level.WARNING, "No ID map found for extent "
                                     + (name == null ? "" : name) + " : "
                                     + extent);
@@ -915,6 +915,10 @@ public class MDRModelImplementation implements ModelImplementation {
      */
     Map<String, String> getPublic2SystemIds() {
         return public2SystemIds;
+    }
+
+    String getSystemId(String publicId) {
+        return public2SystemIds.get(publicId);
     }
 
     void addSearchPath(String path) {
